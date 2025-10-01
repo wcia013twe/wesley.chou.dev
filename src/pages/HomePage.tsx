@@ -5,6 +5,7 @@ import FloatingScrollPrompt from "@/components/FloatingScrollPrompt";
 import { Button } from "@headlessui/react";
 import { MdEmail } from "react-icons/md";
 import { GiJourney } from "react-icons/gi";
+import { ImHappy2 } from "react-icons/im";
 
 const handleAnimationComplete = () => {
   console.log("All letters have animated!");
@@ -44,7 +45,7 @@ const HomePage = () => {
             <TextType
               text={[
                 "Software Engineer",
-                "Computer Vision Researcher",
+                "Augmented Reality Researcher",
                 "Startup Enthusiast",
               ]}
               typingSpeed={50}
@@ -57,7 +58,7 @@ const HomePage = () => {
             <Button className="inline-flex items-center gap-2 rounded-md bg-gray-700 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700">
               {" "}
               About Me
-              <GiJourney />
+              <ImHappy2 />
             </Button>
             <Button className="inline-flex items-center gap-2 rounded-md bg-purple-500 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700">
               {" "}
@@ -79,7 +80,7 @@ const HomePage = () => {
             >
               University of Central Florida
             </a>{" "}
-            working at the intersection of software engineering, AI, and
+            , working at the intersection of software engineering, AI, and
             entrepreneurship. 
           </p>
           <div className="flex flex-wrap gap-3 pt-2">

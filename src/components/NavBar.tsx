@@ -50,7 +50,7 @@ function Navbar() {
             <TooltipTrigger
               render={
                 <a
-                  href="https://github.com"
+                  href="https://github.com/wcia013twe"
                   aria-label="GitHub"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -69,7 +69,7 @@ function Navbar() {
             <TooltipTrigger
               render={
                 <a
-                  href="https://linkedin.com"
+                  href="https://www.linkedin.com/in/weschou013/"
                   aria-label="LinkedIn"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -88,7 +88,7 @@ function Navbar() {
             <TooltipTrigger
               render={
                 <a
-                  href="/resume.pdf"
+                  href="../../WesChouResume2026-918.pdf"
                   aria-label="Resume"
                   className="inline-flex p-2 rounded-md hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-alt)] transition-colors"
                 >
