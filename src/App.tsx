@@ -1,12 +1,17 @@
 import "./App.css";
-import { createBrowserRouter, RouterProvider, Link, Outlet } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Link,
+  Outlet,
+} from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import PostsPage from "./pages/PostsPage";
 import SkillsPage from "./pages/SkillsPage";
 import Navbar from "./components/NavBar";
-
+import { HelmetProvider } from "react-helmet-async";
 
 const Layout = () => (
   <>
@@ -32,7 +37,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <HelmetProvider>
+      <RouterProvider router={router} />
+    </HelmetProvider>
+  );
 }
 
 export default App;

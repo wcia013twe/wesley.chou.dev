@@ -328,8 +328,8 @@ void main(){
 const MAX_CLICKS = 10;
 
 const PixelBlast: React.FC<PixelBlastProps> = ({
-  variant = 'square',
-  pixelSize = 3,
+  variant = 'triangle',
+  pixelSize = 6,
   color = '#B19EEF',
   className,
   style,

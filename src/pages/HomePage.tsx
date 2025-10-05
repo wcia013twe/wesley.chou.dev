@@ -4,8 +4,8 @@ import TextType from "../components/TextType";
 import FloatingScrollPrompt from "@/components/FloatingScrollPrompt";
 import { Button } from "@headlessui/react";
 import { MdEmail } from "react-icons/md";
-import { GiJourney } from "react-icons/gi";
 import { ImHappy2 } from "react-icons/im";
+import { Helmet } from "react-helmet-async";
 
 const handleAnimationComplete = () => {
   console.log("All letters have animated!");
@@ -14,19 +14,25 @@ const handleAnimationComplete = () => {
 const HomePage = () => {
   return (
     // The outermost container (it should not have a position class)
-    <div>
+    <div className="">
+      <Helmet>
+        <title>Home | Wesley Chou</title>
+        <meta
+          name="description"
+          content="Welcome to Wesley Chou's portfolio."
+        />
+      </Helmet>
+
       <div className="fixed inset-0 -z-20 bg-black/50">
-        <PixelBlast />
+        <PixelBlast color="#a78bfa" />
       </div>
 
-      {/* <div className="fixed inset-0 -z-10 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,0,0,0)_0%,rgba(0,0,0,0.55)_100%)]" /> */}
-
-      <div className="relative z-10 mx-auto max-w-3xl px-6 pt-24 pb-40 space-y-24 min-h-[200vh]">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 pt-50 pb-40 space-y-24 min-h-[200]">
         <section className="space-y-4 text-center text-white">
           <h1>
             <SplitText
-              text="Hello All👋!"
-              className="text-4xl font-semibold text-center"
+              text="Hello there👋!"
+              className="text-6xl font-semibold text-center"
               delay={100}
               duration={0.4}
               ease="power3.out"
@@ -39,7 +45,7 @@ const HomePage = () => {
               onLetterAnimationComplete={handleAnimationComplete}
             />
           </h1>
-          <p className="mx-auto max-w-prose text-base leading-relaxed text-white">
+          <p className="mx-auto max-w-prose text-3xl leading-relaxed text-white">
             Hi, I'm <strong>Wesley Chou</strong>, and I am a
             <br />
             <TextType
@@ -55,12 +61,12 @@ const HomePage = () => {
             />
           </p>
           <div className="flex flex-wrap gap-3 pt-2 justify-center mx-auto w-fit">
-            <Button className="inline-flex items-center gap-2 rounded-md bg-gray-700 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700">
+            <Button className="inline-flex items-center gap-2 rounded-md bg-gray-700 px-4 py-3 text-2xl font-semibold text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700">
               {" "}
               About Me
               <ImHappy2 />
             </Button>
-            <Button className="inline-flex items-center gap-2 rounded-md bg-purple-500 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700">
+            <Button className="inline-flex items-center gap-2 rounded-md bg-purple-600 px-4 py-3 text-2xl font-semibold text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700">
               {" "}
               Contact Me
               <MdEmail />
@@ -70,56 +76,60 @@ const HomePage = () => {
 
         <FloatingScrollPrompt />
 
-        <section className="space-y-4 text-white mt-50">
-          <h2 className="text-2xl font-semibold text-white/90">About Me👨‍💻</h2>
-          <p className="max-w-prose text-sm leading-relaxed text-white">
-            I'm a Computer Science senior at{" "}
-            <a
-              href="https://www.ucf.edu/"
-              className="text-yellow-300 underline"
-            >
-              University of Central Florida
-            </a>{" "}
-            , working at the intersection of software engineering, AI, and
-            entrepreneurship. 
-          </p>
-          <div className="flex flex-wrap gap-3 pt-2">
-            <button className="rounded-md bg-white/10 px-4 py-2 text-xs font-medium text-white backdrop-blur hover:bg-white/15 transition">
-              Action
-            </button>
-            <button className="rounded-md bg-white/5 px-4 py-2 text-xs font-medium text-white backdrop-blur hover:bg-white/10 transition">
-              Secondary
-            </button>
+        <section className="flex flex-col md:flex-row items-center gap-8 text-white  mt-100">
+          <div className="flex-1">
+            <h2 className="text-5xl font-semibold text-white/90 mb-10">
+              About Me👨‍💻
+            </h2>
+            <p className="max-w-prose text-2xl leading-relaxed text-white">
+              My name is Wei-Lin, but you can call me Wes! I'm a Computer
+              Science senior at{" "}
+              <a
+                href="https://www.ucf.edu/"
+                className="text-yellow-300 underline"
+              >
+                University of Central Florida
+              </a>
+              , working at the intersection of software engineering, AI, and
+              entrepreneurship. Growing up in Taiwan, the rapid pace of tech
+              advancements captured my interest early on. I launched my
+              programming journey building an ASL identifier using YOLO. Ever
+              since then, I've been driven to build solutions that create a
+              tangible, positive impact.
+            </p>
+          </div>
+          <div className="flex-1 flex justify-center">
+            <img
+              src="src/assets/pfp.jpg"
+              alt="profile picture"
+              className="w-100 h-100 object-cover rounded-full border-4 border-yellow-300 shadow-lg"
+            />
           </div>
         </section>
-
         <section className="space-y-4 text-white">
-          <h2 className="text-2xl font-semibold text-white/90">
-            Longer Content
+          <h2 className="text-5xl font-semibold text-white/90 mb-10">
+            My Journey✈️
           </h2>
-          <p className="max-w-prose text-sm leading-relaxed text-white/70">
-            Add more sections to extend the scroll length. The fixed canvas
-            underneath renders once per frame but never reflows. If performance
-            becomes a concern, you can pause rendering when scrolled beyond a
-            threshold or when the tab is hidden.
+          <p className="max-w-1/2 text-2xl leading-relaxed text-white">
+            In my short two-year tenure at UCF, I have deepened my passion for
+            technology, particularly through exploring machine learning, modern
+            software development, and entrepreneurial ventures. These diverse
+            professional experiences have fueled my ambition to build tangible,
+            market-ready products that put users first.
           </p>
-          <ul className="list-disc pl-5 text-white/60 text-sm space-y-1">
-            <li>Easy layering with z-index</li>
-            <li>Readable text via radial gradient overlay</li>
-            <li>Independent scroll performance</li>
-            <li>Future: parallax or dynamic blur on scroll</li>
-          </ul>
         </section>
 
         <section className="space-y-4 pb-10 text-white">
-          <h2 className="text-2xl font-semibold text-white/90">Next Ideas</h2>
-          <p className="max-w-prose text-sm leading-relaxed text-white/70">
-            Want more depth? We can add a slow zoom, hue shifting, cursor
-            reactive ripples, or performance switches that pause animation when
-            the tab is in the background.
+          <h2 className="text-5xl font-semibold text-white/90">
+            My Interests✨
+          </h2>
+          <p className="max-w-1/2 text-2xl leading-relaxed text-white">
+            I am always venturing outside of my comfort zone. To stay up to
+            trends, I enjoy keeping up with the latest AI trends, investing, and
+            psychology through podcasts and reading. When I step away from the
+            keyboard, I love hiking, volleyball, playing board games, anime, and
+            sitcoms planning my next trip abroad!
           </p>
-          {/* This large div ensures the total page height exceeds the viewport, enabling scroll */}
-          <div className="h-[100vh]"></div>
         </section>
       </div>
     </div>

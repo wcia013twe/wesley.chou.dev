@@ -16,7 +16,7 @@ const FloatingScrollPrompt = () => {
       `}
     >
       <div className="flex flex-col items-center justify-center">
-        <p className="text-white text-lg font-medium mb-1">
+        <p className="text-white text-2xl font-medium mb-1">
           More about me
         </p>
         <svg

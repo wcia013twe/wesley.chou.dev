@@ -1,11 +1,13 @@
-import React from 'react'
-
+import { Helmet } from "react-helmet-async";
 const ProjectsPage = () => {
   return (
     <div>
-      Projects
+      <Helmet>
+        <title>Projects | Wesley Chou</title>
+        <meta name="description" content="Welcome to Wesley Chou's posts." />
+      </Helmet>
     </div>
-  )
-}
+  );
+};
 
-export default ProjectsPage
+export default ProjectsPage;

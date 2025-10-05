@@ -34,7 +34,8 @@
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Layout */
-  --nav-height: 3.25rem; /* 52px nav height */
+  --nav-height: 7rem; /* 52px nav height */
+  --image-size: 2rem;
 
   /* Radii / Spacing (example tokens) */
   /* --radius-sm: 4px;

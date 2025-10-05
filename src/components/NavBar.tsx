@@ -16,28 +16,28 @@ function Navbar() {
         {/* Tabs */}
         <TabList className="flex items-center gap-1">
           <Tab
-            className="rounded-full px-3 py-1 text-sm/6 font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
+            className="rounded-full px-6 py-3 text-3xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
             as={Link}
             to="/"
           >
             Home
           </Tab>
           <Tab
-            className="rounded-full px-3 py-1 text-sm/6 font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
+            className="rounded-full px-6 py-3 text-3xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
             as={Link}
             to="/projects"
           >
             Projects
           </Tab>
           <Tab
-            className="rounded-full px-3 py-1 text-sm/6 font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
+            className="rounded-full px-6 py-3 text-3xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
             as={Link}
             to="/posts"
           >
             Posts
           </Tab>
           <Tab
-            className="rounded-full px-3 py-1 text-sm/6 font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
+            className="rounded-full px-6 py-3 text-3xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
             as={Link}
             to="/skills"
           >
@@ -56,7 +56,7 @@ function Navbar() {
                   rel="noopener noreferrer"
                   className="inline-flex p-2 rounded-md hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-alt)] transition-colors"
                 >
-                  <FaGithub size={20}/>
+                  <FaGithub className="text-5xl"/>
                 </a>
               }
             />
@@ -75,7 +75,7 @@ function Navbar() {
                   rel="noopener noreferrer"
                   className="inline-flex p-2 rounded-md hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-alt)] transition-colors"
                 >
-                  <FaLinkedin size={20}/>
+                  <FaLinkedin className="text-5xl"/>
                 </a>
               }
             />
@@ -92,7 +92,7 @@ function Navbar() {
                   aria-label="Resume"
                   className="inline-flex p-2 rounded-md hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-alt)] transition-colors"
                 >
-                  <CgFileDocument size={20}/>
+                  <CgFileDocument className="text-5xl"/>
                 </a>
               }
             />
