@@ -2,6 +2,7 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { Link } from "react-router-dom";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { CgFileDocument } from "react-icons/cg";
+import { LuRocket } from "react-icons/lu";
 
 import {
   Tooltip,
@@ -14,30 +15,34 @@ function Navbar() {
     <TabGroup>
       <div className="fixed top-0 left-0 z-50 flex h-[var(--nav-height)] w-full items-center justify-between border-[var(--color-border)] bg-[var(--color-bg)]/95 backdrop-blur supports-[backdrop-filter]:bg-[var(--color-bg)]/80 px-3 font-sans text-xl font-medium tracking-wide text-[var(--color-fg)]">
         {/* Tabs */}
+        <div className="px-6 flex items-center justify-center ">
+          <LuRocket className="text-3xl hover:text-[var(--color-primary)]"/>
+          <p className="pl-2 text-2xl hover:text-[var(--color-primary)]">Wesley Chou</p>
+        </div>
         <TabList className="flex items-center gap-1">
           <Tab
-            className="rounded-full px-6 py-3 text-3xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
+            className="rounded-full px-6 py-3 text-2xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
             as={Link}
             to="/"
           >
             Home
           </Tab>
           <Tab
-            className="rounded-full px-6 py-3 text-3xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
+            className="rounded-full px-6 py-3 text-2xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
             as={Link}
             to="/projects"
           >
             Projects
           </Tab>
           <Tab
-            className="rounded-full px-6 py-3 text-3xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
+            className="rounded-full px-6 py-3 text-2xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
             as={Link}
             to="/posts"
           >
             Posts
           </Tab>
           <Tab
-            className="rounded-full px-6 py-3 text-3xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
+            className="rounded-full px-6 py-3 text-2xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
             as={Link}
             to="/skills"
           >
@@ -56,7 +61,7 @@ function Navbar() {
                   rel="noopener noreferrer"
                   className="inline-flex p-2 rounded-md hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-alt)] transition-colors"
                 >
-                  <FaGithub className="text-5xl"/>
+                  <FaGithub className="text-5xl" />
                 </a>
               }
             />
@@ -75,7 +80,7 @@ function Navbar() {
                   rel="noopener noreferrer"
                   className="inline-flex p-2 rounded-md hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-alt)] transition-colors"
                 >
-                  <FaLinkedin className="text-5xl"/>
+                  <FaLinkedin className="text-5xl" />
                 </a>
               }
             />
@@ -92,7 +97,7 @@ function Navbar() {
                   aria-label="Resume"
                   className="inline-flex p-2 rounded-md hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-alt)] transition-colors"
                 >
-                  <CgFileDocument className="text-5xl"/>
+                  <CgFileDocument className="text-5xl" />
                 </a>
               }
             />

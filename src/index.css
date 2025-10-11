@@ -4,7 +4,7 @@
 @theme {
   /* Brand Colors */
   /* Bright Red Theme */
-  --color-primary: #e03131;               /* bright pleasant red */
+  --color-primary: #9333ea;               /* bright pleasant red */
   --color-primary-foreground: #ffffff;
   --color-accent: #ff5b5b;                /* soft light red accent */
   --color-accent-foreground: #2a0f10;
@@ -62,7 +62,7 @@ main { padding-top: var(--nav-height); }
   --color-surface-alt: #252c36;
   --color-border: #2f3844;
   --color-muted: #9aa4b1;
-  --color-primary: #ff4d4d; /* brighter red in dark */
+  --color-primary: #a78bfa; /* brighter red in dark */
   --color-primary-foreground: #1c0a0a;
   --color-accent: #ff7676; /* lighter accent red */
   --color-accent-foreground: #2a0f10;

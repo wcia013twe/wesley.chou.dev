@@ -66,7 +66,7 @@ const HomePage = () => {
               About Me
               <ImHappy2 />
             </Button>
-            <Button className="inline-flex items-center gap-2 rounded-md bg-purple-600 px-4 py-3 text-2xl font-semibold text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700">
+            <Button className="inline-flex items-center gap-2 rounded-md bg-purple-500 px-4 py-3 text-2xl font-semibold text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700">
               {" "}
               Contact Me
               <MdEmail />
@@ -76,10 +76,10 @@ const HomePage = () => {
 
         <FloatingScrollPrompt />
 
-        <section className="flex flex-col md:flex-row items-center gap-8 text-white  mt-100">
+        <section className="flex flex-col md:flex-row items-center gap-8 text-white mt-100">
           <div className="flex-1">
             <h2 className="text-5xl font-semibold text-white/90 mb-10">
-              About Me👨‍💻
+              About Me
             </h2>
             <p className="max-w-prose text-2xl leading-relaxed text-white">
               My name is Wei-Lin, but you can call me Wes! I'm a Computer
@@ -91,11 +91,7 @@ const HomePage = () => {
                 University of Central Florida
               </a>
               , working at the intersection of software engineering, AI, and
-              entrepreneurship. Growing up in Taiwan, the rapid pace of tech
-              advancements captured my interest early on. I launched my
-              programming journey building an ASL identifier using YOLO. Ever
-              since then, I've been driven to build solutions that create a
-              tangible, positive impact.
+              entrepreneurship. 
             </p>
           </div>
           <div className="flex-1 flex justify-center">
@@ -106,30 +102,46 @@ const HomePage = () => {
             />
           </div>
         </section>
-        <section className="space-y-4 text-white">
-          <h2 className="text-5xl font-semibold text-white/90 mb-10">
-            My Journey✈️
-          </h2>
-          <p className="max-w-1/2 text-2xl leading-relaxed text-white">
-            In my short two-year tenure at UCF, I have deepened my passion for
-            technology, particularly through exploring machine learning, modern
-            software development, and entrepreneurial ventures. These diverse
-            professional experiences have fueled my ambition to build tangible,
-            market-ready products that put users first.
-          </p>
+
+        <section className="flex flex-col md:flex-row items-center gap-8 text-white">
+          <div className="flex-1">
+            <h2 className="text-5xl font-semibold text-white/90 mb-10">
+              My Journey
+            </h2>
+            <p className="max-w-prose text-2xl leading-relaxed text-white">
+              In my short two-years at UCF, I have deepened my passion for
+              technology, particularly through exploring machine learning,
+              modern software development, and entrepreneurial ventures. 
+            </p>
+          </div>
+          <div className="flex-1 flex justify-center">
+            <img
+              src="src/assets/ucf.avif"
+              alt="profile picture"
+              className="w-100 h-100 object-cover rounded-full border-4 border-yellow-300 shadow-lg"
+            />
+          </div>
         </section>
 
-        <section className="space-y-4 pb-10 text-white">
-          <h2 className="text-5xl font-semibold text-white/90">
-            My Interests✨
-          </h2>
-          <p className="max-w-1/2 text-2xl leading-relaxed text-white">
-            I am always venturing outside of my comfort zone. To stay up to
-            trends, I enjoy keeping up with the latest AI trends, investing, and
-            psychology through podcasts and reading. When I step away from the
-            keyboard, I love hiking, volleyball, playing board games, anime, and
-            sitcoms planning my next trip abroad!
-          </p>
+        <section className="flex flex-col md:flex-row items-center gap-8 text-white">
+          <div className="flex-1">
+            <h2 className="text-5xl font-semibold text-white/90 mb-10">
+              My Interests
+            </h2>
+            <p className="max-w-prose text-2xl leading-relaxed text-white">
+              I am an outgoing engineer who is passionate about all things
+              AI and latest tech trends. When I step away from
+              the keyboard, I love hiking, volleyball, playing board games, or
+              planning my next trip abroad!
+            </p>
+          </div>
+          <div className="flex-1 flex justify-center">
+            <img
+              src="src/assets/IMG_8569.jpg"
+              alt="profile picture"
+              className="w-100 h-100 object-cover rounded-full border-4 border-yellow-300 shadow-lg"
+            />
+          </div>
         </section>
       </div>
     </div>
