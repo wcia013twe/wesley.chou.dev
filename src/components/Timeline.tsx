@@ -1,11 +1,11 @@
 import React from 'react'
 
-const AboutPage = () => {
+const Timeline = () => {
   return (
     <div>
-      About
+      
     </div>
   )
 }
 
-export default AboutPage
+export default Timeline

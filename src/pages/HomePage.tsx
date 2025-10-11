@@ -23,10 +23,6 @@ const HomePage = () => {
         />
       </Helmet>
 
-      <div className="fixed inset-0 -z-20 bg-black/50">
-        <PixelBlast color="#a78bfa" />
-      </div>
-
       <div className="relative z-10 mx-auto max-w-7xl px-6 pt-50 pb-40 space-y-24 min-h-[200]">
         <section className="space-y-4 text-center text-white">
           <h1>
