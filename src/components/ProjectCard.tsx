@@ -2,8 +2,6 @@ import React from "react";
 import SpotlightCard from "./SpotlightCard";
 // Removed unused import
 
-
-
 type ProjectCardProps = {
   title: string;
   description: string;
@@ -29,7 +27,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         {/* Top image area */}
         <div className="bg-[#181e29] h-60 flex items-end justify-start relative">
           {/* Floating title */}
-          <div className="absolute left-4 bottom-4 z-10 bg-[#10141c] px-4 py-2 rounded-2xl shadow text-white text-lg font-semibold drop-shadow w-auto min-w-[80px] max-w-[70%]">
+          <div className="absolute left-4 bottom-4 z-10 bg-[#10141c]/85 px-4 py-2 rounded-2xl shadow text-white text-lg font-semibold drop-shadow w-auto min-w-[80px] max-w-[70%]">
             {title}
           </div>
           {imageUrl && (

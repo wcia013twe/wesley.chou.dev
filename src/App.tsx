@@ -18,7 +18,7 @@ import PixelBlast from "./components/PixelBlast";
 const Layout = () => (
   <>
     <Navbar />
-    <div className="fixed inset-0 -z-20 bg-black/80">
+    <div className="fixed inset-0 -z-20 bg-black/80 opacity-85">
       <PixelBlast color="#a78bfa" />
     </div>
     <main>

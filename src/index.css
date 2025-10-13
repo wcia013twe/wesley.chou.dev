@@ -58,6 +58,7 @@ main { padding-top: var(--nav-height); }
 .dark {@theme {
   --color-bg: #0f1115; /* unchanged background */
   --color-fg: #f8fafc;
+  --color-card-bg: #10141c;
   --color-surface: #1c2129;
   --color-surface-alt: #252c36;
   --color-border: #2f3844;
