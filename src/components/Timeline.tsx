@@ -4,61 +4,16 @@ import {
 } from "react-vertical-timeline-component";
 import "./Timeline.css";
 import TiltedCard from "./TiltedCard";
-import { BsRocketTakeoffFill } from "react-icons/bs";
 import { Button } from "@headlessui/react";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { MdLocationOn } from "react-icons/md";
 import { FaBuildingUser } from "react-icons/fa6";
 import TimelineDrawer from "./TimelineDrawer";
 import { useState } from "react";
+import { timelineData } from "../lib/experience";
 
 // Timeline data could be kept here as a constant, or moved to a separate file (e.g., timelineData.ts or timelineData.json).
 // For small, static datasets, keeping it here is fine. For larger or reused data, a separate file is better.
-
-const timelineData = [
-  {
-    date: "May 2025 - August 2025",
-    imageSrc: "src/assets/experience/UCF-UpStarts-Logo.png",
-    altText: "UCF Upstarts PNG",
-    captionText: "UCF Upstarts",
-    title: "Student Entrepreneur",
-    workplace: "UCF Upstarts",
-    location: "Orlando, FL",
-    description:
-      "Mentored by founders and VCs while validating a new venture idea for product-market fit.",
-    skills: [
-      "Entrepreneurship",
-      "Business Strategy",
-      "Teamwork",
-      "Leadership",
-      "Pitching",
-      "User Interviews",
-    ],
-    key_responsibilities: [],
-    icon: <BsRocketTakeoffFill />,
-  },
-  {
-    date: "May 2025 - August 2025",
-    imageSrc: "src/assets/experience/UCF-UpStarts-Logo.png",
-    altText: "UCF Upstarts PNG",
-    captionText: "UCF Upstarts",
-    title: "Student Entrepreneur",
-    workplace: "UCF Upstarts",
-    location: "Orlando, FL",
-    description:
-      "Mentored by founders and VCs while validating a new venture idea for product-market fit.",
-    skills: [
-      "Entrepreneurship",
-      "Business Strategy",
-      "Teamwork",
-      "Leadership",
-      "Pitching",
-      "User Interviews",
-    ],
-    key_responsibilities: [],
-    icon: <BsRocketTakeoffFill />,
-  },
-];
 
 function renderSkillBadges(skills: string[]) {
   const maxVisible = 5;
@@ -82,7 +37,6 @@ function renderSkillBadges(skills: string[]) {
 }
 
 const Timeline = () => {
-
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
@@ -158,13 +112,20 @@ const Timeline = () => {
       </VerticalTimeline>
       {drawerOpen && selectedIndex !== null && (
         <TimelineDrawer
+          icon={timelineData[selectedIndex].icon}
           title={timelineData[selectedIndex].title}
           workplace={timelineData[selectedIndex].workplace}
+          hero={timelineData[selectedIndex].hero || ""}
+          altText={timelineData[selectedIndex].altText}
           date={timelineData[selectedIndex].date}
           location={timelineData[selectedIndex].location}
           description={timelineData[selectedIndex].description}
           skills={timelineData[selectedIndex].skills}
-          key_responsibilities={timelineData[selectedIndex].key_responsibilities}
+          overview={timelineData[selectedIndex].overview || ""}
+          key_responsibilities={
+            timelineData[selectedIndex].key_responsibilities
+          }
+          links={timelineData[selectedIndex].links || {}}
           isOpen={drawerOpen}
           onClose={() => {
             setDrawerOpen(false);
