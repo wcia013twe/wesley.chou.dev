@@ -6,7 +6,7 @@ const ExperiencePage = () => {
       <div className="mt-15 text-center">
         <SplitText
           text="Experience"
-          className="text-5xl font-semibold text-center text-purple-300 mb-2"
+          className="text-5xl font-semibold text-center text-purple-500 pb-3"
           delay={100}
           duration={0.4}
           ease="power3.out"

@@ -44,6 +44,16 @@
   --radius-full: 9999px; */
 }
 
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
 /* Global element styles consuming tokens */
 html, body { height: 100%; }
 body { font-family: var(--font-sans); background: var(--color-bg); color: var(--color-fg); }
