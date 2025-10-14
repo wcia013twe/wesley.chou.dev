@@ -1,4 +1,3 @@
-import PixelBlast from "@/components/PixelBlast";
 import SplitText from "../components/SplitText";
 import TextType from "../components/TextType";
 import FloatingScrollPrompt from "@/components/FloatingScrollPrompt";

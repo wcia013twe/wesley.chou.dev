@@ -2,11 +2,9 @@ import "./App.css";
 import {
   createBrowserRouter,
   RouterProvider,
-  Link,
   Outlet,
 } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import AboutPage from "./pages/AboutPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import PostsPage from "./pages/PostsPage";
 import SkillsPage from "./pages/SkillsPage";
