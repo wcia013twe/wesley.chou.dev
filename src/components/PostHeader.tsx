@@ -14,7 +14,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
   profileImageUrl,
 }) => {
   return (
-    <div className="flex items-start p-4 border-b border-gray-700/50 bg-gray-900 rounded-t-xl">
+  <div className="flex items-start p-4 border-gray-700/50 bg-gray-900 rounded-t-xl w-full">
       
       {/* 1. Profile Picture */}
       <div className="flex-shrink-0 mr-3">
@@ -36,7 +36,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
           {/* Mock LinkedIn Verification Checkmark/Dot (Icon Placeholder) */}
           <span className="text-cyan-500" title="Verified">
             {/* Example SVG for a small dot or checkmark */}
-            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+            <GoShieldCheck />
           </span>
           <span className="text-gray-500 font-medium text-sm">
             · You

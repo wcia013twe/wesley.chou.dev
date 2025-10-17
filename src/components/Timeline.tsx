@@ -46,7 +46,7 @@ const Timeline = () => {
         {timelineData.map((item, idx) => (
           <VerticalTimelineElement
             key={idx}
-            className="vertical-timeline-element--work"
+            className="vertical-timeline-element--work hover:-translate-y-1 duration-300 ease-in-out"
             contentStyle={{
               background:
                 "linear-gradient(135deg, #23272f 0%, #3a2e5f 60%, #181e29 100%)",
