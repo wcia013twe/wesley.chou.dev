@@ -26,7 +26,7 @@ const HomePage = () => {
         <section className="space-y-4 text-center text-white">
           <h1>
             <SplitText
-              text="Hello there👋!"
+              text="Hello there!"
               className="text-6xl font-semibold text-center"
               delay={100}
               duration={0.4}
@@ -91,7 +91,7 @@ const HomePage = () => {
           </div>
           <div className="flex-1 flex justify-center">
             <img
-              src="public/assets/pfp.jpg"
+              src="assets/pfp.jpg"
               alt="profile picture"
               className="w-100 h-100 object-cover rounded-full border-4 border-yellow-300 shadow-lg"
             />
@@ -111,7 +111,7 @@ const HomePage = () => {
           </div>
           <div className="flex-1 flex justify-center">
             <img
-              src="public/assets/ucf.avif"
+              src="assets/ucf.avif"
               alt="profile picture"
               className="w-100 h-100 object-cover rounded-full border-4 border-yellow-300 shadow-lg"
             />
@@ -132,7 +132,7 @@ const HomePage = () => {
           </div>
           <div className="flex-1 flex justify-center">
             <img
-              src="public/assets/IMG_8569.jpg"
+              src="assets/IMG_8569.jpg"
               alt="profile picture"
               className="w-100 h-100 object-cover rounded-full border-4 border-yellow-300 shadow-lg"
             />

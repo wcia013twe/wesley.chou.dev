@@ -29,7 +29,7 @@ export const timelineData = [
       "Pitch to potential partner at GitHub"
     ],
     // icon: <BsRocketTakeoffFill />,
-    icon: <img src="public/assets/experience/UCF_Knights_logo.svg" alt="UCF Logo" className="rounded-full h-14 w-13 ml-0.75 mt-0.75" />,
+    icon: <img src="assets/experience/UCF_Knights_logo.svg" alt="UCF Logo" className="rounded-full h-14 w-13 ml-0.75 mt-0.75" />,
     links: {
       "UCF Upstarts": "https://cel.ucf.edu/incubator/",
       "Pitch": "https://youtu.be/0uELuWH24Jo?si=ejtgtBWu9BVhJUXp"
@@ -63,7 +63,7 @@ export const timelineData = [
       "Work with deep learning models for computer vision tasks",
       "Cross-functional collaboration with hardware research team"
     ],
-     icon: <img src="public/assets/experience/UCF_Knights_logo.svg" alt="UCF Logo" className="rounded-full h-14 w-13 ml-0.75 mt-0.75" />,
+     icon: <img src="assets/experience/UCF_Knights_logo.svg" alt="UCF Logo" className="rounded-full h-14 w-13 ml-0.75 mt-0.75" />,
     links: {
       "Creol Research Center": "https://www.creol.ucf.edu/research/",
       "Creol Team": "https://creol.ucf.edu/person/shin-tson-wu/"
