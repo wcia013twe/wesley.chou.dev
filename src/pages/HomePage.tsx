@@ -5,6 +5,8 @@ import { Button } from "@headlessui/react";
 import { MdEmail } from "react-icons/md";
 import { ImHappy2 } from "react-icons/im";
 import { Helmet } from "react-helmet-async";
+import ImageGallery from "react-image-gallery";
+import StickyGallery from "@/components/StickyGallery";
 
 const handleAnimationComplete = () => {
   console.log("All letters have animated!");
@@ -22,7 +24,7 @@ const HomePage = () => {
         />
       </Helmet>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 pt-50 pb-40 space-y-24 min-h-[200]">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 pt-50 space-y-24 min-h-[200]">
         <section className="space-y-4 text-center text-white">
           <h1>
             <SplitText
@@ -71,73 +73,65 @@ const HomePage = () => {
 
         <FloatingScrollPrompt />
 
-        <section className="flex flex-col md:flex-row items-center gap-8 text-white mt-100">
-          <div className="flex-1">
-            <h2 className="text-5xl font-semibold text-white/90 mb-10">
-              About Me
-            </h2>
-            <p className="max-w-prose text-2xl leading-relaxed text-white">
-              My name is Wei-Lin, but you can call me Wes! I'm a Computer
-              Science senior at{" "}
-              <a
-                href="https://www.ucf.edu/"
-                className="text-yellow-300 underline"
-              >
-                University of Central Florida
-              </a>
-              , working at the intersection of software engineering, AI, and
-              entrepreneurship. 
-            </p>
-          </div>
-          <div className="flex-1 flex justify-center">
-            <img
-              src="assets/pfp.jpg"
-              alt="profile picture"
-              className="w-100 h-100 object-cover rounded-full border-4 border-yellow-300 shadow-lg"
-            />
-          </div>
-        </section>
+        <div className="flex p-10 align-center justify center">
+          <div className="">
+            <section className="flex flex-col md:flex-row items-center gap-8 text-white w-[80%] min-h-screen">
+              <div className="flex-1">
+                <h2 className="text-5xl font-semibold text-white/90 mb-10">
+                  About Me
+                </h2>
+                <p className="max-w-prose text-2xl leading-relaxed text-white">
+                  My name is Wei-Lin, but you can call me Wes! I'm a Computer
+                  Science senior at{" "}
+                  <a
+                    href="https://www.ucf.edu/"
+                    className="text-yellow-300 underline"
+                  >
+                    University of Central Florida
+                  </a>
+                  , working at the intersection of software engineering, AI, and
+                  entrepreneurship.
+                </p>
+              </div>
+            </section>
 
-        <section className="flex flex-col md:flex-row items-center gap-8 text-white">
-          <div className="flex-1">
-            <h2 className="text-5xl font-semibold text-white/90 mb-10">
-              My Journey
-            </h2>
-            <p className="max-w-prose text-2xl leading-relaxed text-white">
-              In my short two-years at UCF, I have deepened my passion for
-              technology, particularly through exploring machine learning,
-              modern software development, and entrepreneurial ventures. 
-            </p>
-          </div>
-          <div className="flex-1 flex justify-center">
-            <img
-              src="assets/ucf.avif"
-              alt="profile picture"
-              className="w-100 h-100 object-cover rounded-full border-4 border-yellow-300 shadow-lg"
-            />
-          </div>
-        </section>
+            <section className="flex flex-col md:flex-row items-center gap-8 text-white w-[80%] min-h-screen">
+              <div className="flex-1">
+                <h2 className="text-5xl font-semibold text-white/90 mb-10">
+                  My Journey
+                </h2>
+                <p className="max-w-prose text-2xl leading-relaxed text-white">
+                  In my short two-years at UCF, I have deepened my passion for
+                  technology, particularly through exploring machine learning,
+                  modern software development, and entrepreneurial ventures.
+                </p>
+              </div>
+            </section>
 
-        <section className="flex flex-col md:flex-row items-center gap-8 text-white">
-          <div className="flex-1">
-            <h2 className="text-5xl font-semibold text-white/90 mb-10">
-              My Interests
-            </h2>
-            <p className="max-w-prose text-2xl leading-relaxed text-white">
-              I am an outgoing engineer who is passionate about all things
-              AI and latest tech trends. When I step away from
-              the keyboard, I love hiking, volleyball, playing board games, or
-              planning my next trip abroad!
-            </p>
+            <section className="flex flex-col md:flex-row items-center gap-8 text-white w-[80%] min-h-screen">
+              <div className="flex-1">
+                <h2 className="text-5xl font-semibold text-white/90 mb-10">
+                  My Interests
+                </h2>
+                <p className="max-w-prose text-2xl leading-relaxed text-white">
+                  I am an outgoing engineer who is passionate about all things
+                  AI and latest tech trends. When I step away from the keyboard,
+                  I love hiking, volleyball, playing board games, or planning my
+                  next trip abroad!
+                </p>
+              </div>
+            </section>
           </div>
-          <div className="flex-1 flex justify-center">
-            <img
-              src="assets/IMG_8569.jpg"
-              alt="profile picture"
-              className="w-100 h-100 object-cover rounded-full border-4 border-yellow-300 shadow-lg"
-            />
-          </div>
-        </section>
+
+          <StickyGallery
+            className="w-[50%] hidden md:block min-h-screen sticky pt-[20%]"
+            items={[
+              { original: "assets/gallery/korea.jpg" },
+              { original: "assets/gallery/photo2.jpg" },
+              { original: "assets/gallery/photo3.jpg" },
+            ]}
+          />
+        </div>
       </div>
     </div>
   );
