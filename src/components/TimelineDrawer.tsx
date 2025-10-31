@@ -100,12 +100,12 @@ const TimelineDrawer: React.FC<TimelineDrawerProps> = ({
         >
           ✕
         </Button>
-        <div className="flex w-full items-center justify-center h-[250px] relative overflow-hidden rounded-2xl">
+        <div className="flex w-full items-center justify-center h-[350px] relative overflow-hidden rounded-2xl">
           <div
             className="absolute inset-0 z-0 pointer-events-none border-b"
             style={{
               background:
-                "radial-gradient(ellipse 80% 40% at 60% 30%, rgba(127,90,240,0.35) 0%, rgba(98,70,234,0.25) 60%, transparent 100%), radial-gradient(ellipse 60% 30% at 30% 70%, rgba(185,131,255,0.25) 0%, transparent 100%)",
+          "radial-gradient(ellipse 80% 40% at 60% 30%, rgba(127,90,240,0.35) 0%, rgba(98,70,234,0.25) 60%, transparent 100%), radial-gradient(ellipse 60% 30% at 30% 70%, rgba(185,131,255,0.25) 0%, transparent 100%)",
               opacity: 1,
               filter: "blur(18px)",
             }}
@@ -113,7 +113,7 @@ const TimelineDrawer: React.FC<TimelineDrawerProps> = ({
           <img
             src={hero}
             alt={altText}
-            className="relative z-10 rounded-2xl object-contain max-h-[180px]"
+            className="absolute inset-0 w-full h-full object-cover rounded-2xl z-10"
           />
         </div>
         <div className="p-6 h-full overflow-y-auto">

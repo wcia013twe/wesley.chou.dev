@@ -15,7 +15,7 @@ const ProjectsPage = () => {
         <div className="mt-15 text-center">
           <SplitText
             text="Projects"
-            className="text-5xl font-semibold text-center text-purple-400 pb-3"
+            className="text-5xl font-semibold text-center pb-3"
             delay={100}
             duration={0.4}
             ease="power3.out"
@@ -36,7 +36,7 @@ const ProjectsPage = () => {
             title="Sound Haus"
             description="Sound Haus is a desk and web platform that allows music artists to efficiently share their work and collaborate together"
             date="2025-8-18 - Present"
-            imageUrl="src/assets/New-York-Maps-2024.webp"
+            imageUrl="public/assets/New-York-Maps-2024.webp"
             tech={[
               "Electron",
               "React",

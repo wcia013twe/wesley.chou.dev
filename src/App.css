@@ -1,3 +1,41 @@
+/* FallingText color shine effect classes */
+/* Generic word shine that uses a base color via CSS variable --c */
+.falling-word {
+   --c: #4f8cff; /* default */
+   background-image: linear-gradient(
+      90deg,
+      var(--c) 0%,
+      var(--c) 35%,
+      rgba(255,255,255,0.95) 50%,
+      var(--c) 65%,
+      var(--c) 100%
+   );
+   background-size: 300% 100%;
+   background-position: 0% 50%;
+   background-clip: text;
+   -webkit-background-clip: text;
+   color: transparent;
+   -webkit-text-fill-color: transparent;
+   animation: falling-shine-move 10s cubic-bezier(0.4,0,0.2,1) infinite;
+   will-change: background-position;
+   text-shadow: 0 0 6px rgba(255,255,255,0.08);
+}
+
+.falling-blue   { --c: #4f8cff; }
+.falling-green  { --c: #00e676; }
+.falling-pink   { --c: #ff4081; }
+.falling-orange { --c: #ffb300; }
+.falling-purple { --c: #a259ff; }
+
+@keyframes falling-shine-move {
+
+   0%   { background-position: 0% 50%; }
+   100% { background-position: 300% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+   .falling-word { animation: none; background-position: 100% 50%; }
+}
 /* Tailwind base + theme tokens are imported once globally in index.css.
    Use this file only for component/page-specific custom CSS (if needed). */
 

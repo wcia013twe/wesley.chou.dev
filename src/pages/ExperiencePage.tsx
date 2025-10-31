@@ -3,10 +3,10 @@ import Timeline from "@/components/Timeline";
 const ExperiencePage = () => {
   return (
     <div>
-      <div className="mt-15 text-center">
+      <div className="my-15 text-center">
         <SplitText
           text="Experience"
-          className="text-5xl font-semibold text-center text-purple-400 pb-3"
+          className="text-5xl font-semibold text-center  pb-3"
           delay={100}
           duration={0.4}
           ease="power3.out"

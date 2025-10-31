@@ -37,9 +37,9 @@ interface ScrollStackProps {
 const ScrollStack: React.FC<ScrollStackProps> = ({
   children,
   className = '',
-  itemDistance = 100,
+  itemDistance = 230,
   itemScale = 0.03,
-  itemStackDistance = 30,
+  itemStackDistance = 20,
   stackPosition = '20%',
   scaleEndPosition = '10%',
   baseScale = 0.85,
@@ -105,6 +105,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     isUpdatingRef.current = true;
 
     const { scrollTop, containerHeight, scrollContainer } = getScrollData();
+    scrollContainer; // to avoid unused variable warning
     const stackPositionPx = parsePercentage(stackPosition, containerHeight);
     const scaleEndPositionPx = parsePercentage(scaleEndPosition, containerHeight);
 

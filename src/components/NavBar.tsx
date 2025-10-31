@@ -21,40 +21,34 @@ function Navbar() {
         </div>
         <TabList className="flex items-center gap-1">
           <Tab
-            className="rounded-full px-6 py-3 text-2xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
+            className="rounded-full px-6 py-3 text-xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
             as={Link}
             to="/"
           >
             Home
           </Tab>
           <Tab
-            className="rounded-full px-6 py-3 text-2xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
+            className="rounded-full px-6 py-3 text-xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
             as={Link}
             to="/experience"
           >
             Experience
           </Tab>
           <Tab
-            className="rounded-full px-6 py-3 text-2xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
+            className="rounded-full px-6 py-3 text-xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
             as={Link}
             to="/projects"
           >
             Projects
           </Tab>
           <Tab
-            className="rounded-full px-6 py-3 text-2xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
-            as={Link}
-            to="/posts"
-          >
-            Posts
-          </Tab>
-          <Tab
-            className="rounded-full px-6 py-3 text-2xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
+            className="rounded-full px-6 py-3 text-xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
             as={Link}
             to="/skills"
           >
             Skills
           </Tab>
+ 
         </TabList>
         {/* Icons */}
         <div className="flex items-center gap-2 text-sm">

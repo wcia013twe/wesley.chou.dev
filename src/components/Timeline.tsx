@@ -81,11 +81,11 @@ const Timeline = () => {
                 }
               />
               <div>
-                <h3 className="text-xl font-bold">{item.title}</h3>
-                <h4 className="vertical-timeline-element-subtitle text-gray-300 whitespace-nowrap flex items-center gap-1">
+                <h3 className="text-2xl font-bold mb-2">{item.title}</h3>
+                <h4 className="vertical-timeline-element-subtitle text-gray-300 whitespace-nowrap flex items-center gap-0.5 ">
                   <FaBuildingUser />
                   {item.workplace}
-                  <MdLocationOn className="ml-3" />
+                  <MdLocationOn className="ml-2" />
                   {item.location}
                 </h4>
                 <p className="text-[13px]! mb-2!">{item.description}</p>
@@ -93,7 +93,7 @@ const Timeline = () => {
                 {renderSkillBadges(item.skills)}
 
                 <Button
-                  className="absolute bottom-5 right-5 mt-4 flex items-center text-xs px-3 py-1 rounded-2xl text-white font-semibold bg-indigo-600 hover:bg-indigo-700 transition-colors text-nowrap group"
+                  className="absolute bottom-5 right-5 mt-4 flex items-center text-xs px-3 py-1 rounded-2xl text-white font-semibold bg-gray-600/95 hover:bg-indigo-700 transition-colors text-nowrap group"
                   onClick={() => {
                     setSelectedIndex(idx);
                     setDrawerOpen(true);
@@ -125,7 +125,11 @@ const Timeline = () => {
           key_responsibilities={
             timelineData[selectedIndex].key_responsibilities
           }
-          links={timelineData[selectedIndex].links || {}}
+          links={Object.fromEntries(
+            Object.entries(timelineData[selectedIndex].links || {}).filter(
+              ([, v]) => typeof v === "string"
+            )
+          )}
           isOpen={drawerOpen}
           onClose={() => {
             setDrawerOpen(false);

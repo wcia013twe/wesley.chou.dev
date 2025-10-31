@@ -47,7 +47,7 @@ const HomePage = () => {
               text={[
                 "Software Engineer",
                 "Augmented Reality Researcher",
-                "Startup Enthusiast",
+                "Founder",
               ]}
               typingSpeed={50}
               pauseDuration={1500}
@@ -91,7 +91,7 @@ const HomePage = () => {
           </div>
           <div className="flex-1 flex justify-center">
             <img
-              src="src/assets/pfp.jpg"
+              src="public/assets/pfp.jpg"
               alt="profile picture"
               className="w-100 h-100 object-cover rounded-full border-4 border-yellow-300 shadow-lg"
             />
@@ -111,7 +111,7 @@ const HomePage = () => {
           </div>
           <div className="flex-1 flex justify-center">
             <img
-              src="src/assets/ucf.avif"
+              src="public/assets/ucf.avif"
               alt="profile picture"
               className="w-100 h-100 object-cover rounded-full border-4 border-yellow-300 shadow-lg"
             />
@@ -132,7 +132,7 @@ const HomePage = () => {
           </div>
           <div className="flex-1 flex justify-center">
             <img
-              src="src/assets/IMG_8569.jpg"
+              src="public/assets/IMG_8569.jpg"
               alt="profile picture"
               className="w-100 h-100 object-cover rounded-full border-4 border-yellow-300 shadow-lg"
             />
