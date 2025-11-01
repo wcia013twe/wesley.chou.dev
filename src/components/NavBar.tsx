@@ -94,7 +94,7 @@ function Navbar() {
             <TooltipTrigger
               render={
                 <a
-                  href="../../WesChouResume2026-918.pdf"
+                  href="documents/IWesChouResume2025_1028.pdf"
                   aria-label="Resume"
                   className="inline-flex p-2 rounded-md hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-alt)] transition-colors"
                 >

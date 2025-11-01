@@ -3,6 +3,7 @@ import SpotlightCard from "./SpotlightCard";
 // Removed unused import
 
 type ProjectCardProps = {
+  badge?: boolean;
   title: string;
   description: string;
   date: string;
@@ -14,6 +15,7 @@ type ProjectCardProps = {
 };
 
 const ProjectCard: React.FC<ProjectCardProps> = ({
+  badge = false,
   title,
   description,
   date,
@@ -23,7 +25,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   badgeColor = "text-cyan-300",
 }) => {
   return (
-    <SpotlightCard className={`rounded-2xl overflow-hidden shadow-lg bg-[#10141c] border border-[var(--color-border)] flex flex-col min-h-[370px] ${badgeColor} hover:-translate-y-2 duration-300` }>
+    <SpotlightCard className={`rounded-2xl overflow-hidden shadow-lg bg-[#10141c] border border-[var(--color-border)] flex flex-col min-h-[370px] ${badgeColor} hover:-translate-y-2 duration-300 relative` }>
+        {/* Badge Overlay */}
+        {badge && (
+          <div className="absolute top-4 right-0 z-20">
+            <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold px-6 py-2 rounded-l-lg shadow-lg transform -skew-x-12 text-sm uppercase tracking-wide">
+              Winner
+            </div>
+          </div>
+        )}
         {/* Top image area */}
         <div className="bg-[#181e29] h-60 flex items-end justify-start relative">
           {/* Floating title */}
@@ -63,7 +73,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           {/* Tech badges */}
           {tech.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">
-              {tech.slice(0, 5).map((t, i) => (
+              {tech.slice(0, 7).map((t, i) => (
                 <span
                   key={i}
                   className={`bg-[#181e29] text-xs px-3 py-1 rounded-full font-medium ${badgeColor} border border-[var(--color-border)]`}
@@ -71,9 +81,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   {t}
                 </span>
               ))}
-              {tech.length > 5 && (
+              {tech.length > 7 && (
                 <span className={`bg-[#181e29] text-xs px-3 py-1 rounded-full font-medium ${badgeColor} border border-[var(--color-border)]`}>
-                  +{tech.length - 6}
+                  +{tech.length - 7}
                 </span>
               )}
             </div>

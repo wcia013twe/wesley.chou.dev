@@ -110,7 +110,7 @@ const SkillsPage = () => {
             title="Platforms"
             images={[
               <StackIcon name="jira" />,
-              <StackIcon name="confluence" />,
+              
               <StackIcon name="gitlab" />,
               <StackIcon name="figma" />,
               <StackIcon name="github" />,
@@ -120,6 +120,10 @@ const SkillsPage = () => {
               <CustomIcon
                 title="Google ADK"
                 src="/icons/agent-development-kit.png"
+              />,
+              <CustomIcon
+                title="Confluence"
+                src="icons/confluence-removebg-preview.png"
               />,
             ]}
           />

@@ -34,7 +34,7 @@ const StickyGallery: React.FC<StickyGalleryProps> = ({
       className={"sticky bg-transparent flex items-center justify-center " + className}
       style={{ top: typeof top === "number" ? `${top}px` : top, height }}
     >
-      <div className="w-full max-w-xl">
+      <div className="w-full max-w-xl border-2 border-[#a78bfa] round-md">
         <ImageGallery
           items={items}
           showFullscreenButton={false}

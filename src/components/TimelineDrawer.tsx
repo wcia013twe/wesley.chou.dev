@@ -66,7 +66,6 @@ const linksList = (links: { [key: string]: string }) => {
 };
 
 const TimelineDrawer: React.FC<TimelineDrawerProps> = ({
-  icon,
   title,
   workplace,
   hero,
@@ -116,11 +115,10 @@ const TimelineDrawer: React.FC<TimelineDrawerProps> = ({
             className="absolute inset-0 w-full h-full object-cover rounded-2xl z-10"
           />
         </div>
-        <div className="p-6 h-full overflow-y-auto">
+        <div className="p-6 overflow-y-auto">
           <div className="flex items-center justify-between">
             <div className="flex">
               <h2 className="text-xl font-bold text-white">{workplace}</h2>
-              <div className="p-2 text-xl mr-2 ">{icon}</div>
             </div>
             <h3 className="text-xl">{location}</h3>
           </div>

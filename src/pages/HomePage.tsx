@@ -5,7 +5,6 @@ import { Button } from "@headlessui/react";
 import { MdEmail } from "react-icons/md";
 import { ImHappy2 } from "react-icons/im";
 import { Helmet } from "react-helmet-async";
-import ImageGallery from "react-image-gallery";
 import StickyGallery from "@/components/StickyGallery";
 
 const handleAnimationComplete = () => {
@@ -73,9 +72,9 @@ const HomePage = () => {
 
         <FloatingScrollPrompt />
 
-        <div className="flex p-10 align-center justify center">
+        <div className="flex p-10 align-center justify center snap-mandatory ">
           <div className="">
-            <section className="flex flex-col md:flex-row items-center gap-8 text-white w-[80%] min-h-screen">
+                <section className="flex flex-col md:flex-row items-center gap-8 text-white w-[80%] h-screen snap-start">
               <div className="flex-1">
                 <h2 className="text-5xl font-semibold text-white/90 mb-10">
                   About Me
@@ -95,7 +94,7 @@ const HomePage = () => {
               </div>
             </section>
 
-            <section className="flex flex-col md:flex-row items-center gap-8 text-white w-[80%] min-h-screen">
+            <section className="flex flex-col md:flex-row items-center gap-8 text-white w-[80%] min-h-screen snap-center">
               <div className="flex-1">
                 <h2 className="text-5xl font-semibold text-white/90 mb-10">
                   My Journey
@@ -108,7 +107,7 @@ const HomePage = () => {
               </div>
             </section>
 
-            <section className="flex flex-col md:flex-row items-center gap-8 text-white w-[80%] min-h-screen">
+            <section className="flex flex-col md:flex-row items-center gap-8 text-white w-[80%] min-h-screen snap-center">
               <div className="flex-1">
                 <h2 className="text-5xl font-semibold text-white/90 mb-10">
                   My Interests

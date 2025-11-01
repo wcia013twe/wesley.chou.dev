@@ -33,34 +33,37 @@ const ProjectsPage = () => {
 
         <div className="grid grid-cols-2 gap-6 mt-10 mb-20 w-full max-w-5xl">
           <ProjectCard
-            title="Sound Haus"
-            description="Sound Haus is a desk and web platform that allows music artists to efficiently share their work and collaborate together"
-            date="2025-8-18 - Present"
-            imageUrl="public/assets/New-York-Maps-2024.webp"
+            badge={true}
+            title="Emergent"
+            description="An AI-powered crisis simulation platform enabling emergency managers to test plans against a dynamic community of 50+ intelligent personas using Google ADK agents. Features interactive GIS mapping, real-time agent simulation, and emergent disaster scenarios."
+            date="2025-10-24"
+            imageUrl="assets/projects/emergent.png"
             tech={[
-              "Electron",
+              "Next.js 14",
+              "TypeScript",
               "React",
-              "Gitea",
-              "Docker",
-              "Tailwind",
-              "API",
-              "WebApp",
+              "Tailwind CSS",
+              "Python",
+              "FastAPI",
+              "Google ADK",
+              "Parallel Processing",
             ]}
             badgeColor="text-indigo-300"
           />
           <ProjectCard
             title="InsightAI"
-            description="InsightAI utilizes eye tracking and AI-intelligence to help user experience developers update web components live"
+            description="A real-time attention-driven UX optimization tool using eye tracking and AI to help developers build more accessible websites. Developers rank component importance, InsightAI measures user attention, identifies mismatches, and uses Gemini AI to suggest concrete HTML improvements applied instantly. Generates comprehensive performance summaries for informed design decisions."
             date="2025-9-27"
-            imageUrl="src/assets/New-York-Maps-2024.webp"
+            imageUrl="assets/projects/insightAI.png"
             tech={[
               "Python",
-              "Pandas",
-              "Mapbox",
-              "React",
-              "Tailwind",
-              "API",
-              "WebApp",
+              "Python Tkinter",
+              "Eye Tracking",
+              "Gemini API",
+              "MongoDB",
+              "TensorFlow",
+              "OpenCV",
+              "Accessibility",
             ]}
             badgeColor="text-blue-300"
           />
@@ -68,65 +71,65 @@ const ProjectsPage = () => {
             title="Sonara"
             description="Sonara is a dating platform for people moving into a new city to build new connections through voice"
             date="2025-9-20"
-            imageUrl="src/assets/New-York-Maps-2024.webp"
+            imageUrl="assets/projects/Sonara.png"
             tech={[
-              "Python",
-              "Pandas",
-              "Mapbox",
-              "React",
+              "Next.js 15",
+              "Tailwind CSS",
+              "Gemini",
+              "Websockets",
               "Tailwind",
-              "API",
-              "WebApp",
+              "AI Contextualization",
+              "Supabase",
             ]}
             badgeColor="text-lime-300" // Passing "yellow-300"
-          />
-          <ProjectCard
+            />
+            <ProjectCard
             title="FitLink"
             description="FitLink is an AI-powered client management tool for personal trainers"
             date="2024-8-18 ~ 2025-5-04"
-            imageUrl="src/assets/New-York-Maps-2024.webp"
+            imageUrl="assets/projects/FitLink.png"
             tech={[
-              "Python",
-              "Pandas",
-              "Mapbox",
               "React",
-              "Tailwind",
-              "API",
-              "WebApp",
+              "Flutter",
+              "Firebase",
+              "Express.js",
+              "Node.js",
+              "MongoDB",
+              "Google Calender APIs",
             ]}
             badgeColor="text-red-300"
-          />
-          <ProjectCard
+            />
+            <ProjectCard
             title="FairMap"
             description="FairMap provides a map comparison of the congressional voting data"
             date="2025-10-10"
-            imageUrl="src/assets/New-York-Maps-2024.webp"
+            imageUrl="assets/projects/doesmyvotematter.jpg"
             tech={[
               "Python",
-              "Pandas",
-              "Mapbox",
-              "React",
-              "Tailwind",
-              "API",
-              "WebApp",
+              "Django",
+              "SQLite",
+              "HTML",
+              "CSS",
+              "JavaScript",
+              "Census API",
             ]}
             badgeColor="text-blue-300"
-          />
-          <ProjectCard
-            title="FairMap"
-            description="FairMap provides a map comparison of the congressional voting data"
+            />
+            <ProjectCard
+            title="FindMyFriend"
+            description="FindMyFriend is a LAMP stack project for tracking your friends' locations."
             date="2025-10-10"
-            imageUrl="src/assets/New-York-Maps-2024.webp"
+            imageUrl="assets/projects/FindMyFriend.png"
             tech={[
-              "Python",
-              "Pandas",
-              "Mapbox",
-              "React",
-              "Tailwind",
-              "API",
-              "WebApp",
+              "Linux",
+              "Apache",
+              "MySQL",
+              "PHP",
+              "JavaScript",
+              "HTML",
+              "CSS",  
             ]}
-            badgeColor="text-lime-300" // Passing "yellow-300"
+            badgeColor="text-lime-300"
           />
         </div>
       </div>

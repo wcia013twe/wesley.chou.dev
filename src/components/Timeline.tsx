@@ -16,7 +16,7 @@ import { timelineData } from "../lib/experience";
 // For small, static datasets, keeping it here is fine. For larger or reused data, a separate file is better.
 
 function renderSkillBadges(skills: string[]) {
-  const maxVisible = 5;
+  const maxVisible = 6;
   return (
     <>
       {skills.slice(0, maxVisible).map((skill, i) => (
@@ -46,13 +46,15 @@ const Timeline = () => {
         {timelineData.map((item, idx) => (
           <VerticalTimelineElement
             key={idx}
-            className="vertical-timeline-element--work hover:-translate-y-1 duration-300 ease-in-out"
+            className="vertical-timeline-element--work hover:-translate-y-1 duration-300 ease-in-out group"
             contentStyle={{
               background:
                 "linear-gradient(135deg, #23272f 0%, #3a2e5f 60%, #181e29 100%)",
               color: "white",
               border: "1px solid white",
               borderRadius: "25px",
+              overflow: "visible",
+              position: "relative",
             }}
             contentArrowStyle={{
               borderRight: "7px solid white", // matches the middle color of the gradient
@@ -62,7 +64,7 @@ const Timeline = () => {
             iconStyle={{ background: "var(--color-card-bg)", color: "#fff" }}
             icon={item.icon}
           >
-            <div className="flex gap-[1rem]">
+            <div className="flex gap-[1rem] relative min-h-50">
               <TiltedCard
                 imageSrc={item.imageSrc}
                 altText={item.altText}
@@ -82,7 +84,7 @@ const Timeline = () => {
               />
               <div>
                 <h3 className="text-2xl font-bold mb-2">{item.title}</h3>
-                <h4 className="vertical-timeline-element-subtitle text-gray-300 whitespace-nowrap flex items-center gap-0.5 ">
+                <h4 className="vertical-timeline-element-subtitle text-gray-300 flex items-center gap-0.5 ">
                   <FaBuildingUser />
                   {item.workplace}
                   <MdLocationOn className="ml-2" />
@@ -93,7 +95,7 @@ const Timeline = () => {
                 {renderSkillBadges(item.skills)}
 
                 <Button
-                  className="absolute bottom-5 right-5 mt-4 flex items-center text-xs px-3 py-1 rounded-2xl text-white font-semibold bg-gray-600/95 hover:bg-indigo-700 transition-colors text-nowrap group"
+                  className="absolute bottom-0 right-2 flex items-center text-xs px-3 py-1 rounded-2xl text-white font-semibold bg-gray-600/95 hover:bg-indigo-700 transition-all duration-300 text-nowrap opacity-0 group-hover:opacity-100"
                   onClick={() => {
                     setSelectedIndex(idx);
                     setDrawerOpen(true);

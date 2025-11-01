@@ -16,7 +16,7 @@ const Layout = () => (
   <>
     <Navbar />
     <div className="fixed inset-0 -z-20 bg-black/80 opacity-85">
-      <PixelBlast variant="square" className="bg-[#000014]"  color="#a78bfa" patternDensity={0.}/>
+      <PixelBlast variant="square" className="bg-[#000014]"  color="#a78bfa" patternDensity={0.5}/>
     </div>
     <main>
       <Outlet />
