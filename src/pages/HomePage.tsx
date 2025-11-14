@@ -123,11 +123,12 @@ const HomePage = () => {
           </div>
 
           <StickyGallery
-            className="w-[50%] hidden md:block min-h-screen sticky pt-[20%]"
+            className="w-[50%] hidden md:block min-h-screen sticky pt-[10%] rounded-2xl"
             items={[
+              { original: "assets/gallery/austin.jpeg" },
+              { original: "assets/gallery/pfp.jpg" },
+              { original: "assets/gallery/duck.jpeg" },
               { original: "assets/gallery/korea.jpg" },
-              { original: "assets/gallery/photo2.jpg" },
-              { original: "assets/gallery/photo3.jpg" },
             ]}
           />
         </div>
