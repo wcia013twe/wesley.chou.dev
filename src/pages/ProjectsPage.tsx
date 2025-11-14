@@ -38,6 +38,7 @@ const ProjectsPage = () => {
             description="An AI-powered crisis simulation platform enabling emergency managers to test plans against a dynamic community of 50+ intelligent personas using Google ADK agents. Features interactive GIS mapping, real-time agent simulation, and emergent disaster scenarios."
             date="2025-10-24"
             imageUrl="assets/projects/emergent.png"
+            detailsUrl="https://devpost.com/software/emergent-b2t1fl"
             tech={[
               "Next.js 14",
               "TypeScript",
@@ -55,6 +56,7 @@ const ProjectsPage = () => {
             description="A real-time attention-driven UX optimization tool using eye tracking and AI to help developers build more accessible websites. Developers rank component importance, InsightAI measures user attention, identifies mismatches, and uses Gemini AI to suggest concrete HTML improvements applied instantly. Generates comprehensive performance summaries for informed design decisions."
             date="2025-9-27"
             imageUrl="assets/projects/insightAI.png"
+            detailsUrl="https://devpost.com/software/emergent-b2t1fl"
             tech={[
               "Python",
               "Python Tkinter",
@@ -72,6 +74,7 @@ const ProjectsPage = () => {
             description="Sonara is a dating platform for people moving into a new city to build new connections through voice"
             date="2025-9-20"
             imageUrl="assets/projects/Sonara.png"
+            detailsUrl="https://devpost.com/software/sonara-2xvnh0"
             tech={[
               "Next.js 15",
               "Tailwind CSS",
@@ -88,6 +91,7 @@ const ProjectsPage = () => {
             description="FitLink is an AI-powered client management tool for personal trainers"
             date="2024-8-18 ~ 2025-5-04"
             imageUrl="assets/projects/FitLink.png"
+            detailsUrl="https://github.com/wcia013twe/FitLink"
             tech={[
               "React",
               "Flutter",
@@ -104,6 +108,7 @@ const ProjectsPage = () => {
             description="FairMap provides a map comparison of the congressional voting data"
             date="2025-10-10"
             imageUrl="assets/projects/doesmyvotematter.jpg"
+            detailsUrl="https://devpost.com/software/does-my-vote-matter-1r2g3d"
             tech={[
               "Python",
               "Django",
@@ -120,6 +125,7 @@ const ProjectsPage = () => {
             description="FindMyFriend is a LAMP stack project for tracking your friends' locations."
             date="2025-10-10"
             imageUrl="assets/projects/FindMyFriend.png"
+            detailsUrl="https://github.com/wcia013twe/FindMyFriend"
             tech={[
               "Linux",
               "Apache",

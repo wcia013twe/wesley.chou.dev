@@ -5,7 +5,7 @@ export const timelineData = [
     hero: "assets/experience/Mark-Bruckert-and-Owen-Burns.avif",
     altText: "UCF Upstarts PNG",
     captionText: "UCF Upstarts",
-    title: "Sound Haus Founder ",
+    title: "Startup Founder ",
     workplace: "UCF Upstarts",
     location: "Orlando, FL",
     description:
@@ -19,12 +19,11 @@ export const timelineData = [
       "User Interviews",
     ],
     overview:
-      "Leading a team of four co-founders through the business validation process for a software product, \
+      "Cofounding a venture through the business validation process for a software product, \
       gaining direct mentorship on startup development and fundraising strategies.",
     key_responsibilities: [
       "Conduct 10 user interviews and validate product market fit",
-      "Design backend architecture for scalabilitiy",
-      "Pitch to potential partner at GitHub",
+      "Ship code prototypes to demonstrate core product features",
     ],
     // icon: <BsRocketTakeoffFill />,
     icon: (
