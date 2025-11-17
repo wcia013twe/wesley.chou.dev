@@ -281,45 +281,45 @@ export const timelineData = [
     
   },
 
-  {
-    date: "May 2023 - Aug 2023",
-    imageSrc: "assets/experience/qmt.png",
-    hero: "assets/experience/virtual-learning.jpeg",
-    altText: "The Queer Mathematics Teacher",
-    captionText: "The Queer Mathematics Teacher",
-    title: "Intern",
-    workplace: "The Queer Mathematics Teacher",
-    location: "Remote",
-    description:
-      "Taught discrete mathematics integrated with history and social context",
-    skills: [
-      "Curriculum Design",
-      "Discrete Mathematics",
-      "Teaching",
-      "Communication",
-      "Critical Thinking",
-      "Mentoring",
-      "Public Speaking",
-    ],
-    overview:
-      "As an intern for the summer program, I creatively combined discrete mathematics with historical context \
-      to teach core CS concepts while building student confidence and soft skills.",
-    key_responsibilities: [
-      "Designed and taught discrete math curriculum weaving historical narratives and social applications to deepen student engagement.",
-      "Developed soft skills in 20+ students through guided discussions, collaborative projects, and reflective assignments.",
-      "Cross-collaborated with fellow instructors to refine teaching strategies and enhance overall program effectiveness.",
-    ],
-    icon: (
-      <img
-        src="assets/experience/qmt.png"
-        alt="The Queer Mathematics Teacher Logo"
-        className="rounded-full h-15 w-15"
-      />
-    ),
-    links: {
-      "The Queer Mathematics Teacher": "https://www.thequeermathematicsteacher.com/",
-    },
-  },
+  // {
+  //   date: "May 2023 - Aug 2023",
+  //   imageSrc: "assets/experience/qmt.png",
+  //   hero: "assets/experience/virtual-learning.jpeg",
+  //   altText: "The Queer Mathematics Teacher",
+  //   captionText: "The Queer Mathematics Teacher",
+  //   title: "Intern",
+  //   workplace: "The Queer Mathematics Teacher",
+  //   location: "Remote",
+  //   description:
+  //     "Taught discrete mathematics integrated with history and social context",
+  //   skills: [
+  //     "Curriculum Design",
+  //     "Discrete Mathematics",
+  //     "Teaching",
+  //     "Communication",
+  //     "Critical Thinking",
+  //     "Mentoring",
+  //     "Public Speaking",
+  //   ],
+  //   overview:
+  //     "As an intern for the summer program, I creatively combined discrete mathematics with historical context \
+  //     to teach core CS concepts while building student confidence and soft skills.",
+  //   key_responsibilities: [
+  //     "Designed and taught discrete math curriculum weaving historical narratives and social applications to deepen student engagement.",
+  //     "Developed soft skills in 20+ students through guided discussions, collaborative projects, and reflective assignments.",
+  //     "Cross-collaborated with fellow instructors to refine teaching strategies and enhance overall program effectiveness.",
+  //   ],
+  //   icon: (
+  //     <img
+  //       src="assets/experience/qmt.png"
+  //       alt="The Queer Mathematics Teacher Logo"
+  //       className="rounded-full h-15 w-15"
+  //     />
+  //   ),
+  //   links: {
+  //     "The Queer Mathematics Teacher": "https://www.thequeermathematicsteacher.com/",
+  //   },
+  // },
 ];
 
 export default timelineData;
