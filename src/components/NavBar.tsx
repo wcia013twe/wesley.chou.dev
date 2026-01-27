@@ -17,10 +17,11 @@ function Navbar() {
         {/* Tabs */}
         <Link
           to="/"
-          className="flex items-center gap-2 px-6 cursor-pointer group transition-all duration-300"
+          aria-label="Navigate to home page"
+          className="flex items-center gap-2 px-6 group transition-all duration-300"
         >
-          <LuRocket className="text-3xl transition-all duration-300 group-hover:text-purple-500 group-hover:-translate-y-1 group-hover:-rotate-12 group-hover:drop-shadow-[0_0_8px_rgba(147,51,234,0.6)]"/>
-          <p className="text-2xl transition-all duration-300 group-hover:text-purple-500 group-hover:tracking-wider">Wesley Chou</p>
+          <LuRocket className="text-3xl transition-all duration-300 group-hover:text-purple-500 group-hover:-translate-y-1 group-hover:-rotate-12 group-hover:drop-shadow-[0_0_8px_rgba(147,51,234,0.6)] motion-reduce:transform-none motion-reduce:drop-shadow-none"/>
+          <p className="text-2xl transition-all duration-300 group-hover:text-purple-500 group-hover:tracking-wider motion-reduce:tracking-normal">Wesley Chou</p>
         </Link>
         <TabList className="flex items-center gap-1">
           <Tab
