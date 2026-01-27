@@ -29,7 +29,18 @@ function Navbar() {
           <LuRocket className="text-3xl transition-all duration-300 group-hover:text-purple-500 group-hover:-translate-y-1 group-hover:-rotate-12 group-hover:drop-shadow-[0_0_8px_rgba(147,51,234,0.6)] motion-reduce:transform-none motion-reduce:drop-shadow-none"/>
           <p className="text-2xl transition-all duration-300 group-hover:text-purple-500 group-hover:tracking-wider motion-reduce:tracking-normal">Wesley Chou</p>
         </Link>
-        <TabList className="flex items-center gap-1">
+        {/* Hamburger Menu Button (Mobile Only) */}
+        <button
+          className="md:hidden flex flex-col gap-1.5 p-2 hover:text-purple-500 transition-colors duration-300"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle menu"
+          aria-expanded={mobileMenuOpen}
+        >
+          <span className={`w-6 h-0.5 bg-current transition-all duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+          <span className={`w-6 h-0.5 bg-current transition-all duration-300 ${mobileMenuOpen ? 'opacity-0' : ''}`} />
+          <span className={`w-6 h-0.5 bg-current transition-all duration-300 ${mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+        </button>
+        <TabList className="hidden md:flex items-center gap-1">
           <Tab
             className={TAB_CLASS}
             as={Link}
