@@ -15,10 +15,13 @@ function Navbar() {
     <TabGroup>
       <div className="fixed top-0 left-0 z-50 flex h-[var(--nav-height)] w-full items-center justify-between border-b border-purple-500/20 bg-[var(--color-bg)]/60 backdrop-blur-xl supports-[backdrop-filter]:bg-[var(--color-bg)]/60 shadow-lg shadow-black/10 px-6 font-sans text-xl font-medium tracking-wide text-[var(--color-fg)] transition-all duration-300">
         {/* Tabs */}
-        <div className="flex items-center justify-center">
-          <LuRocket className="text-3xl hover:text-[var(--color-primary)]"/>
-          <p className="pl-2 text-2xl hover:text-[var(--color-primary)]">Wesley Chou</p>
-        </div>
+        <Link
+          to="/"
+          className="flex items-center gap-2 px-6 cursor-pointer group transition-all duration-300"
+        >
+          <LuRocket className="text-3xl transition-all duration-300 group-hover:text-purple-500 group-hover:-translate-y-1 group-hover:-rotate-12 group-hover:drop-shadow-[0_0_8px_rgba(147,51,234,0.6)]"/>
+          <p className="text-2xl transition-all duration-300 group-hover:text-purple-500 group-hover:tracking-wider">Wesley Chou</p>
+        </Link>
         <TabList className="flex items-center gap-1">
           <Tab
             className="rounded-full px-6 py-3 text-xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
