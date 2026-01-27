@@ -13,7 +13,7 @@ import {
 function Navbar() {
   return (
     <TabGroup>
-      <div className="fixed top-0 left-0 z-50 flex h-[var(--nav-height)] w-full items-center justify-between border-[var(--color-border)] bg-[var(--color-bg)]/95 backdrop-blur supports-[backdrop-filter]:bg-[var(--color-bg)]/80 px-3 font-sans text-xl font-medium tracking-wide text-[var(--color-fg)]">
+      <div className="fixed top-0 left-0 z-50 flex h-[72px] w-full items-center justify-between border-b border-purple-500/20 bg-[var(--color-bg)]/60 backdrop-blur-xl shadow-lg shadow-black/10 px-6 font-sans text-xl font-medium tracking-wide text-[var(--color-fg)] transition-all duration-300">
         {/* Tabs */}
         <div className="px-6 flex items-center justify-center ">
           <LuRocket className="text-3xl hover:text-[var(--color-primary)]"/>
@@ -94,11 +94,7 @@ function Navbar() {
             <TooltipTrigger
               render={
                 <a
-<<<<<<< Updated upstream
-                  href="IWesChouResume2025_1028.pdf"
-=======
                   href="documents/IWesChouResume2026_1120.pdf"
->>>>>>> Stashed changes
                   aria-label="Resume"
                   className="inline-flex p-2 rounded-md hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-alt)] transition-colors"
                 >
