@@ -25,28 +25,28 @@ function Navbar() {
         </Link>
         <TabList className="flex items-center gap-1">
           <Tab
-            className="rounded-full px-6 py-3 text-xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
+            className="rounded-full px-5 py-2.5 text-lg font-semibold text-white/70 border border-transparent transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 data-hover:bg-white/10 data-hover:border-white/10 data-hover:text-white data-hover:scale-105 data-selected:bg-gradient-to-r data-selected:from-purple-600 data-selected:to-purple-500 data-selected:text-white data-selected:shadow-lg data-selected:shadow-purple-500/50 data-selected:scale-105"
             as={Link}
             to="/"
           >
             Home
           </Tab>
           <Tab
-            className="rounded-full px-6 py-3 text-xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
+            className="rounded-full px-5 py-2.5 text-lg font-semibold text-white/70 border border-transparent transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 data-hover:bg-white/10 data-hover:border-white/10 data-hover:text-white data-hover:scale-105 data-selected:bg-gradient-to-r data-selected:from-purple-600 data-selected:to-purple-500 data-selected:text-white data-selected:shadow-lg data-selected:shadow-purple-500/50 data-selected:scale-105"
             as={Link}
             to="/experience"
           >
             Experience
           </Tab>
           <Tab
-            className="rounded-full px-6 py-3 text-xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
+            className="rounded-full px-5 py-2.5 text-lg font-semibold text-white/70 border border-transparent transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 data-hover:bg-white/10 data-hover:border-white/10 data-hover:text-white data-hover:scale-105 data-selected:bg-gradient-to-r data-selected:from-purple-600 data-selected:to-purple-500 data-selected:text-white data-selected:shadow-lg data-selected:shadow-purple-500/50 data-selected:scale-105"
             as={Link}
             to="/projects"
           >
             Projects
           </Tab>
           <Tab
-            className="rounded-full px-6 py-3 text-xl font-semibold text-white focus:outline-none focus-visible:ring-0 data-hover:bg-white/5 data-selected:bg-white/10 data-selected:data-hover:bg-white/10"
+            className="rounded-full px-5 py-2.5 text-lg font-semibold text-white/70 border border-transparent transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 data-hover:bg-white/10 data-hover:border-white/10 data-hover:text-white data-hover:scale-105 data-selected:bg-gradient-to-r data-selected:from-purple-600 data-selected:to-purple-500 data-selected:text-white data-selected:shadow-lg data-selected:shadow-purple-500/50 data-selected:scale-105"
             as={Link}
             to="/skills"
           >
