@@ -67,6 +67,12 @@
       transform: translateX(0);
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-slide-in {
+      animation: none;
+    }
+  }
 }
 
 /* Global element styles consuming tokens */

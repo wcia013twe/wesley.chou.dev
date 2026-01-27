@@ -17,6 +17,7 @@ function Navbar() {
   const TAB_CLASS = "rounded-full px-5 py-2.5 text-lg font-semibold text-white/70 border border-transparent transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 data-hover:bg-white/10 data-hover:border-white/10 data-hover:text-white data-hover:scale-105 data-selected:bg-gradient-to-r data-selected:from-purple-600 data-selected:to-purple-500 data-selected:text-white data-selected:shadow-lg data-selected:shadow-purple-500/50 data-selected:scale-105 motion-reduce:scale-100 motion-reduce:transition-colors";
   const SOCIAL_ICON_CLASS = "inline-flex p-2.5 rounded-lg text-white/80 hover:text-purple-500 hover:bg-purple-500/20 hover:backdrop-blur-sm hover:scale-110 hover:rotate-6 hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-250 motion-reduce:scale-100 motion-reduce:rotate-0 motion-reduce:shadow-none";
   const HAMBURGER_LINE_CLASS = "w-6 h-0.5 bg-current transition-all duration-300 motion-reduce:transition-none";
+  const MOBILE_NAV_LINK_CLASS = "text-2xl font-semibold text-white/70 hover:text-purple-500 py-6 transition-colors";
 
   return (
     <TabGroup>
@@ -157,28 +158,28 @@ function Navbar() {
             <div className="flex flex-col items-center justify-center h-full gap-8">
               <Link
                 to="/"
-                className="text-2xl font-semibold text-white/70 hover:text-purple-500 py-6 transition-colors"
+                className={MOBILE_NAV_LINK_CLASS}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Home
               </Link>
               <Link
                 to="/experience"
-                className="text-2xl font-semibold text-white/70 hover:text-purple-500 py-6 transition-colors"
+                className={MOBILE_NAV_LINK_CLASS}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Experience
               </Link>
               <Link
                 to="/projects"
-                className="text-2xl font-semibold text-white/70 hover:text-purple-500 py-6 transition-colors"
+                className={MOBILE_NAV_LINK_CLASS}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Projects
               </Link>
               <Link
                 to="/skills"
-                className="text-2xl font-semibold text-white/70 hover:text-purple-500 py-6 transition-colors"
+                className={MOBILE_NAV_LINK_CLASS}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Skills
