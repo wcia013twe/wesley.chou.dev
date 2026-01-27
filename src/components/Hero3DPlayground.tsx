@@ -124,8 +124,8 @@ const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
 
     // Request permission on iOS 13+
     if (typeof DeviceOrientationEvent !== 'undefined' &&
-        typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
-      (DeviceOrientationEvent as any).requestPermission()
+        'requestPermission' in DeviceOrientationEvent) {
+      (DeviceOrientationEvent as { requestPermission: () => Promise<'granted' | 'denied'> }).requestPermission()
         .then((response: string) => {
           if (response === 'granted') {
             window.addEventListener('deviceorientation', handleOrientation);
