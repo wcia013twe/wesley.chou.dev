@@ -57,7 +57,7 @@ function Navbar() {
  
         </TabList>
         {/* Icons */}
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-center gap-3 border-l border-purple-500/20 pl-3">
           <Tooltip>
             <TooltipTrigger
               render={
@@ -66,13 +66,13 @@ function Navbar() {
                   aria-label="GitHub"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex p-2 rounded-md hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-alt)] transition-colors"
+                  className="inline-flex p-2.5 rounded-lg text-white/80 hover:text-purple-500 hover:bg-purple-500/20 hover:backdrop-blur-sm hover:scale-110 hover:rotate-6 hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-250 motion-reduce:scale-100 motion-reduce:rotate-0 motion-reduce:shadow-none"
                 >
-                  <FaGithub className="text-5xl" />
+                  <FaGithub className="text-4xl" />
                 </a>
               }
             />
-            <TooltipPanel side="bottom" sideOffset={6} className="text-xs">
+            <TooltipPanel side="bottom" sideOffset={6} className="text-xs bg-black/80 backdrop-blur-md border border-purple-500/30 px-2 py-1">
               GitHub
             </TooltipPanel>
           </Tooltip>
@@ -85,13 +85,13 @@ function Navbar() {
                   aria-label="LinkedIn"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex p-2 rounded-md hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-alt)] transition-colors"
+                  className="inline-flex p-2.5 rounded-lg text-white/80 hover:text-purple-500 hover:bg-purple-500/20 hover:backdrop-blur-sm hover:scale-110 hover:rotate-6 hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-250 motion-reduce:scale-100 motion-reduce:rotate-0 motion-reduce:shadow-none"
                 >
-                  <FaLinkedin className="text-5xl" />
+                  <FaLinkedin className="text-4xl" />
                 </a>
               }
             />
-            <TooltipPanel side="bottom" sideOffset={6} className="text-xs">
+            <TooltipPanel side="bottom" sideOffset={6} className="text-xs bg-black/80 backdrop-blur-md border border-purple-500/30 px-2 py-1">
               LinkedIn
             </TooltipPanel>
           </Tooltip>
@@ -102,13 +102,13 @@ function Navbar() {
                 <a
                   href="documents/IWesChouResume2026_1120.pdf"
                   aria-label="Resume"
-                  className="inline-flex p-2 rounded-md hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-alt)] transition-colors"
+                  className="inline-flex p-2.5 rounded-lg text-white/80 hover:text-purple-500 hover:bg-purple-500/20 hover:backdrop-blur-sm hover:scale-110 hover:rotate-6 hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-250 motion-reduce:scale-100 motion-reduce:rotate-0 motion-reduce:shadow-none"
                 >
-                  <CgFileDocument className="text-5xl" />
+                  <CgFileDocument className="text-4xl" />
                 </a>
               }
             />
-            <TooltipPanel side="bottom" sideOffset={6} className="text-xs">
+            <TooltipPanel side="bottom" sideOffset={6} className="text-xs bg-black/80 backdrop-blur-md border border-purple-500/30 px-2 py-1">
               Resume
             </TooltipPanel>
           </Tooltip>
