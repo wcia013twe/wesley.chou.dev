@@ -1,5 +1,20 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+const usePrefersReducedMotion = () => {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  return prefersReducedMotion;
+};
 
 interface FeatureCardProps {
   title: string;
@@ -9,6 +24,7 @@ interface FeatureCardProps {
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, imageSrc }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   return (
     <motion.div
@@ -31,7 +47,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, imageSrc 
           e.preventDefault();
         }
       }}
-      whileHover={{ y: -8 }}
+      whileHover={prefersReducedMotion ? {} : { y: -8 }}
     >
       {/* Background Image */}
       <motion.div

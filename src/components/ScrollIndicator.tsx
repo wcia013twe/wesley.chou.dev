@@ -1,8 +1,24 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
+const usePrefersReducedMotion = () => {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  return prefersReducedMotion;
+};
+
 const ScrollIndicator: React.FC = () => {
   const [isVisible, setIsVisible] = useState(true);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,7 +36,7 @@ const ScrollIndicator: React.FC = () => {
     };
   }, []);
 
-  if (!isVisible) return null;
+  if (!isVisible || prefersReducedMotion) return null;
 
   return (
     <motion.div

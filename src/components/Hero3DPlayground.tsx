@@ -1,6 +1,21 @@
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
+
+const usePrefersReducedMotion = () => {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  return prefersReducedMotion;
+};
 
 interface FloatingShapeProps {
   geometry: 'box' | 'sphere' | 'torus' | 'icosahedron';
@@ -8,6 +23,7 @@ interface FloatingShapeProps {
   rotationSpeed: [number, number, number];
   material: 'standard' | 'wireframe';
   mousePosRef: React.MutableRefObject<{ x: number; y: number }>;
+  prefersReducedMotion: boolean;
 }
 
 const FloatingShape: React.FC<FloatingShapeProps> = ({
@@ -16,6 +32,7 @@ const FloatingShape: React.FC<FloatingShapeProps> = ({
   rotationSpeed,
   material,
   mousePosRef,
+  prefersReducedMotion,
 }) => {
   const meshRef = useRef<THREE.Mesh>(null);
 
@@ -27,11 +44,13 @@ const FloatingShape: React.FC<FloatingShapeProps> = ({
       meshRef.current.rotation.z += rotationSpeed[2] * delta;
 
       // Mouse parallax - read from ref
-      const targetX = position[0] + mousePosRef.current.x * 0.5;
-      const targetY = position[1] + mousePosRef.current.y * 0.5;
+      if (!prefersReducedMotion) {
+        const targetX = position[0] + mousePosRef.current.x * 0.5;
+        const targetY = position[1] + mousePosRef.current.y * 0.5;
 
-      meshRef.current.position.x += (targetX - meshRef.current.position.x) * 0.05;
-      meshRef.current.position.y += (targetY - meshRef.current.position.y) * 0.05;
+        meshRef.current.position.x += (targetX - meshRef.current.position.x) * 0.05;
+        meshRef.current.position.y += (targetY - meshRef.current.position.y) * 0.05;
+      }
     }
   });
 
@@ -69,8 +88,11 @@ interface Hero3DPlaygroundProps {
 
 const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
   const mousePositionRef = useRef({ x: 0, y: 0 });
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
+    if (prefersReducedMotion) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       mousePositionRef.current = {
         x: (e.clientX / window.innerWidth) * 2 - 1,
@@ -80,7 +102,7 @@ const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <div className={`fixed inset-0 -z-10 ${className || ''}`} aria-hidden="true">
@@ -97,6 +119,7 @@ const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
           rotationSpeed={[0.5, 0.3, 0]}
           material="wireframe"
           mousePosRef={mousePositionRef}
+          prefersReducedMotion={prefersReducedMotion}
         />
         <FloatingShape
           geometry="sphere"
@@ -104,6 +127,7 @@ const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
           rotationSpeed={[0.2, 0.4, 0.1]}
           material="standard"
           mousePosRef={mousePositionRef}
+          prefersReducedMotion={prefersReducedMotion}
         />
         <FloatingShape
           geometry="torus"
@@ -111,6 +135,7 @@ const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
           rotationSpeed={[0.3, 0.2, 0.5]}
           material="wireframe"
           mousePosRef={mousePositionRef}
+          prefersReducedMotion={prefersReducedMotion}
         />
         <FloatingShape
           geometry="icosahedron"
@@ -118,6 +143,7 @@ const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
           rotationSpeed={[0.1, 0.5, 0.2]}
           material="standard"
           mousePosRef={mousePositionRef}
+          prefersReducedMotion={prefersReducedMotion}
         />
         <FloatingShape
           geometry="box"
@@ -125,6 +151,7 @@ const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
           rotationSpeed={[0.4, 0.1, 0.3]}
           material="standard"
           mousePosRef={mousePositionRef}
+          prefersReducedMotion={prefersReducedMotion}
         />
       </Canvas>
     </div>
