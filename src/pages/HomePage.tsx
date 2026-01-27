@@ -84,7 +84,19 @@ const HomePage = () => {
 
       {/* Feature Cards Zone */}
       <section className="relative z-10 max-w-7xl mx-auto px-6 py-20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={{
+            visible: {
+              transition: {
+                staggerChildren: 0.15,
+              },
+            },
+          }}
+        >
           <FeatureCard
             title="About Me"
             description="My name is Wei-Lin, but you can call me Wes! I'm a Computer Science senior at University of Central Florida, working at the intersection of software engineering, AI, and entrepreneurship."
@@ -102,7 +114,7 @@ const HomePage = () => {
             description="I am an outgoing engineer who is passionate about all things AI and latest tech trends. When I step away from the keyboard, I love hiking, volleyball, playing board games, or planning my next trip abroad!"
             imageSrc="assets/gallery/duck.jpeg"
           />
-        </div>
+        </motion.div>
       </section>
     </div>
   );
