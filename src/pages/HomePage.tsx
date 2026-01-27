@@ -1,53 +1,44 @@
-import SplitText from "../components/SplitText";
-import TextType from "../components/TextType";
-import FloatingScrollPrompt from "@/components/FloatingScrollPrompt";
-import { Button } from "@headlessui/react";
-import { MdEmail } from "react-icons/md";
-import { ImHappy2 } from "react-icons/im";
 import { Helmet } from "react-helmet-async";
-import StickyGallery from "@/components/StickyGallery";
-
-const handleAnimationComplete = () => {
-  console.log("All letters have animated!");
-};
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { MdEmail } from "react-icons/md";
+import { FaArrowRight } from "react-icons/fa";
+import Hero3DPlayground from "@/components/Hero3DPlayground";
+import FeatureCard from "@/components/FeatureCard";
+import ScrollIndicator from "@/components/ScrollIndicator";
+import TextType from "@/components/TextType";
 
 const HomePage = () => {
   return (
-    // The outermost container (it should not have a position class)
     <div className="">
       <Helmet>
         <title>Home | Wesley Chou</title>
         <meta
           name="description"
-          content="Welcome to Wesley Chou's portfolio."
+          content="Portfolio of Wesley Chou - Software Engineer, AR Researcher, and Founder"
         />
       </Helmet>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 pt-50 space-y-24 min-h-[200]">
-        <section className="space-y-4 text-center text-white">
-          <h1>
-            <SplitText
-              text="Hello there!"
-              className="text-6xl font-semibold text-center"
-              delay={100}
-              duration={0.4}
-              ease="power3.out"
-              splitType="chars"
-              from={{ opacity: 0, y: 40 }}
-              to={{ opacity: 1, y: 0 }}
-              threshold={0.1}
-              rootMargin="-100px"
-              textAlign="center"
-              onLetterAnimationComplete={handleAnimationComplete}
-            />
+      {/* 3D Background */}
+      <Hero3DPlayground />
+
+      {/* Hero Zone */}
+      <section className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6">
+        <motion.div
+          className="text-center space-y-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h1 className="text-7xl font-bold text-white drop-shadow-lg">
+            Hi, I'm Wesley Chou
           </h1>
-          <p className="mx-auto max-w-prose text-3xl leading-relaxed text-white">
-            Hi, I'm <strong>Wesley Chou</strong>, and I am a
-            <br />
+
+          <div className="text-4xl text-white/90">
             <TextType
               text={[
                 "Software Engineer",
-                "Augmented Reality Researcher",
+                "AR Researcher",
                 "Founder",
               ]}
               typingSpeed={50}
@@ -55,84 +46,64 @@ const HomePage = () => {
               showCursor={true}
               cursorCharacter="|"
             />
-          </p>
-          <div className="flex flex-wrap gap-3 pt-2 justify-center mx-auto w-fit">
-            <Button className="inline-flex items-center gap-2 rounded-md bg-gray-700 px-4 py-3 text-2xl font-semibold text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700">
-              {" "}
-              About Me
-              <ImHappy2 />
-            </Button>
-            <Button className="inline-flex items-center gap-2 rounded-md bg-purple-500 px-4 py-3 text-2xl font-semibold text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700">
-              {" "}
-              Contact Me
-              <MdEmail />
-            </Button>
-          </div>
-        </section>
-
-        <FloatingScrollPrompt />
-
-        <div className="flex p-10 align-center justify center snap-mandatory ">
-          <div className="">
-                <section className="flex flex-col md:flex-row items-center gap-8 text-white w-[80%] h-screen snap-start">
-              <div className="flex-1">
-                <h2 className="text-5xl font-semibold text-white/90 mb-10">
-                  About Me
-                </h2>
-                <p className="max-w-prose text-2xl leading-relaxed text-white">
-                  My name is Wei-Lin, but you can call me Wes! I'm a Computer
-                  Science senior at{" "}
-                  <a
-                    href="https://www.ucf.edu/"
-                    className="text-yellow-300 underline"
-                  >
-                    University of Central Florida
-                  </a>
-                  , working at the intersection of software engineering, AI, and
-                  entrepreneurship.
-                </p>
-              </div>
-            </section>
-
-            <section className="flex flex-col md:flex-row items-center gap-8 text-white w-[80%] min-h-screen snap-center">
-              <div className="flex-1">
-                <h2 className="text-5xl font-semibold text-white/90 mb-10">
-                  My Journey
-                </h2>
-                <p className="max-w-prose text-2xl leading-relaxed text-white">
-                  In my short two-years at UCF, I have deepened my passion for
-                  technology, particularly through exploring machine learning,
-                  modern software development, and entrepreneurial ventures.
-                </p>
-              </div>
-            </section>
-
-            <section className="flex flex-col md:flex-row items-center gap-8 text-white w-[80%] min-h-screen snap-center">
-              <div className="flex-1">
-                <h2 className="text-5xl font-semibold text-white/90 mb-10">
-                  My Interests
-                </h2>
-                <p className="max-w-prose text-2xl leading-relaxed text-white">
-                  I am an outgoing engineer who is passionate about all things
-                  AI and latest tech trends. When I step away from the keyboard,
-                  I love hiking, volleyball, playing board games, or planning my
-                  next trip abroad!
-                </p>
-              </div>
-            </section>
           </div>
 
-          <StickyGallery
-            className="w-[50%] hidden md:block min-h-screen sticky pt-[10%] rounded-2xl"
-            items={[
-              { original: "assets/gallery/austin.jpeg" },
-              { original: "assets/gallery/pfp.jpg" },
-              { original: "assets/gallery/duck.jpeg" },
-              { original: "assets/gallery/korea.jpg" },
-            ]}
+          {/* CTA Buttons */}
+          <motion.div
+            className="flex flex-wrap gap-4 justify-center pt-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <Link to="/experience">
+              <motion.button
+                className="inline-flex items-center gap-2 px-6 py-4 text-xl font-semibold bg-purple-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                View Experience
+                <FaArrowRight />
+              </motion.button>
+            </Link>
+
+            <a href="mailto:wcia013twe@gmail.com">
+              <motion.button
+                className="inline-flex items-center gap-2 px-6 py-4 text-xl font-semibold bg-transparent border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Contact Me
+                <MdEmail />
+              </motion.button>
+            </a>
+          </motion.div>
+        </motion.div>
+
+        <ScrollIndicator />
+      </section>
+
+      {/* Feature Cards Zone */}
+      <section className="relative z-10 max-w-7xl mx-auto px-6 py-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <FeatureCard
+            title="About Me"
+            description="My name is Wei-Lin, but you can call me Wes! I'm a Computer Science senior at University of Central Florida, working at the intersection of software engineering, AI, and entrepreneurship."
+            imageSrc="assets/gallery/pfp.jpg"
+          />
+
+          <FeatureCard
+            title="My Journey"
+            description="In my short two years at UCF, I have deepened my passion for technology, particularly through exploring machine learning, modern software development, and entrepreneurial ventures."
+            imageSrc="assets/gallery/korea.jpg"
+          />
+
+          <FeatureCard
+            title="My Interests"
+            description="I am an outgoing engineer who is passionate about all things AI and latest tech trends. When I step away from the keyboard, I love hiking, volleyball, playing board games, or planning my next trip abroad!"
+            imageSrc="assets/gallery/duck.jpeg"
           />
         </div>
-      </div>
+      </section>
     </div>
   );
 };
