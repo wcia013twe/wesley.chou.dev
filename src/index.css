@@ -53,6 +53,20 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* Mobile menu slide-in animation */
+  .animate-slide-in {
+    animation: slideIn 300ms ease-out;
+  }
+
+  @keyframes slideIn {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
 }
 
 /* Global element styles consuming tokens */

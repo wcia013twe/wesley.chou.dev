@@ -130,6 +130,63 @@ function Navbar() {
           </Tooltip>
         </div>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-40 md:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <div className="fixed inset-0 bg-black/95 backdrop-blur-2xl" />
+          <nav
+            className="fixed right-0 top-0 h-full w-full bg-black/95 backdrop-blur-2xl animate-slide-in"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              className="absolute top-6 right-6 p-2 text-white hover:text-purple-500 transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* Menu Items */}
+            <div className="flex flex-col items-center justify-center h-full gap-8">
+              <Link
+                to="/"
+                className="text-2xl font-semibold text-white/70 hover:text-purple-500 py-6 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link
+                to="/experience"
+                className="text-2xl font-semibold text-white/70 hover:text-purple-500 py-6 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Experience
+              </Link>
+              <Link
+                to="/projects"
+                className="text-2xl font-semibold text-white/70 hover:text-purple-500 py-6 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Projects
+              </Link>
+              <Link
+                to="/skills"
+                className="text-2xl font-semibold text-white/70 hover:text-purple-500 py-6 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Skills
+              </Link>
+            </div>
+          </nav>
+        </div>
+      )}
     </TabGroup>
   );
 }
