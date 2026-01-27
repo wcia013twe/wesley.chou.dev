@@ -92,11 +92,14 @@ const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
   const isInView = useInView(canvasRef);
   const mousePositionRef = useRef({ x: 0, y: 0 });
   const prefersReducedMotion = usePrefersReducedMotion();
+  const [deviceTilt, setDeviceTilt] = useState({ x: 0, y: 0 });
+  const hasMouseMoved = useRef(false);
 
   useEffect(() => {
     if (prefersReducedMotion) return;
 
     const handleMouseMove = (e: MouseEvent) => {
+      hasMouseMoved.current = true;
       mousePositionRef.current = {
         x: (e.clientX / window.innerWidth) * 2 - 1,
         y: -(e.clientY / window.innerHeight) * 2 + 1,
@@ -106,6 +109,41 @@ const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [prefersReducedMotion]);
+
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      if (e.beta !== null && e.gamma !== null) {
+        // Normalize to -1 to 1 range
+        const x = Math.max(-1, Math.min(1, e.gamma / 45));
+        const y = Math.max(-1, Math.min(1, e.beta / 45));
+        setDeviceTilt({ x, y });
+      }
+    };
+
+    // Request permission on iOS 13+
+    if (typeof DeviceOrientationEvent !== 'undefined' &&
+        typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
+      (DeviceOrientationEvent as any).requestPermission()
+        .then((response: string) => {
+          if (response === 'granted') {
+            window.addEventListener('deviceorientation', handleOrientation);
+          }
+        });
+    } else {
+      window.addEventListener('deviceorientation', handleOrientation);
+    }
+
+    return () => window.removeEventListener('deviceorientation', handleOrientation);
+  }, [prefersReducedMotion]);
+
+  useEffect(() => {
+    // Only use device tilt if mouse hasn't been used
+    if (!hasMouseMoved.current) {
+      mousePositionRef.current = deviceTilt;
+    }
+  }, [deviceTilt]);
 
   return (
     <div ref={canvasRef} className={`fixed inset-0 -z-10 ${className || ''}`} aria-hidden="true">
