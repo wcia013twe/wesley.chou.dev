@@ -10,4 +10,12 @@ export default defineConfig({
       "@": "/src",
     },
   },
+  server: {
+    watch: {
+      usePolling: true,
+    },
+    hmr: {
+      overlay: true,
+    },
+  },
 });
