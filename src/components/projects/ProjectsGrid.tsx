@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import ParticleField from '@/components/projects/ParticleField';
+import Particles from '@/components/Particles';
 import ProjectCard from '@/components/projects/ProjectCard';
 import { Project } from '@/data/projectsData';
 
@@ -180,8 +180,18 @@ export default function ProjectsGrid({ projects, onProjectClick }: ProjectsGridP
 
   return (
     <div className="relative w-full">
-      {/* Background ParticleField */}
-      <ParticleField scrollY={scrollY} />
+      {/* Background Particles */}
+      <div className="fixed inset-0 w-full h-full pointer-events-none" style={{ zIndex: -1 }}>
+        <Particles
+          particleCount={200}
+          particleColors={['#ffffff', '#9333ea', '#a78bfa']}
+          alphaParticles={true}
+          particleBaseSize={80}
+          sizeRandomness={1}
+          speed={0.1}
+          disableRotation={false}
+        />
+      </div>
 
       {/* Ambient Gradient Overlay */}
       <div

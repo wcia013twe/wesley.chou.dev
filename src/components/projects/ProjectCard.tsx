@@ -158,10 +158,10 @@ export default function ProjectCard({
       <NeonBorder
         color={badgeColorHex}
         animated={true}
-        className="w-full h-full rounded-2xl overflow-hidden bg-black/60 backdrop-blur-md shadow-xl shadow-purple-500/10"
+        className="w-full h-full rounded-2xl overflow-hidden bg-black/60 backdrop-blur-md shadow-xl shadow-purple-500/10 flex flex-col"
       >
         {/* Image section (top 60%) */}
-        <div className="relative h-[60%] overflow-hidden">
+        <div className="relative flex-[6] overflow-hidden min-h-0">
           <motion.img
             src={project.imageUrl}
             alt={project.title}
@@ -205,7 +205,7 @@ export default function ProjectCard({
         </div>
 
         {/* Content section (bottom 40%) */}
-        <div className="relative h-[40%] p-5 bg-black/40 flex flex-col">
+        <div className="relative flex-[4] p-5 bg-black/40 flex flex-col min-h-0">
           {/* Title */}
           <h3 className="text-xl font-bold text-white mb-2 line-clamp-1">
             {project.title}

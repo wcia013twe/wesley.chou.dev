@@ -72,22 +72,14 @@ export default function NeonBorder({
           : undefined
       }
     >
-      {/* Rotating gradient effect for modal */}
+      {/* Static gradient effect for modal */}
       {rotating && (
-        <motion.div
+        <div
           className="absolute inset-0 rounded-inherit pointer-events-none"
           style={{
             background: `conic-gradient(from 0deg, transparent 0%, ${color} 50%, transparent 100%)`,
             opacity: 0.3,
             zIndex: -1,
-          }}
-          animate={{
-            rotate: 360,
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: 'linear',
           }}
         />
       )}
