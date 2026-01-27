@@ -1,5 +1,6 @@
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useRef, useEffect, useState } from 'react';
+import { useInView } from 'framer-motion';
 import * as THREE from 'three';
 
 const usePrefersReducedMotion = () => {
@@ -87,6 +88,8 @@ interface Hero3DPlaygroundProps {
 }
 
 const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
+  const canvasRef = useRef(null);
+  const isInView = useInView(canvasRef);
   const mousePositionRef = useRef({ x: 0, y: 0 });
   const prefersReducedMotion = usePrefersReducedMotion();
 
@@ -105,8 +108,9 @@ const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
   }, [prefersReducedMotion]);
 
   return (
-    <div className={`fixed inset-0 -z-10 ${className || ''}`} aria-hidden="true">
+    <div ref={canvasRef} className={`fixed inset-0 -z-10 ${className || ''}`} aria-hidden="true">
       <Canvas
+        frameloop={isInView ? 'always' : 'demand'}
         camera={{ position: [0, 0, 8], fov: 45 }}
         gl={{ alpha: true, antialias: true }}
       >
