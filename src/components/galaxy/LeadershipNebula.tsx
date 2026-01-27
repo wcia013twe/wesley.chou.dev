@@ -15,6 +15,7 @@ interface LeadershipNebulaProps {
   opacity?: number;
   planetScale?: number;
   isZoomedView?: boolean;
+  focusedSkillIndex?: number;
 }
 
 /**
@@ -34,6 +35,7 @@ export default function LeadershipNebula({
   opacity = 1.0,
   planetScale = 1.0,
   isZoomedView = false,
+  focusedSkillIndex = -1,
 }: LeadershipNebulaProps) {
   const pointsRef = useRef<THREE.Points>(null);
   const groupRef = useRef<THREE.Group>(null);
@@ -128,6 +130,7 @@ export default function LeadershipNebula({
             text={skill.name}
             position={getRandomSpherePosition(category.radius, index)}
             color={category.color}
+            isFocused={focusedSkillIndex === index}
           />
         ))}
       </group>
@@ -190,17 +193,19 @@ export default function LeadershipNebula({
 /**
  * FloatingSkillText Component
  *
- * Displays a single skill as 3D floating text with hover effects.
- * Text lights up (emissive glow) and moves forward on z-axis when hovered.
+ * Displays a single skill as 3D floating text with hover and focus effects.
+ * Text lights up (emissive glow) and moves forward on z-axis when hovered or focused.
  */
 function FloatingSkillText({
   text,
   position,
   color,
+  isFocused = false,
 }: {
   text: string;
   position: [number, number, number];
   color: string;
+  isFocused?: boolean;
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const textRef = useRef<THREE.Mesh>(null);
@@ -214,11 +219,11 @@ function FloatingSkillText({
     }
   });
 
-  // Hover animation
+  // Hover and focus animation - focus has stronger effect
   const { scale, emissiveIntensity, positionZ } = useSpring({
-    scale: isHovered ? 1.1 : 1.0,
-    emissiveIntensity: isHovered ? 0.8 : 0.2,
-    positionZ: isHovered ? position[2] + 0.5 : position[2],
+    scale: isFocused ? 1.3 : (isHovered ? 1.1 : 1.0),
+    emissiveIntensity: isFocused ? 1.2 : (isHovered ? 0.8 : 0.2),
+    positionZ: isFocused ? position[2] + 0.8 : (isHovered ? position[2] + 0.5 : position[2]),
     config: {
       tension: 280,
       friction: 60,

@@ -9,6 +9,7 @@ interface SkillIconProps {
   skill: SkillIconType;
   position: [number, number, number];
   color: string;
+  isFocused?: boolean;
 }
 
 /**
@@ -21,9 +22,10 @@ interface SkillIconProps {
  * - Circular background with gradient and category-colored border
  * - Floating animation using sine wave bob
  * - Hover effects with scale animation
- * - Tooltip showing skill name on hover
+ * - Keyboard focus indicators with enhanced glow
+ * - Tooltip showing skill name on hover or focus
  */
-export default function SkillIcon({ skill, position, color }: SkillIconProps) {
+export default function SkillIcon({ skill, position, color, isFocused = false }: SkillIconProps) {
   const groupRef = useRef<THREE.Group>(null);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -36,9 +38,10 @@ export default function SkillIcon({ skill, position, color }: SkillIconProps) {
     }
   });
 
-  // Hover animation using react-spring
+  // Hover and focus animation using react-spring
+  // Focus has stronger effect than hover for accessibility
   const springProps = useSpring({
-    scale: isHovered ? 1.15 : 1.0,
+    scale: isFocused ? 1.25 : (isHovered ? 1.15 : 1.0),
     config: {
       tension: 300,
       friction: 25,
@@ -51,11 +54,11 @@ export default function SkillIcon({ skill, position, color }: SkillIconProps) {
       position={[position[0], position[1], position[2]]}
       scale={springProps.scale}
     >
-      {/* Point light for glow effect */}
+      {/* Point light for glow effect - brighter when focused */}
       <pointLight
         color={color}
-        intensity={isHovered ? 0.8 : 0.5}
-        distance={3}
+        intensity={isFocused ? 1.5 : (isHovered ? 0.8 : 0.5)}
+        distance={isFocused ? 4 : 3}
         decay={2}
       />
 
@@ -76,8 +79,10 @@ export default function SkillIcon({ skill, position, color }: SkillIconProps) {
             height: '64px',
             borderRadius: '50%',
             background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.5))',
-            border: `3px solid ${color}`,
-            boxShadow: `0 0 20px ${color}80, inset 0 0 10px rgba(255, 255, 255, 0.1)`,
+            border: isFocused ? `4px solid ${color}` : `3px solid ${color}`,
+            boxShadow: isFocused
+              ? `0 0 40px ${color}cc, 0 0 20px ${color}ff, inset 0 0 15px rgba(255, 255, 255, 0.2)`
+              : `0 0 20px ${color}80, inset 0 0 10px rgba(255, 255, 255, 0.1)`,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -110,8 +115,8 @@ export default function SkillIcon({ skill, position, color }: SkillIconProps) {
             {skill.icon || skill.name.charAt(0).toUpperCase()}
           </div>
 
-          {/* Tooltip - shown on hover */}
-          {isHovered && (
+          {/* Tooltip - shown on hover or focus */}
+          {(isHovered || isFocused) && (
             <div
               style={{
                 position: 'absolute',

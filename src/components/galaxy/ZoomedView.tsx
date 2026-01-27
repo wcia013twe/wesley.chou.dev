@@ -20,13 +20,14 @@ interface ZoomedViewProps {
  * - Skill icons in orbital rings (2-3 rings at radii 4, 6, 8)
  * - Continuous rotation animation (0.005 rad/frame per ring)
  * - Positioned relative to category planet position
+ * - Keyboard focus support for individual skill icons
  *
  * Orbital layout algorithm:
  * - Distributes skills evenly across rings, filling inner rings first
  * - Calculates angle step: 2π / icons per ring
  * - Position: [radius * cos(angle + rotation), 0, radius * sin(angle + rotation)]
  */
-export default function ZoomedView({ category }: ZoomedViewProps) {
+export default function ZoomedView({ category, focusedSkillIndex = -1 }: ZoomedViewProps) {
   const orbitRef = useRef<Group>(null);
 
   // Continuous rotation animation for orbital rings
@@ -46,6 +47,7 @@ export default function ZoomedView({ category }: ZoomedViewProps) {
         onClick={() => {}}
         disableHover={true}
         isZoomedView={true}
+        focusedSkillIndex={focusedSkillIndex}
       />
     );
   }
@@ -66,6 +68,7 @@ export default function ZoomedView({ category }: ZoomedViewProps) {
             skill={skill}
             position={skillPositions[index]}
             color={category.color}
+            isFocused={focusedSkillIndex === index}
           />
         ))}
       </group>
