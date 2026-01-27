@@ -5,7 +5,7 @@ import StarField from './StarField';
 import Planet from './Planet';
 import LeadershipNebula from './LeadershipNebula';
 import PlanetLabel from './PlanetLabel';
-import { skillsGalaxyData } from '@/data/skillsGalaxyData';
+import { skillsGalaxyData } from '@/data/skillsGalaxyData.tsx';
 
 interface GalaxyViewProps {
   onPlanetClick: (categoryId: string) => void;

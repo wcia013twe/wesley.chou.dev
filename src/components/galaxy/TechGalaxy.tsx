@@ -8,8 +8,11 @@ import ZoomedView from './ZoomedView';
 import ExitButton from './ExitButton';
 import CameraController from './CameraController';
 import ReducedMotionFallback from './ReducedMotionFallback';
-import { skillsGalaxyData } from '@/data/skillsGalaxyData';
+import ErrorBoundary from '@/components/ErrorBoundary';
+import { skillsGalaxyData } from '@/data/skillsGalaxyData.tsx';
 import { useMobile, useTouchDevice } from '@/hooks/useMobile';
+import { detectWebGL } from '@/utils/webgl';
+import { preloadImages, extractImageUrls } from '@/utils/imagePreloader';
 
 type ViewMode = 'galaxy' | 'zoomed';
 
@@ -33,6 +36,7 @@ export default function TechGalaxy() {
   const [showHint, setShowHint] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [webGLSupported, setWebGLSupported] = useState(true);
 
   // Mobile and touch device detection
   const isMobile = useMobile();
@@ -47,6 +51,11 @@ export default function TechGalaxy() {
 
   // Ref for OrbitControls to enable/disable during transitions
   const orbitControlsRef = useRef<OrbitControlsImpl>(null);
+
+  // Detect WebGL support
+  useEffect(() => {
+    setWebGLSupported(detectWebGL());
+  }, []);
 
   // Detect prefers-reduced-motion preference
   useEffect(() => {
@@ -95,12 +104,30 @@ export default function TechGalaxy() {
     }
   }, [focusedPlanetIndex, focusedSkillIndex, viewMode, selectedCategory]);
 
-  // Handle loading state - show spinner briefly during initialization
+  // Handle loading state - preload images before showing scene
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-    return () => clearTimeout(timer);
+    const loadResources = async () => {
+      try {
+        // Extract and preload all custom icon images
+        const imageUrls = extractImageUrls(skillsGalaxyData);
+
+        // Preload images (if any exist)
+        if (imageUrls.length > 0) {
+          await preloadImages(imageUrls);
+        }
+
+        // Add a minimum delay to ensure smooth transition
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error preloading resources:', error);
+        // Still show the scene even if preloading fails
+        setIsLoading(false);
+      }
+    };
+
+    loadResources();
   }, []);
 
   // Show hint text after 2s when in zoomed mode
@@ -244,7 +271,6 @@ export default function TechGalaxy() {
         // Focus highlight (could trigger detail view in future)
         if (focusedSkillIndex >= 0 && focusedSkillIndex < skillCount) {
           // Currently just maintains focus, could expand functionality
-          console.log('Focused skill:', selectedCategory.skills[focusedSkillIndex].name);
         }
         break;
 
@@ -331,6 +357,11 @@ export default function TechGalaxy() {
     );
   }
 
+  // If WebGL is not supported, show accessible fallback
+  if (!webGLSupported) {
+    return <ReducedMotionFallback categories={skillsGalaxyData} />;
+  }
+
   // If user prefers reduced motion, show accessible fallback
   if (prefersReducedMotion) {
     return <ReducedMotionFallback categories={skillsGalaxyData} />;
@@ -385,77 +416,84 @@ export default function TechGalaxy() {
         )}
       </div>
 
-      {/* Three.js Canvas */}
-      <Canvas
-        camera={{ position: [0, 5, 15], fov: 75 }}
-        className="h-full w-full"
-        style={{ touchAction: 'none' }}
-        dpr={isMobile ? 1 : window.devicePixelRatio}
-        performance={{ min: 0.5 }}
-        role="region"
-        aria-label="3D interactive skills galaxy visualization"
-        aria-describedby="galaxy-description"
+      {/* Three.js Canvas with Error Boundary */}
+      <ErrorBoundary
+        fallback={<ReducedMotionFallback categories={skillsGalaxyData} />}
+        onError={(error, errorInfo) => {
+          console.error('Canvas rendering error:', error, errorInfo);
+        }}
       >
-        {/* Background gradient (black → dark purple) */}
-        <color attach="background" args={['#0a0015']} />
+        <Canvas
+          camera={{ position: [0, 5, 15], fov: 75 }}
+          className="h-full w-full"
+          style={{ touchAction: 'none' }}
+          dpr={isMobile ? 1 : window.devicePixelRatio}
+          performance={{ min: 0.5 }}
+          role="region"
+          aria-label="3D interactive skills galaxy visualization"
+          aria-describedby="galaxy-description"
+        >
+          {/* Background gradient (black → dark purple) */}
+          <color attach="background" args={['#0a0015']} />
 
-        {/* Lighting - reduced on mobile for performance */}
-        <ambientLight intensity={isMobile ? 0.4 : 0.5} />
-        <pointLight position={[10, 10, 10]} intensity={isMobile ? 0.7 : 1} />
+          {/* Lighting - reduced on mobile for performance */}
+          <ambientLight intensity={isMobile ? 0.4 : 0.5} />
+          <pointLight position={[10, 10, 10]} intensity={isMobile ? 0.7 : 1} />
 
-        {/* Camera controller for smooth transitions */}
-        <CameraController
-          viewMode={viewMode}
-          selectedCategory={selectedCategory}
-          orbitControlsRef={orbitControlsRef}
-          onTransitionStart={() => setIsTransitioning(true)}
-          onTransitionEnd={() => setIsTransitioning(false)}
-        />
+          {/* Camera controller for smooth transitions */}
+          <CameraController
+            viewMode={viewMode}
+            selectedCategory={selectedCategory}
+            orbitControlsRef={orbitControlsRef}
+            onTransitionStart={() => setIsTransitioning(true)}
+            onTransitionEnd={() => setIsTransitioning(false)}
+          />
 
-        {/* Always render GalaxyView for planets (with opacity control) */}
-        <GalaxyView
-          ref={orbitControlsRef}
-          onPlanetClick={handlePlanetClick}
-          planetOpacities={planetOpacities}
-          planetScales={planetScales}
-          focusedPlanetId={focusedPlanetIndex >= 0 ? skillsGalaxyData[focusedPlanetIndex]?.id : null}
-          isMobile={isMobile}
-          isTouchDevice={isTouchDevice}
-        />
+          {/* Always render GalaxyView for planets (with opacity control) */}
+          <GalaxyView
+            ref={orbitControlsRef}
+            onPlanetClick={handlePlanetClick}
+            planetOpacities={planetOpacities}
+            planetScales={planetScales}
+            focusedPlanetId={focusedPlanetIndex >= 0 ? skillsGalaxyData[focusedPlanetIndex]?.id : null}
+            isMobile={isMobile}
+            isTouchDevice={isTouchDevice}
+          />
 
-        {/* Render ZoomedView when in zoomed mode */}
-        {viewMode === 'zoomed' && selectedCategory && (
-          <>
-            <ZoomedView
-              category={selectedCategory}
-              focusedSkillIndex={focusedSkillIndex}
-              isMobile={isMobile}
-              isTouchDevice={isTouchDevice}
-            />
+          {/* Render ZoomedView when in zoomed mode */}
+          {viewMode === 'zoomed' && selectedCategory && (
+            <>
+              <ZoomedView
+                category={selectedCategory}
+                focusedSkillIndex={focusedSkillIndex}
+                isMobile={isMobile}
+                isTouchDevice={isTouchDevice}
+              />
 
-            {/* Background click plane - large invisible mesh to catch clicks */}
-            <mesh
-              position={[0, 0, -20]}
-              onClick={handleBackgroundClick}
-            >
-              <planeGeometry args={[100, 100]} />
-              <meshBasicMaterial transparent opacity={0} />
+              {/* Background click plane - large invisible mesh to catch clicks */}
+              <mesh
+                position={[0, 0, -20]}
+                onClick={handleBackgroundClick}
+              >
+                <planeGeometry args={[100, 100]} />
+                <meshBasicMaterial transparent opacity={0} />
 
-              {/* Accessible label for background */}
-              <Html position={[0, 0, 0]} center style={{ pointerEvents: 'none' }}>
-                <div
-                  role="button"
-                  aria-label="Click background to return to galaxy view"
-                  className="sr-only"
-                  tabIndex={-1}
-                >
-                  Background
-                </div>
-              </Html>
-            </mesh>
-          </>
-        )}
-      </Canvas>
+                {/* Accessible label for background */}
+                <Html position={[0, 0, 0]} center style={{ pointerEvents: 'none' }}>
+                  <div
+                    role="button"
+                    aria-label="Click background to return to galaxy view"
+                    className="sr-only"
+                    tabIndex={-1}
+                  >
+                    Background
+                  </div>
+                </Html>
+              </mesh>
+            </>
+          )}
+        </Canvas>
+      </ErrorBoundary>
 
       {/* Hidden description for Canvas accessibility */}
       <p id="galaxy-description" className="sr-only">

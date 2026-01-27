@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { Text } from '@react-three/drei';
 import { animated, useSpring } from '@react-spring/three';
 import * as THREE from 'three';
-import { SkillCategory } from '@/data/skillsGalaxyData';
+import { SkillCategory } from '@/data/skillsGalaxyData.tsx';
 
 interface LeadershipNebulaProps {
   category: SkillCategory;

@@ -1,10 +1,10 @@
-import { useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Project interface (to be imported from data file when available)
 interface TechItem {
   name: string;
-  category: 'frontend' | 'backend' | 'database' | 'ai' | 'devops';
+  category: "frontend" | "backend" | "database" | "ai" | "devops";
 }
 
 interface Project {
@@ -29,22 +29,22 @@ interface ProjectModalProps {
 
 // Tech category colors mapping
 const techCategoryColors = {
-  frontend: '#9333ea',    // Purple
-  backend: '#3b82f6',     // Blue
-  database: '#10b981',    // Green
-  ai: '#ec4899',          // Pink
-  devops: '#f59e0b'       // Orange
+  frontend: "#9333ea", // Purple
+  backend: "#3b82f6", // Blue
+  database: "#10b981", // Green
+  ai: "#ec4899", // Pink
+  devops: "#f59e0b", // Orange
 };
 
 // Badge color to hex mapping for dynamic styling
 const badgeColorMap: Record<string, string> = {
-  'text-indigo-300': '#a5b4fc',
-  'text-blue-300': '#93c5fd',
-  'text-lime-300': '#bef264',
-  'text-red-300': '#fca5a5',
-  'text-cyan-300': '#67e8f9',
-  'text-purple-300': '#d8b4fe',
-  'text-yellow-300': '#fde047'
+  "text-indigo-300": "#a5b4fc",
+  "text-blue-300": "#93c5fd",
+  "text-lime-300": "#bef264",
+  "text-red-300": "#fca5a5",
+  "text-cyan-300": "#67e8f9",
+  "text-purple-300": "#d8b4fe",
+  "text-yellow-300": "#fde047",
 };
 
 const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
@@ -54,37 +54,37 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
 
   // Get badge color hex from Tailwind class
   const getBadgeColorHex = (badgeColor: string): string => {
-    return badgeColorMap[badgeColor] || '#a5b4fc'; // Default to indigo
+    return badgeColorMap[badgeColor] || "#a5b4fc"; // Default to indigo
   };
 
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
       // Focus close button when modal opens
       setTimeout(() => {
         closeButtonRef.current?.focus();
       }, 100);
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
 
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
   // ESC key to close
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === "Escape" && isOpen) {
         onClose();
       }
     };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      return () => document.removeEventListener('keydown', handleEscape);
+      document.addEventListener("keydown", handleEscape);
+      return () => document.removeEventListener("keydown", handleEscape);
     }
   }, [isOpen, onClose]);
 
@@ -93,11 +93,12 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
     if (!isOpen) return;
 
     const handleTab = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab' || !modalContentRef.current) return;
+      if (e.key !== "Tab" || !modalContentRef.current) return;
 
-      const focusableElements = modalContentRef.current.querySelectorAll<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
+      const focusableElements =
+        modalContentRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
 
       const firstElement = focusableElements[0];
       const lastElement = focusableElements[focusableElements.length - 1];
@@ -111,8 +112,8 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
       }
     };
 
-    document.addEventListener('keydown', handleTab);
-    return () => document.removeEventListener('keydown', handleTab);
+    document.addEventListener("keydown", handleTab);
+    return () => document.removeEventListener("keydown", handleTab);
   }, [isOpen]);
 
   // Handle background click to close
@@ -126,11 +127,11 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
   const getTechItems = (tech: string[] | TechItem[]): TechItem[] => {
     if (tech.length === 0) return [];
 
-    if (typeof tech[0] === 'string') {
+    if (typeof tech[0] === "string") {
       // Convert string array to TechItem array with default category
-      return (tech as string[]).map(name => ({
+      return (tech as string[]).map((name) => ({
         name,
-        category: 'frontend' as const
+        category: "frontend" as const,
       }));
     }
 
@@ -197,21 +198,26 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
             className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-lg rounded-3xl shadow-2xl p-6 md:p-12"
             style={{
               border: `3px solid ${badgeColorHex}60`,
-              boxShadow: `0 20px 60px -15px ${badgeColorHex}40`
+              boxShadow: `0 20px 60px -15px ${badgeColorHex}40`,
             }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Animated border effect - much larger so edges don't show when rotating */}
+
             <div
-              className="absolute pointer-events-none opacity-30 rounded-3xl"
+              className="absolute pointer-events-none opacity-30 rounded-3xl animate-spin-slow"
               style={{
-                inset: '-100px',
-                background: `conic-gradient(from 0deg at 50% 50%, transparent 0%, ${badgeColorHex} 25%, transparent 50%, ${badgeColorHex} 75%, transparent 100%)`,
-                animation: 'rotateBorder 10s linear infinite'
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "calc(100% + 200px)", // Adjust based on your modal width
+                height: "calc(100% + 200px)", // Adjust based on your modal height
+                background: `conic-gradient(from 0deg at 50% 50%, transparent 0%, ${badgeColorHex} 25%,
+  transparent 50%, ${badgeColorHex} 75%, transparent 100%)`,
               }}
             />
 
@@ -223,7 +229,7 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
                   className="aspect-video rounded-2xl overflow-hidden shadow-lg border-2 hover:scale-[1.02] transition-transform duration-300"
                   style={{
                     borderColor: `${badgeColorHex}40`,
-                    boxShadow: `0 10px 30px -10px ${badgeColorHex}20`
+                    boxShadow: `0 10px 30px -10px ${badgeColorHex}20`,
                   }}
                 >
                   {project.imageUrl ? (
@@ -245,7 +251,10 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
                 {/* Header */}
                 <div className="mb-6">
                   <div className="flex items-start gap-3 mb-2">
-                    <h2 id="modal-title" className="text-3xl md:text-4xl font-bold text-white flex-1">
+                    <h2
+                      id="modal-title"
+                      className="text-3xl md:text-4xl font-bold text-white flex-1"
+                    >
                       {project.title}
                     </h2>
                     {project.badge && (
@@ -254,7 +263,7 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
                         style={{
                           borderColor: badgeColorHex,
                           color: badgeColorHex,
-                          boxShadow: `0 4px 12px ${badgeColorHex}60`
+                          boxShadow: `0 4px 12px ${badgeColorHex}60`,
                         }}
                       >
                         Featured
@@ -295,7 +304,9 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
                 {/* Tech Stack Section */}
                 {techItems.length > 0 && (
                   <div className="mb-8">
-                    <h3 className="text-xl font-semibold text-white mb-4">Technologies</h3>
+                    <h3 className="text-xl font-semibold text-white mb-4">
+                      Technologies
+                    </h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                       {techItems.map((tech, index) => {
                         const categoryColor = techCategoryColors[tech.category];
@@ -308,7 +319,7 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
                             className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-sm rounded-full px-4 py-2.5 text-sm font-medium text-white/90 text-center hover:scale-105 hover:from-gray-700/60 hover:to-gray-800/60 transition-all duration-200"
                             style={{
                               border: `2px solid ${categoryColor}60`,
-                              boxShadow: `0 4px 12px ${categoryColor}20`
+                              boxShadow: `0 4px 12px ${categoryColor}20`,
                             }}
                           >
                             {tech.name}

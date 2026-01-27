@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { animated, useSpring } from '@react-spring/three';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
-import { SkillCategory } from '@/data/skillsGalaxyData';
+import { SkillCategory } from '@/data/skillsGalaxyData.tsx';
 
 interface PlanetProps {
   category: SkillCategory;

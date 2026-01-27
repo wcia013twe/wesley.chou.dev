@@ -3,7 +3,7 @@ import { useThree } from '@react-three/fiber';
 import { useSpring } from '@react-spring/three';
 import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
-import { SkillCategory } from '@/data/skillsGalaxyData';
+import { SkillCategory } from '@/data/skillsGalaxyData.tsx';
 
 interface CameraControllerProps {
   viewMode: 'galaxy' | 'zoomed';

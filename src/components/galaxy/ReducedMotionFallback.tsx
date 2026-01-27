@@ -1,4 +1,4 @@
-import { SkillCategory } from '@/data/skillsGalaxyData';
+import { SkillCategory } from '@/data/skillsGalaxyData.tsx';
 
 interface ReducedMotionFallbackProps {
   categories: SkillCategory[];

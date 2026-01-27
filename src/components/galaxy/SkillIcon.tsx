@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import { animated, useSpring } from '@react-spring/three';
 import * as THREE from 'three';
-import { SkillIcon as SkillIconType } from '@/data/skillsGalaxyData';
+import { SkillIcon as SkillIconType } from '@/data/skillsGalaxyData.tsx';
 
 interface SkillIconProps {
   skill: SkillIconType;

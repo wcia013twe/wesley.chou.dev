@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Group } from 'three';
-import { SkillCategory } from '@/data/skillsGalaxyData';
+import { SkillCategory } from '@/data/skillsGalaxyData.tsx';
 import SkillIcon from './SkillIcon';
 import LeadershipNebula from './LeadershipNebula';
 

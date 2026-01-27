@@ -76,6 +76,20 @@
     }
   }
 
+  /* Slow spin animation for decorative elements */
+  .animate-spin-slow {
+    animation: spin-slow 20s linear infinite;
+  }
+
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
   /* Screen reader only - visually hidden but accessible */
   .sr-only {
     position: absolute;
