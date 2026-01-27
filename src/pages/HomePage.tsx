@@ -30,11 +30,11 @@ const HomePage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-7xl font-bold text-white drop-shadow-lg">
+          <h1 className="text-5xl md:text-7xl font-bold text-white drop-shadow-lg">
             Hi, I'm Wesley Chou
           </h1>
 
-          <div className="text-4xl text-white/90">
+          <div className="text-2xl md:text-4xl text-white/90">
             <TextType
               text={[
                 "Software Engineer",
@@ -57,7 +57,7 @@ const HomePage = () => {
           >
             <Link to="/experience">
               <motion.button
-                className="inline-flex items-center gap-2 px-6 py-4 text-xl font-semibold bg-purple-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+                className="inline-flex items-center gap-2 px-4 py-3 md:px-6 md:py-4 text-lg md:text-xl font-semibold bg-purple-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-shadow"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -68,7 +68,7 @@ const HomePage = () => {
 
             <a href="mailto:wcia013twe@gmail.com">
               <motion.button
-                className="inline-flex items-center gap-2 px-6 py-4 text-xl font-semibold bg-transparent border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-3 md:px-6 md:py-4 text-lg md:text-xl font-semibold bg-transparent border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.98 }}
               >
