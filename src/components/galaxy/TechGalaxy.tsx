@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { motion, AnimatePresence } from 'motion/react';
+import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import GalaxyView from './GalaxyView';
 import ZoomedView from './ZoomedView';
 import ExitButton from './ExitButton';
+import CameraController from './CameraController';
 import { skillsGalaxyData } from '@/data/skillsGalaxyData';
 
 type ViewMode = 'galaxy' | 'zoomed';
@@ -26,6 +28,10 @@ export default function TechGalaxy() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showHint, setShowHint] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // Ref for OrbitControls to enable/disable during transitions
+  const orbitControlsRef = useRef<OrbitControlsImpl>(null);
 
   // Get the selected category data
   const selectedCategory = selectedCategoryId
@@ -55,18 +61,54 @@ export default function TechGalaxy() {
     }
   }, [viewMode]);
 
+  // Calculate planet opacities based on view mode and selected category
+  const planetOpacities = useMemo(() => {
+    const opacities = new Map<string, number>();
+
+    if (viewMode === 'galaxy') {
+      // All planets visible in galaxy view
+      skillsGalaxyData.forEach((cat) => {
+        opacities.set(cat.id, 1.0);
+      });
+    } else if (viewMode === 'zoomed' && selectedCategoryId) {
+      // In zoomed view: only selected planet visible, others fade to 0
+      skillsGalaxyData.forEach((cat) => {
+        opacities.set(cat.id, cat.id === selectedCategoryId ? 1.0 : 0.0);
+      });
+    }
+
+    return opacities;
+  }, [viewMode, selectedCategoryId]);
+
+  // Calculate planet scales based on view mode and selected category
+  const planetScales = useMemo(() => {
+    const scales = new Map<string, number>();
+
+    if (viewMode === 'galaxy') {
+      // All planets at normal scale in galaxy view
+      skillsGalaxyData.forEach((cat) => {
+        scales.set(cat.id, 1.0);
+      });
+    } else if (viewMode === 'zoomed' && selectedCategoryId) {
+      // Selected planet scaled to 1.5x in zoomed view
+      skillsGalaxyData.forEach((cat) => {
+        scales.set(cat.id, cat.id === selectedCategoryId ? 1.5 : 1.0);
+      });
+    }
+
+    return scales;
+  }, [viewMode, selectedCategoryId]);
+
   // Handle planet click - transition to zoomed view
   const handlePlanetClick = (categoryId: string) => {
     setSelectedCategoryId(categoryId);
     setViewMode('zoomed');
-    // Task 9 will handle camera animation based on viewMode change
   };
 
   // Handle exit - return to galaxy view
   const handleExit = () => {
     setViewMode('galaxy');
     setSelectedCategoryId(null);
-    // Task 9 will handle camera animation based on viewMode change
   };
 
   // Handle background click in zoomed mode
@@ -98,11 +140,23 @@ export default function TechGalaxy() {
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={1} />
 
-        {/* Conditional render based on view mode */}
-        {viewMode === 'galaxy' && (
-          <GalaxyView onPlanetClick={handlePlanetClick} />
-        )}
+        {/* Camera controller for smooth transitions */}
+        <CameraController
+          viewMode={viewMode}
+          selectedCategory={selectedCategory}
+          orbitControlsRef={orbitControlsRef}
+          onTransitionStart={() => setIsTransitioning(true)}
+          onTransitionEnd={() => setIsTransitioning(false)}
+        />
 
+        {/* Always render GalaxyView for planets (with opacity control) */}
+        <GalaxyView
+          ref={orbitControlsRef}
+          onPlanetClick={handlePlanetClick}
+          planetOpacities={planetOpacities}
+        />
+
+        {/* Render ZoomedView when in zoomed mode */}
         {viewMode === 'zoomed' && selectedCategory && (
           <>
             <ZoomedView category={selectedCategory} />

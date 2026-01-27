@@ -28,6 +28,7 @@
     "marked": "^16.4.0",
     "matter-js": "^0.20.0",
     "motion": "^12.23.24",
+    "ogl": "^1.0.11",
     "postprocessing": "^6.37.8",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",

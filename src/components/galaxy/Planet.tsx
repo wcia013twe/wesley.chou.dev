@@ -10,6 +10,8 @@ interface PlanetProps {
   onHover: (id: string | null) => void;
   onClick: (id: string) => void;
   disableHover?: boolean;
+  opacity?: number;
+  planetScale?: number; // Additional scale for zoom transitions (1.0 = normal, 1.5 = zoomed)
 }
 
 /**
@@ -18,7 +20,7 @@ interface PlanetProps {
  * Renders a skill category as a glowing planet in 3D space.
  * Features rotation animation and smooth hover effects using react-spring.
  */
-export default function Planet({ category, isHovered, onHover, onClick, disableHover = false }: PlanetProps) {
+export default function Planet({ category, isHovered, onHover, onClick, disableHover = false, opacity = 1.0, planetScale = 1.0 }: PlanetProps) {
   const meshRef = useRef<THREE.Mesh>(null);
 
   // Rotation animation (0.002 rad/frame on Y-axis, or slower if hover disabled)
@@ -29,8 +31,8 @@ export default function Planet({ category, isHovered, onHover, onClick, disableH
   });
 
   // Hover animation using react-spring (disabled if disableHover is true)
-  const { scale, emissiveIntensity } = useSpring({
-    scale: (isHovered && !disableHover) ? 1.05 : 1.0,
+  const { hoverScale, emissiveIntensity } = useSpring({
+    hoverScale: (isHovered && !disableHover) ? 1.05 : 1.0,
     emissiveIntensity: (isHovered && !disableHover) ? 1.3 : 1.0,
     config: {
       tension: 280,
@@ -38,11 +40,14 @@ export default function Planet({ category, isHovered, onHover, onClick, disableH
     },
   });
 
+  // Combine hover scale with planet scale for zoom transitions
+  const combinedScale = hoverScale.to((h) => h * planetScale);
+
   return (
     <group position={category.position}>
       <animated.mesh
         ref={meshRef}
-        scale={scale}
+        scale={combinedScale}
         onPointerEnter={disableHover ? undefined : () => {
           document.body.style.cursor = 'pointer';
           onHover(category.id);
@@ -60,6 +65,8 @@ export default function Planet({ category, isHovered, onHover, onClick, disableH
           emissiveIntensity={emissiveIntensity}
           metalness={0.5}
           roughness={0.3}
+          transparent={true}
+          opacity={opacity}
         />
       </animated.mesh>
 

@@ -47,7 +47,7 @@ const SkillsPage = () => {
       <div className="w-[50vw] h-[100vh]">
         <ScrollStack className="align-center no-scrollbar -mt-30">
           <ScrollStackCard
-            title="Languages"
+            title="Languages & Frontend"
             images={[
               <StackIcon name="java" />,
               <StackIcon name="python" />,
@@ -56,74 +56,53 @@ const SkillsPage = () => {
               <StackIcon name="js" />,
               <StackIcon name="html5" />,
               <StackIcon name="css3" />,
-              <StackIcon name="bash" />,
-            ]}
-          />
-          <ScrollStackCard
-            title="Frontend"
-            images={[
               <StackIcon name="react" />,
-              <StackIcon name="jest" />,
               <StackIcon name="tailwindcss" />,
               <StackIcon name="nextjs" />,
-              // <StackIcon name="streamlit" />,
-              // <StackIcon name="materialui" />,
-              // <StackIcon name="shadcnui" />,
               <StackIcon name="flutter" />,
-              <StackIcon name="vitejs" />,
             ]}
           />
           <ScrollStackCard
-            title="Backend"
+            title="Backend & Databases"
             images={[
               <StackIcon name="nodejs" />,
               <StackIcon name="spring" />,
+              <CustomIcon title="FastAPI" src="icons/fastapi.png" />,
+              <StackIcon name="langchain" />,
               <StackIcon name="mongodb" />,
               <StackIcon name="postgresql" />,
               <StackIcon name="mysql" />,
               <StackIcon name="supabase" />,
-              // <StackIcon name="redis" />,
-              // <StackIcon name="graphql" />,
-              <StackIcon name="firebase" />,
-              <StackIcon name="langchain" />,
-              <CustomIcon title="FastAPI" src="icons/fastapi.png" />,
+              <StackIcon name="supabase" />,
             ]}
           />
           <ScrollStackCard
-            title="Tools"
+            title="DevOps & Infrastructure"
             images={[
-              <StackIcon name="linux" />,
-              <StackIcon name="vercel" />,
+              <StackIcon name="docker" />,
               <StackIcon name="kubernetes" />,
+              <StackIcon name="linux" />,
               <StackIcon name="git" />,
-              <StackIcon name="postman" />,
               <StackIcon name="digitalocean" />,
               <StackIcon name="colab" />,
-              <StackIcon name="docker" />,
-              <CustomIcon
-                title="Google ADK"
-                src="/icons/agent-development-kit.png"
-              />,
+               <StackIcon name="cloudflare" />,
             ]}
           />
           <ScrollStackCard
-            title="Platforms"
+            title="Tools & Collaboration"
             images={[
-              <StackIcon name="jira" />,
-              
-              <StackIcon name="gitlab" />,
-              <StackIcon name="figma" />,
               <StackIcon name="github" />,
-              <StackIcon name="digitalocean" />,
-              <StackIcon name="colab" />,
-              <StackIcon name="docker" />,
-              <CustomIcon
-                title="Google ADK"
-                src="/icons/agent-development-kit.png"
-              />,
+              <StackIcon name="gitlab" />,
+              <StackIcon name="postman" />,
+              <StackIcon name="jira" />,
               <CustomIcon
                 title="Confluence"
                 src="icons/confluence-removebg-preview.png"
+              />,
+              <StackIcon name="figma" />,
+              <CustomIcon
+                title="Google ADK"
+                src="/icons/agent-development-kit.png"
               />,
             ]}
           />
@@ -133,7 +112,7 @@ const SkillsPage = () => {
             </h2>
             <FallingText
               key={fallingTextKey}
-              text="Leadership|Mentorship|High Resiliency|Appetite For Rejection|Research|Shipping Relentlessly|Market Research|High Agency| Pitching|Agile|Project Ownership|Mentorship|Stakeholder Communication|Professional Development"
+              text="Mentorship|High Resiliency|Appetite For Rejection|Research|Shipping Relentlessly|Market Research|High Agency| Pitching|Project Ownership|Mentorship|Stakeholder Communication"
               trigger="click"
               backgroundColor="transparent"
               wireframes={false}

@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Group } from 'three';
 import { SkillCategory } from '@/data/skillsGalaxyData';
-import Planet from './Planet';
 import SkillIcon from './SkillIcon';
 
 interface ZoomedViewProps {
@@ -12,10 +11,13 @@ interface ZoomedViewProps {
 /**
  * ZoomedView Component
  *
- * Displays a zoomed-in view of a skill category with:
- * - Central planet (scaled 1.5x, no hover effects, slow rotation)
+ * Displays skill icons orbiting around the selected category planet.
+ * The planet itself is rendered by GalaxyView with animated scale.
+ *
+ * Features:
  * - Skill icons in orbital rings (2-3 rings at radii 4, 6, 8)
  * - Continuous rotation animation (0.005 rad/frame per ring)
+ * - Positioned relative to category planet position
  *
  * Orbital layout algorithm:
  * - Distributes skills evenly across rings, filling inner rings first
@@ -38,23 +40,8 @@ export default function ZoomedView({ category }: ZoomedViewProps) {
   // Calculate positions for all skill icons
   const skillPositions = calculateSkillPositions(category.skills, ringAssignments, radii);
 
-  // Scale planet 1.5x for zoomed view
-  const scaledCategory = {
-    ...category,
-    radius: category.radius * 1.5,
-  };
-
   return (
-    <group>
-      {/* Central planet - scaled, no hover, slow rotation */}
-      <Planet
-        category={scaledCategory}
-        isHovered={false}
-        onHover={() => {}}
-        onClick={() => {}}
-        disableHover={true}
-      />
-
+    <group position={category.position}>
       {/* Orbiting skill icons */}
       <group ref={orbitRef}>
         {category.skills.map((skill, index) => (
