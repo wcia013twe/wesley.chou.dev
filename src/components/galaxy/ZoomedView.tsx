@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { Group } from 'three';
 import { SkillCategory } from '@/data/skillsGalaxyData';
 import SkillIcon from './SkillIcon';
+import LeadershipNebula from './LeadershipNebula';
 
 interface ZoomedViewProps {
   category: SkillCategory;
@@ -33,6 +34,20 @@ export default function ZoomedView({ category }: ZoomedViewProps) {
       orbitRef.current.rotation.y += 0.005;
     }
   });
+
+  // Leadership category uses LeadershipNebula in zoomed view
+  if (category.id === 'leadership') {
+    return (
+      <LeadershipNebula
+        category={category}
+        isHovered={false}
+        onHover={() => {}}
+        onClick={() => {}}
+        disableHover={true}
+        isZoomedView={true}
+      />
+    );
+  }
 
   // Distribute skills across orbital rings
   const { ringAssignments, radii } = distributeSkillsInRings(category.skills.length);

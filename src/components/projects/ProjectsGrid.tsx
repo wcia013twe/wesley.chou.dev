@@ -28,8 +28,8 @@ interface ProjectsGridProps {
 // Depth layer configuration
 const DEPTH_CONFIG = {
   1: { scale: 1.0, parallaxMultiplier: 10, scrollMultiplier: 1.0, zIndex: 30 },
-  2: { scale: 0.95, parallaxMultiplier: 5, scrollMultiplier: 0.8, zIndex: 20 },
-  3: { scale: 0.9, parallaxMultiplier: 2, scrollMultiplier: 0.6, zIndex: 10 },
+  2: { scale: 1.0, parallaxMultiplier: 5, scrollMultiplier: 0.8, zIndex: 20 },
+  3: { scale: 1.0, parallaxMultiplier: 2, scrollMultiplier: 0.6, zIndex: 10 },
 } as const;
 
 export default function ProjectsGrid({ projects, onProjectClick }: ProjectsGridProps) {
@@ -155,8 +155,6 @@ export default function ProjectsGrid({ projects, onProjectClick }: ProjectsGridP
 
   // Framer Motion variants for card reveal animation
   const getCardVariants = (depth: 1 | 2 | 3, index: number) => {
-    const targetScale = DEPTH_CONFIG[depth].scale;
-
     return {
       hidden: {
         opacity: 0,
@@ -167,7 +165,7 @@ export default function ProjectsGrid({ projects, onProjectClick }: ProjectsGridP
       visible: {
         opacity: 1,
         y: 0,
-        scale: targetScale,
+        scale: 1.0,
         rotateX: 0,
         transition: {
           duration: 0.8,
@@ -183,12 +181,12 @@ export default function ProjectsGrid({ projects, onProjectClick }: ProjectsGridP
       {/* Background Particles */}
       <div className="fixed inset-0 w-full h-full pointer-events-none" style={{ zIndex: -1 }}>
         <Particles
-          particleCount={200}
-          particleColors={['#ffffff', '#9333ea', '#a78bfa']}
+          particleCount={500}
+          particleColors={['#ffffff', '#ffffff', '#9333ea', '#a78bfa', '#c084fc']}
           alphaParticles={true}
-          particleBaseSize={80}
-          sizeRandomness={1}
-          speed={0.1}
+          particleBaseSize={120}
+          sizeRandomness={1.5}
+          speed={0.15}
           disableRotation={false}
         />
       </div>

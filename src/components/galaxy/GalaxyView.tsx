@@ -3,6 +3,7 @@ import { OrbitControls } from '@react-three/drei';
 import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import StarField from './StarField';
 import Planet from './Planet';
+import LeadershipNebula from './LeadershipNebula';
 import PlanetLabel from './PlanetLabel';
 import { skillsGalaxyData } from '@/data/skillsGalaxyData';
 
@@ -29,17 +30,33 @@ const GalaxyView = forwardRef<OrbitControlsImpl, GalaxyViewProps>(
       <StarField />
 
       {/* Render all planets */}
-      {skillsGalaxyData.map((category) => (
-        <Planet
-          key={category.id}
-          category={category}
-          isHovered={hoveredPlanetId === category.id}
-          onHover={setHoveredPlanetId}
-          onClick={onPlanetClick}
-          opacity={planetOpacities?.get(category.id) ?? 1.0}
-          planetScale={planetScales?.get(category.id) ?? 1.0}
-        />
-      ))}
+      {skillsGalaxyData.map((category) => {
+        // Use LeadershipNebula for the leadership category, Planet for others
+        if (category.id === 'leadership') {
+          return (
+            <LeadershipNebula
+              key={category.id}
+              category={category}
+              isHovered={hoveredPlanetId === category.id}
+              onHover={setHoveredPlanetId}
+              onClick={onPlanetClick}
+              opacity={planetOpacities?.get(category.id) ?? 1.0}
+              planetScale={planetScales?.get(category.id) ?? 1.0}
+            />
+          );
+        }
+        return (
+          <Planet
+            key={category.id}
+            category={category}
+            isHovered={hoveredPlanetId === category.id}
+            onHover={setHoveredPlanetId}
+            onClick={onPlanetClick}
+            opacity={planetOpacities?.get(category.id) ?? 1.0}
+            planetScale={planetScales?.get(category.id) ?? 1.0}
+          />
+        );
+      })}
 
       {/* Render planet labels */}
       {skillsGalaxyData.map((category) => {

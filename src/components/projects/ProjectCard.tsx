@@ -10,14 +10,14 @@ import NeonBorder from './NeonBorder';
  *
  * An enhanced 3D card component with neon borders, parallax effects, and hover interactions.
  * Features:
- * - Depth-based scaling (1.0, 0.95, 0.9)
+ * - Uniform card sizing for all depth layers
  * - Mouse position-based tilt (±3deg)
  * - Particle trail emission on hover
  * - Sequential tech pill brightening
  * - Glassmorphic styling with neon accents
  *
  * @param project - Project data from projectsData.ts
- * @param depth - Depth layer (1, 2, or 3) for z-index and scale
+ * @param depth - Depth layer (1, 2, or 3) for parallax effects
  * @param parallaxOffset - Mouse-based offset from parent grid { x, y }
  * @param onClick - Handler for opening project modal
  */
@@ -46,8 +46,8 @@ export default function ProjectCard({
   const [isHovered, setIsHovered] = useState(false);
   const [particles, setParticles] = useState<Particle[]>([]);
 
-  // Depth-based scale
-  const depthScale = depth === 1 ? 1.0 : depth === 2 ? 0.95 : 0.9;
+  // All cards same scale for uniformity
+  const depthScale = 1.0;
 
   // Mouse position tracking for tilt effect
   const mouseX = useMotionValue(0);
