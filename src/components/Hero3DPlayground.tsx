@@ -1,6 +1,4 @@
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
-import { useRef } from 'react';
 
 interface Hero3DPlaygroundProps {
   className?: string;
@@ -8,7 +6,7 @@ interface Hero3DPlaygroundProps {
 
 const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
   return (
-    <div className={`fixed inset-0 -z-10 ${className || ''}`}>
+    <div className={`fixed inset-0 -z-10 ${className || ''}`} aria-hidden="true">
       <Canvas
         camera={{ position: [0, 0, 8], fov: 45 }}
         gl={{ alpha: true, antialias: true }}
