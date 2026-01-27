@@ -35,7 +35,7 @@
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Layout */
-  --nav-height: 6rem; /* 52px nav height */
+  --nav-height: 72px; /* 72px nav height for glassmorphism design */
   --image-size: 2rem;
 
   /* Radii / Spacing (example tokens) */

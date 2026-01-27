@@ -13,9 +13,9 @@ import {
 function Navbar() {
   return (
     <TabGroup>
-      <div className="fixed top-0 left-0 z-50 flex h-[72px] w-full items-center justify-between border-b border-purple-500/20 bg-[var(--color-bg)]/60 backdrop-blur-xl shadow-lg shadow-black/10 px-6 font-sans text-xl font-medium tracking-wide text-[var(--color-fg)] transition-all duration-300">
+      <div className="fixed top-0 left-0 z-50 flex h-[var(--nav-height)] w-full items-center justify-between border-b border-purple-500/20 bg-[var(--color-bg)]/60 backdrop-blur-xl supports-[backdrop-filter]:bg-[var(--color-bg)]/60 shadow-lg shadow-black/10 px-6 font-sans text-xl font-medium tracking-wide text-[var(--color-fg)] transition-all duration-300">
         {/* Tabs */}
-        <div className="px-6 flex items-center justify-center ">
+        <div className="flex items-center justify-center">
           <LuRocket className="text-3xl hover:text-[var(--color-primary)]"/>
           <p className="pl-2 text-2xl hover:text-[var(--color-primary)]">Wesley Chou</p>
         </div>
