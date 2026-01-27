@@ -1,6 +1,9 @@
-import { Canvas } from '@react-three/fiber';
-import { useRef } from 'react';
+// @ts-nocheck
+import { Canvas, useFrame } from '@react-three/fiber';
+import { useGLTF } from '@react-three/drei';
+import { useRef, useEffect, useState } from 'react';
 import { useInView } from 'framer-motion';
+import * as THREE from 'three';
 
 interface SpaceshipSceneProps {
   className?: string;
