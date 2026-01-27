@@ -50,7 +50,6 @@ const badgeColorMap: Record<string, string> = {
 const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const modalContentRef = useRef<HTMLDivElement>(null);
-  const hintTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Get badge color hex from Tailwind class
   const getBadgeColorHex = (badgeColor: string): string => {
@@ -194,12 +193,11 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
 
           {/* Modal content container */}
           <motion.div
-            ref={modalContentRef}
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-lg rounded-3xl shadow-2xl p-6 md:p-12"
+            className="relative w-full max-w-5xl max-h-[90vh] overflow-hidden bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-lg rounded-3xl shadow-2xl"
             style={{
               border: `3px solid ${badgeColorHex}60`,
               boxShadow: `0 20px 60px -15px ${badgeColorHex}40`,
@@ -207,22 +205,19 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Animated border effect - much larger so edges don't show when rotating */}
-
             <div
               className="absolute pointer-events-none opacity-30 rounded-3xl animate-spin-slow"
               style={{
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: "calc(100% + 200px)", // Adjust based on your modal width
-                height: "calc(100% + 200px)", // Adjust based on your modal height
+                inset:"-500px",
                 background: `conic-gradient(from 0deg at 50% 50%, transparent 0%, ${badgeColorHex} 25%,
   transparent 50%, ${badgeColorHex} 75%, transparent 100%)`,
               }}
             />
 
-            {/* Two-column layout for desktop, single column for mobile */}
-            <div className="relative z-10 grid grid-cols-1 md:grid-cols-5 gap-8">
+            {/* Scrollable content wrapper */}
+            <div ref={modalContentRef} className="relative z-10 max-h-[90vh] overflow-y-auto p-6 md:p-12">
+              {/* Two-column layout for desktop, single column for mobile */}
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
               {/* Left column - Image (40% on desktop) */}
               <div className="md:col-span-2">
                 <div
@@ -374,6 +369,7 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
                   )}
                 </div>
               </div>
+            </div>
             </div>
           </motion.div>
 

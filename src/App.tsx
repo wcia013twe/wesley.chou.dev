@@ -10,7 +10,7 @@ import SkillsPage from "./pages/SkillsPage";
 import Navbar from "./components/NavBar";
 import { HelmetProvider } from "react-helmet-async";
 import ExperiencePage from "./pages/ExperiencePage";
-import PixelBlast from "./components/PixelBlast";
+// import PixelBlast from "./components/PixelBlast";
 
 const Layout = () => (
   <>

@@ -67,7 +67,6 @@ export default function StarField({ isMobile = false }: StarFieldProps) {
   useFrame((state) => {
     if (!pointsRef.current || prefersReducedMotion) return;
 
-    const material = pointsRef.current.material as THREE.PointsMaterial;
     const geometry = pointsRef.current.geometry;
     const opacityAttr = geometry.attributes.opacity as THREE.BufferAttribute;
 

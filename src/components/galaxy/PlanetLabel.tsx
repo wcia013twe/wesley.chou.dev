@@ -21,7 +21,6 @@ export default function PlanetLabel({ text, position }: PlanetLabelProps) {
       anchorY="bottom"
       outlineWidth={0.05}
       outlineColor="black"
-      billboard
     >
       {text}
     </Text>

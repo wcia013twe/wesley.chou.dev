@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import { motion, AnimatePresence } from 'motion/react';
 import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
+import * as THREE from 'three';
 import GalaxyView from './GalaxyView';
 import ZoomedView from './ZoomedView';
 import ExitButton from './ExitButton';
@@ -34,7 +35,7 @@ export default function TechGalaxy() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showHint, setShowHint] = useState(false);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [_isTransitioning, setIsTransitioning] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [webGLSupported, setWebGLSupported] = useState(true);
 
@@ -203,28 +204,48 @@ export default function TechGalaxy() {
       case 'ArrowLeft':
         // Rotate camera left
         if (orbitControlsRef.current) {
-          orbitControlsRef.current.rotateLeft(0.1);
+          const spherical = new THREE.Spherical().setFromVector3(
+            orbitControlsRef.current.object.position.clone().sub(orbitControlsRef.current.target)
+          );
+          spherical.theta -= 0.1;
+          orbitControlsRef.current.object.position.setFromSpherical(spherical).add(orbitControlsRef.current.target);
+          orbitControlsRef.current.update();
         }
         break;
 
       case 'ArrowRight':
         // Rotate camera right
         if (orbitControlsRef.current) {
-          orbitControlsRef.current.rotateLeft(-0.1);
+          const spherical = new THREE.Spherical().setFromVector3(
+            orbitControlsRef.current.object.position.clone().sub(orbitControlsRef.current.target)
+          );
+          spherical.theta += 0.1;
+          orbitControlsRef.current.object.position.setFromSpherical(spherical).add(orbitControlsRef.current.target);
+          orbitControlsRef.current.update();
         }
         break;
 
       case 'ArrowUp':
         // Rotate camera up
         if (orbitControlsRef.current) {
-          orbitControlsRef.current.rotateUp(0.1);
+          const spherical = new THREE.Spherical().setFromVector3(
+            orbitControlsRef.current.object.position.clone().sub(orbitControlsRef.current.target)
+          );
+          spherical.phi = Math.max(0.1, spherical.phi - 0.1);
+          orbitControlsRef.current.object.position.setFromSpherical(spherical).add(orbitControlsRef.current.target);
+          orbitControlsRef.current.update();
         }
         break;
 
       case 'ArrowDown':
         // Rotate camera down
         if (orbitControlsRef.current) {
-          orbitControlsRef.current.rotateUp(-0.1);
+          const spherical = new THREE.Spherical().setFromVector3(
+            orbitControlsRef.current.object.position.clone().sub(orbitControlsRef.current.target)
+          );
+          spherical.phi = Math.min(Math.PI - 0.1, spherical.phi + 0.1);
+          orbitControlsRef.current.object.position.setFromSpherical(spherical).add(orbitControlsRef.current.target);
+          orbitControlsRef.current.update();
         }
         break;
 

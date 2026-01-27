@@ -132,7 +132,7 @@ export default function ProjectsGrid({ projects, onProjectClick }: ProjectsGridP
   }, [projects, revealedCards]);
 
   // Calculate parallax transform for a given depth
-  const getParallaxTransform = (depth: 1 | 2 | 3, index: number) => {
+  const getParallaxTransform = (depth: 1 | 2 | 3, _index: number) => {
     const config = DEPTH_CONFIG[depth];
 
     // Mouse parallax (only on fine pointer devices)
@@ -154,7 +154,7 @@ export default function ProjectsGrid({ projects, onProjectClick }: ProjectsGridP
   };
 
   // Framer Motion variants for card reveal animation
-  const getCardVariants = (depth: 1 | 2 | 3, index: number) => {
+  const getCardVariants = (_depth: 1 | 2 | 3, index: number) => {
     return {
       hidden: {
         opacity: 0,
@@ -170,7 +170,7 @@ export default function ProjectsGrid({ projects, onProjectClick }: ProjectsGridP
         transition: {
           duration: 0.8,
           delay: index * 0.2, // Stagger by 200ms
-          ease: [0.25, 0.1, 0.25, 1], // ease-out
+          ease: 'easeOut' as const,
         },
       },
     };

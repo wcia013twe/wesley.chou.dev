@@ -38,7 +38,7 @@ interface Particle {
 
 export default function ProjectCard({
   project,
-  depth,
+  depth: _depth,
   parallaxOffset,
   onClick,
 }: ProjectCardProps) {
