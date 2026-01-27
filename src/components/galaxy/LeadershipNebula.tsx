@@ -16,14 +16,17 @@ interface LeadershipNebulaProps {
   planetScale?: number;
   isZoomedView?: boolean;
   focusedSkillIndex?: number;
+  isMobile?: boolean;
+  isTouchDevice?: boolean;
 }
 
 /**
  * LeadershipNebula Component
  *
  * Renders the leadership category as a particle cloud/nebula with pink/magenta aesthetic.
- * In galaxy view: displays 500-800 particles forming a nebula cloud with Perlin-like noise drift.
+ * In galaxy view: displays 650 particles (400 on mobile) forming a nebula cloud with Perlin-like noise drift.
  * In zoomed view: displays skill names as 3D floating text labels with hover effects.
+ * Optimized for mobile performance and touch devices.
  */
 export default function LeadershipNebula({
   category,
@@ -36,12 +39,14 @@ export default function LeadershipNebula({
   planetScale = 1.0,
   isZoomedView = false,
   focusedSkillIndex = -1,
+  isMobile = false,
+  isTouchDevice = false,
 }: LeadershipNebulaProps) {
   const pointsRef = useRef<THREE.Points>(null);
   const groupRef = useRef<THREE.Group>(null);
 
-  // Generate particle positions (500-800 particles in spherical distribution)
-  const particleCount = 650;
+  // Generate particle positions (650 particles, 400 on mobile for performance)
+  const particleCount = isMobile ? 400 : 650;
   const particles = useMemo(() => {
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
@@ -67,7 +72,7 @@ export default function LeadershipNebula({
     }
 
     return { positions, colors };
-  }, [category.radius, category.color]);
+  }, [category.radius, category.color, particleCount]);
 
   // Perlin-like noise drift animation using multiple sin/cos frequencies
   useFrame(({ clock }) => {
@@ -103,8 +108,10 @@ export default function LeadershipNebula({
 
   // Hover and focus animation using react-spring
   // Focus has stronger effect than hover for accessibility
+  // Disable hover effect on touch devices
+  const shouldDisableHover = disableHover || isTouchDevice;
   const { hoverIntensity } = useSpring({
-    hoverIntensity: isFocused ? 2.2 : ((isHovered && !disableHover) ? 1.5 : 1.0),
+    hoverIntensity: isFocused ? 2.2 : ((isHovered && !shouldDisableHover) ? 1.5 : 1.0),
     config: {
       tension: 280,
       friction: 60,
@@ -143,15 +150,15 @@ export default function LeadershipNebula({
       <animated.group ref={groupRef} scale={scale.scale}>
         <points
           ref={pointsRef}
-          onPointerEnter={disableHover ? undefined : () => {
+          onPointerEnter={shouldDisableHover ? undefined : () => {
             document.body.style.cursor = 'pointer';
             onHover(category.id);
           }}
-          onPointerLeave={disableHover ? undefined : () => {
+          onPointerLeave={shouldDisableHover ? undefined : () => {
             document.body.style.cursor = 'default';
             onHover(null);
           }}
-          onClick={disableHover ? undefined : () => onClick(category.id)}
+          onClick={shouldDisableHover ? undefined : () => onClick(category.id)}
         >
           <bufferGeometry>
             <bufferAttribute
@@ -168,7 +175,7 @@ export default function LeadershipNebula({
             />
           </bufferGeometry>
           <animated.pointsMaterial
-            size={0.05 * planetScale}
+            size={0.05 * planetScale * (isMobile ? 0.8 : 1)}
             vertexColors
             transparent
             opacity={opacity}

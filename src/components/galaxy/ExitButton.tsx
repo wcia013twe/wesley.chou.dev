@@ -22,10 +22,11 @@ export default function ExitButton({ visible, onClick }: ExitButtonProps) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
           onClick={onClick}
-          aria-label="Return to galaxy view"
+          aria-label="Exit zoomed view and return to galaxy overview. You can also press Escape key or click the background."
+          title="Return to galaxy view (Escape)"
           className="fixed top-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-purple-500/50 bg-black/60 shadow-[0_4px_12px_rgba(0,0,0,0.3)] transition-all duration-200 hover:border-purple-400/70 hover:bg-black/80"
         >
-          <IoClose className="h-6 w-6 text-white" />
+          <IoClose className="h-6 w-6 text-white" aria-hidden="true" />
         </motion.button>
       )}
     </AnimatePresence>

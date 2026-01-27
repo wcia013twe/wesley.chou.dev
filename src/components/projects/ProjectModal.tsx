@@ -205,12 +205,13 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Animated border effect - pseudo-element with rotating gradient */}
+            {/* Animated border effect - much larger so edges don't show when rotating */}
             <div
-              className="absolute inset-0 rounded-3xl pointer-events-none opacity-30"
+              className="absolute pointer-events-none opacity-30 rounded-3xl"
               style={{
+                inset: '-100px',
                 background: `conic-gradient(from 0deg at 50% 50%, transparent 0%, ${badgeColorHex} 25%, transparent 50%, ${badgeColorHex} 75%, transparent 100%)`,
-                animation: 'rotateBorder 4s linear infinite'
+                animation: 'rotateBorder 10s linear infinite'
               }}
             />
 

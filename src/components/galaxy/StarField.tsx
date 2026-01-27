@@ -2,14 +2,18 @@ import { useRef, useMemo, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
+interface StarFieldProps {
+  isMobile?: boolean;
+}
+
 /**
  * StarField Component
  *
  * Renders a background star field using Three.js Points geometry.
- * Creates 1500 particles positioned randomly in a sphere with subtle twinkling animation.
- * Respects user's reduced-motion preferences.
+ * Creates 1500 particles (500 on mobile) positioned randomly in a sphere with subtle twinkling animation.
+ * Respects user's reduced-motion preferences and mobile performance constraints.
  */
-export default function StarField() {
+export default function StarField({ isMobile = false }: StarFieldProps) {
   const pointsRef = useRef<THREE.Points>(null);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
@@ -28,7 +32,8 @@ export default function StarField() {
 
   // Generate star positions and attributes
   const { positions, opacities, twinkleSpeed, twinkleOffset } = useMemo(() => {
-    const count = 1500;
+    // Reduce star count on mobile for better performance
+    const count = isMobile ? 500 : 1500;
     const positions = new Float32Array(count * 3);
     const opacities = new Float32Array(count);
     const twinkleSpeed = new Float32Array(count);
@@ -56,7 +61,7 @@ export default function StarField() {
     }
 
     return { positions, opacities, twinkleSpeed, twinkleOffset };
-  }, []);
+  }, [isMobile]);
 
   // Twinkling animation using useFrame
   useFrame((state) => {
@@ -103,7 +108,7 @@ export default function StarField() {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={2}
+        size={isMobile ? 1.5 : 2}
         sizeAttenuation={true}
         color="#ffffff"
         transparent={true}

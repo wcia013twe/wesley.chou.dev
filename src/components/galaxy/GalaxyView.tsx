@@ -12,6 +12,8 @@ interface GalaxyViewProps {
   planetOpacities?: Map<string, number>;
   planetScales?: Map<string, number>;
   focusedPlanetId?: string | null;
+  isMobile?: boolean;
+  isTouchDevice?: boolean;
 }
 
 /**
@@ -22,13 +24,13 @@ interface GalaxyViewProps {
  * Manages hover state for interactive planet effects.
  */
 const GalaxyView = forwardRef<OrbitControlsImpl, GalaxyViewProps>(
-  ({ onPlanetClick, planetOpacities, planetScales, focusedPlanetId }, ref) => {
+  ({ onPlanetClick, planetOpacities, planetScales, focusedPlanetId, isMobile = false, isTouchDevice = false }, ref) => {
     const [hoveredPlanetId, setHoveredPlanetId] = useState<string | null>(null);
 
   return (
     <>
       {/* Star background */}
-      <StarField />
+      <StarField isMobile={isMobile} />
 
       {/* Render all planets */}
       {skillsGalaxyData.map((category) => {
@@ -46,6 +48,8 @@ const GalaxyView = forwardRef<OrbitControlsImpl, GalaxyViewProps>(
               onClick={onPlanetClick}
               opacity={planetOpacities?.get(category.id) ?? 1.0}
               planetScale={planetScales?.get(category.id) ?? 1.0}
+              isMobile={isMobile}
+              isTouchDevice={isTouchDevice}
             />
           );
         }
@@ -59,6 +63,8 @@ const GalaxyView = forwardRef<OrbitControlsImpl, GalaxyViewProps>(
             onClick={onPlanetClick}
             opacity={planetOpacities?.get(category.id) ?? 1.0}
             planetScale={planetScales?.get(category.id) ?? 1.0}
+            isMobile={isMobile}
+            isTouchDevice={isTouchDevice}
           />
         );
       })}

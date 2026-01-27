@@ -8,6 +8,8 @@ import LeadershipNebula from './LeadershipNebula';
 interface ZoomedViewProps {
   category: SkillCategory;
   focusedSkillIndex?: number;
+  isMobile?: boolean;
+  isTouchDevice?: boolean;
 }
 
 /**
@@ -21,13 +23,14 @@ interface ZoomedViewProps {
  * - Continuous rotation animation (0.005 rad/frame per ring)
  * - Positioned relative to category planet position
  * - Keyboard focus support for individual skill icons
+ * - Mobile optimizations for larger touch targets
  *
  * Orbital layout algorithm:
  * - Distributes skills evenly across rings, filling inner rings first
  * - Calculates angle step: 2π / icons per ring
  * - Position: [radius * cos(angle + rotation), 0, radius * sin(angle + rotation)]
  */
-export default function ZoomedView({ category, focusedSkillIndex = -1 }: ZoomedViewProps) {
+export default function ZoomedView({ category, focusedSkillIndex = -1, isMobile = false, isTouchDevice = false }: ZoomedViewProps) {
   const orbitRef = useRef<Group>(null);
 
   // Continuous rotation animation for orbital rings
@@ -48,6 +51,8 @@ export default function ZoomedView({ category, focusedSkillIndex = -1 }: ZoomedV
         disableHover={true}
         isZoomedView={true}
         focusedSkillIndex={focusedSkillIndex}
+        isMobile={isMobile}
+        isTouchDevice={isTouchDevice}
       />
     );
   }
@@ -69,6 +74,8 @@ export default function ZoomedView({ category, focusedSkillIndex = -1 }: ZoomedV
             position={skillPositions[index]}
             color={category.color}
             isFocused={focusedSkillIndex === index}
+            isMobile={isMobile}
+            isTouchDevice={isTouchDevice}
           />
         ))}
       </group>

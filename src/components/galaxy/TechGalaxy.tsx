@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
+import { Html } from '@react-three/drei';
 import { motion, AnimatePresence } from 'motion/react';
 import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import GalaxyView from './GalaxyView';
@@ -8,6 +9,7 @@ import ExitButton from './ExitButton';
 import CameraController from './CameraController';
 import ReducedMotionFallback from './ReducedMotionFallback';
 import { skillsGalaxyData } from '@/data/skillsGalaxyData';
+import { useMobile, useTouchDevice } from '@/hooks/useMobile';
 
 type ViewMode = 'galaxy' | 'zoomed';
 
@@ -32,9 +34,16 @@ export default function TechGalaxy() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
+  // Mobile and touch device detection
+  const isMobile = useMobile();
+  const isTouchDevice = useTouchDevice();
+
   // Keyboard navigation state
   const [focusedPlanetIndex, setFocusedPlanetIndex] = useState<number>(-1);
   const [focusedSkillIndex, setFocusedSkillIndex] = useState<number>(-1);
+
+  // ARIA announcements for screen readers
+  const [announcement, setAnnouncement] = useState<string>('');
 
   // Ref for OrbitControls to enable/disable during transitions
   const orbitControlsRef = useRef<OrbitControlsImpl>(null);
@@ -59,6 +68,32 @@ export default function TechGalaxy() {
   const selectedCategory = selectedCategoryId
     ? skillsGalaxyData.find((cat) => cat.id === selectedCategoryId) ?? null
     : null;
+
+  // Announce view mode changes to screen readers
+  useEffect(() => {
+    if (viewMode === 'zoomed' && selectedCategory) {
+      const skillCount = selectedCategory.skills.length;
+      setAnnouncement(
+        `Entered ${selectedCategory.name} category, showing ${skillCount} skill${skillCount !== 1 ? 's' : ''}`
+      );
+    } else if (viewMode === 'galaxy') {
+      const categoryCount = skillsGalaxyData.length;
+      setAnnouncement(
+        `Returned to galaxy view, showing ${categoryCount} categor${categoryCount !== 1 ? 'ies' : 'y'}`
+      );
+    }
+  }, [viewMode, selectedCategory]);
+
+  // Announce focused element changes to screen readers
+  useEffect(() => {
+    if (viewMode === 'galaxy' && focusedPlanetIndex >= 0 && focusedPlanetIndex < skillsGalaxyData.length) {
+      const category = skillsGalaxyData[focusedPlanetIndex];
+      setAnnouncement(`Focused on ${category.name} planet`);
+    } else if (viewMode === 'zoomed' && selectedCategory && focusedSkillIndex >= 0 && focusedSkillIndex < selectedCategory.skills.length) {
+      const skill = selectedCategory.skills[focusedSkillIndex];
+      setAnnouncement(`Focused on ${skill.name} skill`);
+    }
+  }, [focusedPlanetIndex, focusedSkillIndex, viewMode, selectedCategory]);
 
   // Handle loading state - show spinner briefly during initialization
   useEffect(() => {
@@ -304,17 +339,69 @@ export default function TechGalaxy() {
   // Otherwise, show the full 3D experience
   return (
     <div className="relative h-full w-full">
+      {/* ARIA live region for screen reader announcements */}
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+      >
+        {announcement}
+      </div>
+
+      {/* Semantic HTML structure for screen readers (visually hidden) */}
+      <div className="sr-only">
+        <h2>Skills Galaxy - {viewMode === 'galaxy' ? 'Category Overview' : selectedCategory?.name || ''}</h2>
+        {viewMode === 'galaxy' ? (
+          <>
+            <p>Navigate through {skillsGalaxyData.length} skill categories using Tab key. Press Enter to zoom into a category.</p>
+            <nav aria-label="Skill categories">
+              <ul role="list">
+                {skillsGalaxyData.map((category, index) => (
+                  <li key={category.id} role="listitem">
+                    {category.name} - {category.skills.length} skills
+                    {focusedPlanetIndex === index && ' (focused)'}
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </>
+        ) : (
+          selectedCategory && (
+            <>
+              <p>Viewing {selectedCategory.name} skills. Use Tab to navigate, Escape to return to galaxy view.</p>
+              <nav aria-label={`${selectedCategory.name} skills`}>
+                <ul role="list">
+                  {selectedCategory.skills.map((skill, index) => (
+                    <li key={index} role="listitem">
+                      {skill.name}
+                      {focusedSkillIndex === index && ' (focused)'}
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </>
+          )
+        )}
+      </div>
+
       {/* Three.js Canvas */}
       <Canvas
         camera={{ position: [0, 5, 15], fov: 75 }}
         className="h-full w-full"
+        style={{ touchAction: 'none' }}
+        dpr={isMobile ? 1 : window.devicePixelRatio}
+        performance={{ min: 0.5 }}
+        role="region"
+        aria-label="3D interactive skills galaxy visualization"
+        aria-describedby="galaxy-description"
       >
         {/* Background gradient (black → dark purple) */}
         <color attach="background" args={['#0a0015']} />
 
-        {/* Lighting */}
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} intensity={1} />
+        {/* Lighting - reduced on mobile for performance */}
+        <ambientLight intensity={isMobile ? 0.4 : 0.5} />
+        <pointLight position={[10, 10, 10]} intensity={isMobile ? 0.7 : 1} />
 
         {/* Camera controller for smooth transitions */}
         <CameraController
@@ -332,6 +419,8 @@ export default function TechGalaxy() {
           planetOpacities={planetOpacities}
           planetScales={planetScales}
           focusedPlanetId={focusedPlanetIndex >= 0 ? skillsGalaxyData[focusedPlanetIndex]?.id : null}
+          isMobile={isMobile}
+          isTouchDevice={isTouchDevice}
         />
 
         {/* Render ZoomedView when in zoomed mode */}
@@ -340,6 +429,8 @@ export default function TechGalaxy() {
             <ZoomedView
               category={selectedCategory}
               focusedSkillIndex={focusedSkillIndex}
+              isMobile={isMobile}
+              isTouchDevice={isTouchDevice}
             />
 
             {/* Background click plane - large invisible mesh to catch clicks */}
@@ -349,10 +440,29 @@ export default function TechGalaxy() {
             >
               <planeGeometry args={[100, 100]} />
               <meshBasicMaterial transparent opacity={0} />
+
+              {/* Accessible label for background */}
+              <Html position={[0, 0, 0]} center style={{ pointerEvents: 'none' }}>
+                <div
+                  role="button"
+                  aria-label="Click background to return to galaxy view"
+                  className="sr-only"
+                  tabIndex={-1}
+                >
+                  Background
+                </div>
+              </Html>
             </mesh>
           </>
         )}
       </Canvas>
+
+      {/* Hidden description for Canvas accessibility */}
+      <p id="galaxy-description" className="sr-only">
+        {viewMode === 'galaxy'
+          ? 'An interactive 3D galaxy showing skill categories as planets. Click on a planet to explore its skills, or use keyboard navigation with Tab and Enter keys.'
+          : `Zoomed view of ${selectedCategory?.name || ''} showing skills orbiting around the planet. Click the background or press Escape to return to galaxy view.`}
+      </p>
 
       {/* Exit button (visible only in zoomed mode) */}
       <ExitButton visible={viewMode === 'zoomed'} onClick={handleExit} />
