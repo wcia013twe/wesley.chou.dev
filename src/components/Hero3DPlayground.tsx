@@ -1,5 +1,5 @@
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 
 interface FloatingShapeProps {
@@ -19,7 +19,7 @@ const FloatingShape: React.FC<FloatingShapeProps> = ({
 }) => {
   const meshRef = useRef<THREE.Mesh>(null);
 
-  useFrame((state, delta) => {
+  useFrame((_state, delta) => {
     if (meshRef.current) {
       // Rotation
       meshRef.current.rotation.x += rotationSpeed[0] * delta;
