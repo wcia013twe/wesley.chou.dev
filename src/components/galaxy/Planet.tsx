@@ -9,6 +9,7 @@ interface PlanetProps {
   isHovered: boolean;
   onHover: (id: string | null) => void;
   onClick: (id: string) => void;
+  disableHover?: boolean;
 }
 
 /**
@@ -17,20 +18,20 @@ interface PlanetProps {
  * Renders a skill category as a glowing planet in 3D space.
  * Features rotation animation and smooth hover effects using react-spring.
  */
-export default function Planet({ category, isHovered, onHover, onClick }: PlanetProps) {
+export default function Planet({ category, isHovered, onHover, onClick, disableHover = false }: PlanetProps) {
   const meshRef = useRef<THREE.Mesh>(null);
 
-  // Rotation animation (0.002 rad/frame on Y-axis)
+  // Rotation animation (0.002 rad/frame on Y-axis, or slower if hover disabled)
   useFrame(() => {
     if (meshRef.current) {
-      meshRef.current.rotation.y += 0.002;
+      meshRef.current.rotation.y += disableHover ? 0.001 : 0.002;
     }
   });
 
-  // Hover animation using react-spring
+  // Hover animation using react-spring (disabled if disableHover is true)
   const { scale, emissiveIntensity } = useSpring({
-    scale: isHovered ? 1.05 : 1.0,
-    emissiveIntensity: isHovered ? 1.3 : 1.0,
+    scale: (isHovered && !disableHover) ? 1.05 : 1.0,
+    emissiveIntensity: (isHovered && !disableHover) ? 1.3 : 1.0,
     config: {
       tension: 280,
       friction: 60,
@@ -42,15 +43,15 @@ export default function Planet({ category, isHovered, onHover, onClick }: Planet
       <animated.mesh
         ref={meshRef}
         scale={scale}
-        onPointerEnter={() => {
+        onPointerEnter={disableHover ? undefined : () => {
           document.body.style.cursor = 'pointer';
           onHover(category.id);
         }}
-        onPointerLeave={() => {
+        onPointerLeave={disableHover ? undefined : () => {
           document.body.style.cursor = 'default';
           onHover(null);
         }}
-        onClick={() => onClick(category.id)}
+        onClick={disableHover ? undefined : () => onClick(category.id)}
       >
         <sphereGeometry args={[category.radius, 32, 32]} />
         <animated.meshStandardMaterial

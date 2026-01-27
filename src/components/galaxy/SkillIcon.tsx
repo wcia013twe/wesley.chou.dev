@@ -94,7 +94,7 @@ export default function SkillIcon({ skill, position, color }: SkillIconProps) {
             document.body.style.cursor = 'default';
           }}
         >
-          {/* Render the skill icon */}
+          {/* Render the skill icon or placeholder */}
           <div
             style={{
               width: '48px',
@@ -102,9 +102,12 @@ export default function SkillIcon({ skill, position, color }: SkillIconProps) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              fontSize: '24px',
+              fontWeight: 'bold',
+              color: color,
             }}
           >
-            {skill.icon}
+            {skill.icon || skill.name.charAt(0).toUpperCase()}
           </div>
 
           {/* Tooltip - shown on hover */}
