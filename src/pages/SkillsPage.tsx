@@ -5,7 +5,7 @@ import TechGalaxy from "@/components/galaxy/TechGalaxy";
 
 const SkillsPage = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-screen flex flex-col overflow-hidden">
       <Helmet>
         <title>Skills | Wesley Chou</title>
         <meta name="description" content="Welcome to Wesley Chou's skills." />
