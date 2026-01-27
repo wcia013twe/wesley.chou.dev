@@ -1,5 +1,7 @@
 import SplitText from "../components/SplitText";
 import Timeline from "@/components/Timeline";
+import { professionalExperience, academicExperience } from "@/lib/experience";
+
 const ExperiencePage = () => {
   return (
     <div>
@@ -22,7 +24,22 @@ const ExperiencePage = () => {
           I've worked with
         </p>
       </div>
-      <Timeline />
+
+      {/* Professional Experience Section */}
+      <div className="mt-16">
+        <h2 className="text-4xl font-bold text-center text-white/90 mb-8">
+          Professional Experience
+        </h2>
+        <Timeline data={professionalExperience} />
+      </div>
+
+      {/* Academic & Leadership Section */}
+      <div className="mt-20">
+        <h2 className="text-4xl font-bold text-center text-white/90 mb-8">
+          Academic & Leadership
+        </h2>
+        <Timeline data={academicExperience} />
+      </div>
     </div>
   );
 };

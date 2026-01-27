@@ -10,10 +10,30 @@ import { MdLocationOn } from "react-icons/md";
 import { FaBuildingUser } from "react-icons/fa6";
 import TimelineDrawer from "./TimelineDrawer";
 import { useState } from "react";
-import { timelineData } from "../lib/experience";
 
 // Timeline data could be kept here as a constant, or moved to a separate file (e.g., timelineData.ts or timelineData.json).
 // For small, static datasets, keeping it here is fine. For larger or reused data, a separate file is better.
+
+interface TimelineData {
+  date: string;
+  imageSrc: string;
+  hero: string;
+  altText: string;
+  captionText: string;
+  title: string;
+  workplace: string;
+  location: string;
+  description: string;
+  skills: string[];
+  overview: string;
+  key_responsibilities: string[];
+  icon: React.ReactElement;
+  links?: Record<string, string>;
+}
+
+interface TimelineProps {
+  data: TimelineData[];
+}
 
 function renderSkillBadges(skills: string[]) {
   const maxVisible = 6;
@@ -36,14 +56,14 @@ function renderSkillBadges(skills: string[]) {
   );
 }
 
-const Timeline = () => {
+const Timeline = ({ data }: TimelineProps) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   return (
     <>
       <VerticalTimeline>
-        {timelineData.map((item, idx) => (
+        {data.map((item, idx) => (
           <VerticalTimelineElement
             key={idx}
             className="vertical-timeline-element--work hover:-translate-y-1 duration-300 ease-in-out group"
@@ -114,21 +134,21 @@ const Timeline = () => {
       </VerticalTimeline>
       {drawerOpen && selectedIndex !== null && (
         <TimelineDrawer
-          icon={timelineData[selectedIndex].icon}
-          title={timelineData[selectedIndex].title}
-          workplace={timelineData[selectedIndex].workplace}
-          hero={timelineData[selectedIndex].hero || ""}
-          altText={timelineData[selectedIndex].altText}
-          date={timelineData[selectedIndex].date}
-          location={timelineData[selectedIndex].location}
-          description={timelineData[selectedIndex].description}
-          skills={timelineData[selectedIndex].skills}
-          overview={timelineData[selectedIndex].overview || ""}
+          icon={data[selectedIndex].icon}
+          title={data[selectedIndex].title}
+          workplace={data[selectedIndex].workplace}
+          hero={data[selectedIndex].hero || ""}
+          altText={data[selectedIndex].altText}
+          date={data[selectedIndex].date}
+          location={data[selectedIndex].location}
+          description={data[selectedIndex].description}
+          skills={data[selectedIndex].skills}
+          overview={data[selectedIndex].overview || ""}
           key_responsibilities={
-            timelineData[selectedIndex].key_responsibilities
+            data[selectedIndex].key_responsibilities
           }
           links={Object.fromEntries(
-            Object.entries(timelineData[selectedIndex].links || {}).filter(
+            Object.entries(data[selectedIndex].links || {}).filter(
               ([, v]) => typeof v === "string"
             )
           )}
