@@ -7,6 +7,7 @@ import LeadershipNebula from './LeadershipNebula';
 
 interface ZoomedViewProps {
   category: SkillCategory;
+  focusedSkillIndex?: number;
 }
 
 /**

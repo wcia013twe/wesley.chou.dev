@@ -11,6 +11,7 @@ interface GalaxyViewProps {
   onPlanetClick: (categoryId: string) => void;
   planetOpacities?: Map<string, number>;
   planetScales?: Map<string, number>;
+  focusedPlanetId?: string | null;
 }
 
 /**
@@ -21,7 +22,7 @@ interface GalaxyViewProps {
  * Manages hover state for interactive planet effects.
  */
 const GalaxyView = forwardRef<OrbitControlsImpl, GalaxyViewProps>(
-  ({ onPlanetClick, planetOpacities, planetScales }, ref) => {
+  ({ onPlanetClick, planetOpacities, planetScales, focusedPlanetId }, ref) => {
     const [hoveredPlanetId, setHoveredPlanetId] = useState<string | null>(null);
 
   return (
@@ -31,6 +32,8 @@ const GalaxyView = forwardRef<OrbitControlsImpl, GalaxyViewProps>(
 
       {/* Render all planets */}
       {skillsGalaxyData.map((category) => {
+        const isFocused = focusedPlanetId === category.id;
+
         // Use LeadershipNebula for the leadership category, Planet for others
         if (category.id === 'leadership') {
           return (
@@ -38,6 +41,7 @@ const GalaxyView = forwardRef<OrbitControlsImpl, GalaxyViewProps>(
               key={category.id}
               category={category}
               isHovered={hoveredPlanetId === category.id}
+              isFocused={isFocused}
               onHover={setHoveredPlanetId}
               onClick={onPlanetClick}
               opacity={planetOpacities?.get(category.id) ?? 1.0}
@@ -50,6 +54,7 @@ const GalaxyView = forwardRef<OrbitControlsImpl, GalaxyViewProps>(
             key={category.id}
             category={category}
             isHovered={hoveredPlanetId === category.id}
+            isFocused={isFocused}
             onHover={setHoveredPlanetId}
             onClick={onPlanetClick}
             opacity={planetOpacities?.get(category.id) ?? 1.0}

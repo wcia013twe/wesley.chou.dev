@@ -89,7 +89,7 @@ function Navbar() {
                 </a>
               }
             />
-            <TooltipPanel side="bottom" sideOffset={6} className="text-xs bg-black/80 backdrop-blur-md border border-purple-500/30 px-2 py-1">
+            <TooltipPanel side="bottom" sideOffset={6} className="text-xs bg-black/95 backdrop-blur-md border-2 border-purple-400/60 text-white font-semibold shadow-xl shadow-purple-500/50 px-3 py-1.5">
               GitHub
             </TooltipPanel>
           </Tooltip>
@@ -108,7 +108,7 @@ function Navbar() {
                 </a>
               }
             />
-            <TooltipPanel side="bottom" sideOffset={6} className="text-xs bg-black/80 backdrop-blur-md border border-purple-500/30 px-2 py-1">
+            <TooltipPanel side="bottom" sideOffset={6} className="text-xs bg-black/95 backdrop-blur-md border-2 border-purple-400/60 text-white font-semibold shadow-xl shadow-purple-500/50 px-3 py-1.5">
               LinkedIn
             </TooltipPanel>
           </Tooltip>
@@ -125,7 +125,7 @@ function Navbar() {
                 </a>
               }
             />
-            <TooltipPanel side="bottom" sideOffset={6} className="text-xs bg-black/80 backdrop-blur-md border border-purple-500/30 px-2 py-1">
+            <TooltipPanel side="bottom" sideOffset={6} className="text-xs bg-black/95 backdrop-blur-md border-2 border-purple-400/60 text-white font-semibold shadow-xl shadow-purple-500/50 px-3 py-1.5">
               Resume
             </TooltipPanel>
           </Tooltip>

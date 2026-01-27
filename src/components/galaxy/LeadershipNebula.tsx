@@ -8,6 +8,7 @@ import { SkillCategory } from '@/data/skillsGalaxyData';
 interface LeadershipNebulaProps {
   category: SkillCategory;
   isHovered: boolean;
+  isFocused?: boolean;
   onHover: (id: string | null) => void;
   onClick: (id: string) => void;
   disableHover?: boolean;
@@ -26,6 +27,7 @@ interface LeadershipNebulaProps {
 export default function LeadershipNebula({
   category,
   isHovered,
+  isFocused = false,
   onHover,
   onClick,
   disableHover = false,
@@ -97,9 +99,10 @@ export default function LeadershipNebula({
     }
   });
 
-  // Hover animation using react-spring
+  // Hover and focus animation using react-spring
+  // Focus has stronger effect than hover for accessibility
   const { hoverIntensity } = useSpring({
-    hoverIntensity: (isHovered && !disableHover) ? 1.5 : 1.0,
+    hoverIntensity: isFocused ? 2.2 : ((isHovered && !disableHover) ? 1.5 : 1.0),
     config: {
       tension: 280,
       friction: 60,

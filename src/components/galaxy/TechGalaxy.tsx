@@ -6,6 +6,7 @@ import GalaxyView from './GalaxyView';
 import ZoomedView from './ZoomedView';
 import ExitButton from './ExitButton';
 import CameraController from './CameraController';
+import ReducedMotionFallback from './ReducedMotionFallback';
 import { skillsGalaxyData } from '@/data/skillsGalaxyData';
 
 type ViewMode = 'galaxy' | 'zoomed';
@@ -29,9 +30,30 @@ export default function TechGalaxy() {
   const [isLoading, setIsLoading] = useState(true);
   const [showHint, setShowHint] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  // Keyboard navigation state
+  const [focusedPlanetIndex, setFocusedPlanetIndex] = useState<number>(-1);
+  const [focusedSkillIndex, setFocusedSkillIndex] = useState<number>(-1);
 
   // Ref for OrbitControls to enable/disable during transitions
   const orbitControlsRef = useRef<OrbitControlsImpl>(null);
+
+  // Detect prefers-reduced-motion preference
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    // Set initial value
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    // Listen for changes
+    const handleChange = (e: MediaQueryListEvent) => {
+      setPrefersReducedMotion(e.matches);
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
 
   // Get the selected category data
   const selectedCategory = selectedCategoryId
@@ -60,6 +82,153 @@ export default function TechGalaxy() {
       setShowHint(false);
     }
   }, [viewMode]);
+
+  // Reset focus state when switching views
+  useEffect(() => {
+    if (viewMode === 'galaxy') {
+      setFocusedSkillIndex(-1);
+      setFocusedPlanetIndex(-1);
+    } else if (viewMode === 'zoomed') {
+      setFocusedPlanetIndex(-1);
+      setFocusedSkillIndex(-1);
+    }
+  }, [viewMode]);
+
+  // Keyboard navigation handler
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Prevent default for navigation keys to avoid page scrolling
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab', '+', '=', '-', '_'].includes(e.key)) {
+        e.preventDefault();
+      }
+
+      if (viewMode === 'galaxy') {
+        handleGalaxyViewKeyboard(e);
+      } else if (viewMode === 'zoomed') {
+        handleZoomedViewKeyboard(e);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [viewMode, focusedPlanetIndex, focusedSkillIndex, selectedCategoryId]);
+
+  // Galaxy view keyboard handlers
+  const handleGalaxyViewKeyboard = (e: KeyboardEvent) => {
+    const planetCount = skillsGalaxyData.length;
+
+    switch (e.key) {
+      case 'Tab':
+        // Cycle through planets
+        if (e.shiftKey) {
+          // Reverse cycle
+          setFocusedPlanetIndex((prev) => (prev <= 0 ? planetCount - 1 : prev - 1));
+        } else {
+          // Forward cycle
+          setFocusedPlanetIndex((prev) => (prev + 1) % planetCount);
+        }
+        break;
+
+      case 'Enter':
+      case ' ':
+        // Zoom into focused planet
+        if (focusedPlanetIndex >= 0 && focusedPlanetIndex < planetCount) {
+          const categoryId = skillsGalaxyData[focusedPlanetIndex].id;
+          handlePlanetClick(categoryId);
+        }
+        break;
+
+      case 'ArrowLeft':
+        // Rotate camera left
+        if (orbitControlsRef.current) {
+          orbitControlsRef.current.rotateLeft(0.1);
+        }
+        break;
+
+      case 'ArrowRight':
+        // Rotate camera right
+        if (orbitControlsRef.current) {
+          orbitControlsRef.current.rotateLeft(-0.1);
+        }
+        break;
+
+      case 'ArrowUp':
+        // Rotate camera up
+        if (orbitControlsRef.current) {
+          orbitControlsRef.current.rotateUp(0.1);
+        }
+        break;
+
+      case 'ArrowDown':
+        // Rotate camera down
+        if (orbitControlsRef.current) {
+          orbitControlsRef.current.rotateUp(-0.1);
+        }
+        break;
+
+      case '+':
+      case '=':
+        // Zoom in
+        if (orbitControlsRef.current) {
+          orbitControlsRef.current.dollyIn(1.1);
+          orbitControlsRef.current.update();
+        }
+        break;
+
+      case '-':
+      case '_':
+        // Zoom out
+        if (orbitControlsRef.current) {
+          orbitControlsRef.current.dollyOut(1.1);
+          orbitControlsRef.current.update();
+        }
+        break;
+    }
+  };
+
+  // Zoomed view keyboard handlers
+  const handleZoomedViewKeyboard = (e: KeyboardEvent) => {
+    if (!selectedCategory) return;
+
+    const skillCount = selectedCategory.skills.length;
+
+    switch (e.key) {
+      case 'Tab':
+        // Cycle through skill icons
+        if (e.shiftKey) {
+          // Reverse cycle
+          setFocusedSkillIndex((prev) => (prev <= 0 ? skillCount - 1 : prev - 1));
+        } else {
+          // Forward cycle
+          setFocusedSkillIndex((prev) => (prev + 1) % skillCount);
+        }
+        break;
+
+      case 'Enter':
+      case ' ':
+        // Focus highlight (could trigger detail view in future)
+        if (focusedSkillIndex >= 0 && focusedSkillIndex < skillCount) {
+          // Currently just maintains focus, could expand functionality
+          console.log('Focused skill:', selectedCategory.skills[focusedSkillIndex].name);
+        }
+        break;
+
+      case 'Escape':
+        // Return to galaxy view
+        handleExit();
+        break;
+
+      case 'ArrowLeft':
+        // Optional: Rotate orbital view left
+        // Currently not implemented as the orbit auto-rotates
+        break;
+
+      case 'ArrowRight':
+        // Optional: Rotate orbital view right
+        // Currently not implemented as the orbit auto-rotates
+        break;
+    }
+  };
 
   // Calculate planet opacities based on view mode and selected category
   const planetOpacities = useMemo(() => {
@@ -118,6 +287,7 @@ export default function TechGalaxy() {
     }
   };
 
+  // Show loading spinner briefly
   if (isLoading) {
     return (
       <div className="flex h-full w-full items-center justify-center bg-gradient-to-b from-black to-purple-950">
@@ -126,6 +296,12 @@ export default function TechGalaxy() {
     );
   }
 
+  // If user prefers reduced motion, show accessible fallback
+  if (prefersReducedMotion) {
+    return <ReducedMotionFallback categories={skillsGalaxyData} />;
+  }
+
+  // Otherwise, show the full 3D experience
   return (
     <div className="relative h-full w-full">
       {/* Three.js Canvas */}
@@ -154,12 +330,17 @@ export default function TechGalaxy() {
           ref={orbitControlsRef}
           onPlanetClick={handlePlanetClick}
           planetOpacities={planetOpacities}
+          planetScales={planetScales}
+          focusedPlanetId={focusedPlanetIndex >= 0 ? skillsGalaxyData[focusedPlanetIndex]?.id : null}
         />
 
         {/* Render ZoomedView when in zoomed mode */}
         {viewMode === 'zoomed' && selectedCategory && (
           <>
-            <ZoomedView category={selectedCategory} />
+            <ZoomedView
+              category={selectedCategory}
+              focusedSkillIndex={focusedSkillIndex}
+            />
 
             {/* Background click plane - large invisible mesh to catch clicks */}
             <mesh

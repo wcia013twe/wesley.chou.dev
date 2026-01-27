@@ -7,6 +7,7 @@ import { SkillCategory } from '@/data/skillsGalaxyData';
 interface PlanetProps {
   category: SkillCategory;
   isHovered: boolean;
+  isFocused?: boolean;
   onHover: (id: string | null) => void;
   onClick: (id: string) => void;
   disableHover?: boolean;
@@ -18,9 +19,9 @@ interface PlanetProps {
  * Planet Component
  *
  * Renders a skill category as a glowing planet in 3D space.
- * Features rotation animation and smooth hover effects using react-spring.
+ * Features rotation animation, hover effects, and keyboard focus indicators using react-spring.
  */
-export default function Planet({ category, isHovered, onHover, onClick, disableHover = false, opacity = 1.0, planetScale = 1.0 }: PlanetProps) {
+export default function Planet({ category, isHovered, isFocused = false, onHover, onClick, disableHover = false, opacity = 1.0, planetScale = 1.0 }: PlanetProps) {
   const meshRef = useRef<THREE.Mesh>(null);
 
   // Rotation animation (0.002 rad/frame on Y-axis, or slower if hover disabled)
@@ -30,10 +31,11 @@ export default function Planet({ category, isHovered, onHover, onClick, disableH
     }
   });
 
-  // Hover animation using react-spring (disabled if disableHover is true)
+  // Hover and focus animation using react-spring
+  // Focus has stronger effect than hover for accessibility
   const { hoverScale, emissiveIntensity } = useSpring({
-    hoverScale: (isHovered && !disableHover) ? 1.05 : 1.0,
-    emissiveIntensity: (isHovered && !disableHover) ? 1.3 : 1.0,
+    hoverScale: isFocused ? 1.12 : ((isHovered && !disableHover) ? 1.05 : 1.0),
+    emissiveIntensity: isFocused ? 1.8 : ((isHovered && !disableHover) ? 1.3 : 1.0),
     config: {
       tension: 280,
       friction: 60,
@@ -70,11 +72,11 @@ export default function Planet({ category, isHovered, onHover, onClick, disableH
         />
       </animated.mesh>
 
-      {/* Point light for glow effect */}
+      {/* Point light for glow effect - brighter when focused */}
       <pointLight
         color={category.color}
-        intensity={2}
-        distance={category.radius * 3}
+        intensity={isFocused ? 3.5 : 2}
+        distance={category.radius * (isFocused ? 4 : 3)}
         decay={2}
       />
     </group>
