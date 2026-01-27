@@ -7,7 +7,7 @@ interface FloatingShapeProps {
   position: [number, number, number];
   rotationSpeed: [number, number, number];
   material: 'standard' | 'wireframe';
-  mousePos: { x: number; y: number };
+  mousePosRef: React.MutableRefObject<{ x: number; y: number }>;
 }
 
 const FloatingShape: React.FC<FloatingShapeProps> = ({
@@ -15,7 +15,7 @@ const FloatingShape: React.FC<FloatingShapeProps> = ({
   position,
   rotationSpeed,
   material,
-  mousePos,
+  mousePosRef,
 }) => {
   const meshRef = useRef<THREE.Mesh>(null);
 
@@ -26,9 +26,9 @@ const FloatingShape: React.FC<FloatingShapeProps> = ({
       meshRef.current.rotation.y += rotationSpeed[1] * delta;
       meshRef.current.rotation.z += rotationSpeed[2] * delta;
 
-      // Mouse parallax with elastic following
-      const targetX = position[0] + mousePos.x * 0.5;
-      const targetY = position[1] + mousePos.y * 0.5;
+      // Mouse parallax - read from ref
+      const targetX = position[0] + mousePosRef.current.x * 0.5;
+      const targetY = position[1] + mousePosRef.current.y * 0.5;
 
       meshRef.current.position.x += (targetX - meshRef.current.position.x) * 0.05;
       meshRef.current.position.y += (targetY - meshRef.current.position.y) * 0.05;
@@ -96,35 +96,35 @@ const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
           position={[-3, 2, 0]}
           rotationSpeed={[0.5, 0.3, 0]}
           material="wireframe"
-          mousePos={mousePositionRef.current}
+          mousePosRef={mousePositionRef}
         />
         <FloatingShape
           geometry="sphere"
           position={[3, -1, -2]}
           rotationSpeed={[0.2, 0.4, 0.1]}
           material="standard"
-          mousePos={mousePositionRef.current}
+          mousePosRef={mousePositionRef}
         />
         <FloatingShape
           geometry="torus"
           position={[0, -2, 1]}
           rotationSpeed={[0.3, 0.2, 0.5]}
           material="wireframe"
-          mousePos={mousePositionRef.current}
+          mousePosRef={mousePositionRef}
         />
         <FloatingShape
           geometry="icosahedron"
           position={[-2, -1, -1]}
           rotationSpeed={[0.1, 0.5, 0.2]}
           material="standard"
-          mousePos={mousePositionRef.current}
+          mousePosRef={mousePositionRef}
         />
         <FloatingShape
           geometry="box"
           position={[2, 2, -1]}
           rotationSpeed={[0.4, 0.1, 0.3]}
           material="standard"
-          mousePos={mousePositionRef.current}
+          mousePosRef={mousePositionRef}
         />
       </Canvas>
     </div>
