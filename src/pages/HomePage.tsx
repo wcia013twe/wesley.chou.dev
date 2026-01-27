@@ -2,7 +2,8 @@ import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MdEmail } from "react-icons/md";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaGithub, FaLinkedin } from "react-icons/fa";
+import { CgFileDocument } from "react-icons/cg";
 import Hero3DPlayground from "@/components/Hero3DPlayground";
 import FeatureCard from "@/components/FeatureCard";
 import ScrollIndicator from "@/components/ScrollIndicator";
@@ -116,6 +117,58 @@ const HomePage = () => {
           />
         </motion.div>
       </section>
+
+      {/* Quick Links Footer */}
+      <footer className="relative z-10 bg-black/80 border-t border-gray-800">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          {/* Row 1: Social Icons */}
+          <div className="flex justify-center gap-4 mb-4">
+            <a
+              href="https://github.com/wcia013twe"
+              aria-label="GitHub"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-3xl text-white/80 hover:text-purple-500 hover:scale-110 transition-all"
+            >
+              <FaGithub />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/weschou013/"
+              aria-label="LinkedIn"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-3xl text-white/80 hover:text-purple-500 hover:scale-110 transition-all"
+            >
+              <FaLinkedin />
+            </a>
+            <a
+              href="documents/IWesChouResume2026_1120.pdf"
+              aria-label="Resume"
+              className="text-3xl text-white/80 hover:text-purple-500 hover:scale-110 transition-all"
+            >
+              <CgFileDocument />
+            </a>
+          </div>
+
+          {/* Row 2: Copyright & Navigation */}
+          <div className="flex flex-col md:flex-row justify-center items-center gap-4 text-sm text-white/60">
+            <p>© 2025 Wesley Chou</p>
+            <div className="flex gap-2">
+              <Link to="/experience" className="hover:text-purple-500 hover:underline transition-colors">
+                Experience
+              </Link>
+              <span>|</span>
+              <Link to="/projects" className="hover:text-purple-500 hover:underline transition-colors">
+                Projects
+              </Link>
+              <span>|</span>
+              <Link to="/skills" className="hover:text-purple-500 hover:underline transition-colors">
+                Skills
+              </Link>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
