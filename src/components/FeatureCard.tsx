@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { useRef, useState } from 'react';
 
 interface FeatureCardProps {
   title: string;
@@ -8,10 +8,13 @@ interface FeatureCardProps {
 }
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, imageSrc }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <motion.div
+      ref={ref}
       role="button"
       tabIndex={0}
       aria-label={`${title}: ${description}`}
@@ -26,8 +29,10 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, imageSrc 
           e.preventDefault();
         }
       }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       whileHover={{ y: -8 }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
+      transition={{ duration: 0.6, ease: 'easeOut' }}
     >
       {/* Background Image */}
       <motion.div
