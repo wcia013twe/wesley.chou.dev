@@ -1,5 +1,5 @@
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 
 interface FloatingShapeProps {
@@ -7,6 +7,7 @@ interface FloatingShapeProps {
   position: [number, number, number];
   rotationSpeed: [number, number, number];
   material: 'standard' | 'wireframe';
+  mousePos: { x: number; y: number };
 }
 
 const FloatingShape: React.FC<FloatingShapeProps> = ({
@@ -14,14 +15,23 @@ const FloatingShape: React.FC<FloatingShapeProps> = ({
   position,
   rotationSpeed,
   material,
+  mousePos,
 }) => {
   const meshRef = useRef<THREE.Mesh>(null);
 
   useFrame((state, delta) => {
     if (meshRef.current) {
+      // Rotation
       meshRef.current.rotation.x += rotationSpeed[0] * delta;
       meshRef.current.rotation.y += rotationSpeed[1] * delta;
       meshRef.current.rotation.z += rotationSpeed[2] * delta;
+
+      // Mouse parallax with elastic following
+      const targetX = position[0] + mousePos.x * 0.5;
+      const targetY = position[1] + mousePos.y * 0.5;
+
+      meshRef.current.position.x += (targetX - meshRef.current.position.x) * 0.05;
+      meshRef.current.position.y += (targetY - meshRef.current.position.y) * 0.05;
     }
   });
 
@@ -58,6 +68,20 @@ interface Hero3DPlaygroundProps {
 }
 
 const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth) * 2 - 1,
+        y: -(e.clientY / window.innerHeight) * 2 + 1,
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   return (
     <div className={`fixed inset-0 -z-10 ${className || ''}`} aria-hidden="true">
       <Canvas
@@ -72,30 +96,35 @@ const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
           position={[-3, 2, 0]}
           rotationSpeed={[0.5, 0.3, 0]}
           material="wireframe"
+          mousePos={mousePosition}
         />
         <FloatingShape
           geometry="sphere"
           position={[3, -1, -2]}
           rotationSpeed={[0.2, 0.4, 0.1]}
           material="standard"
+          mousePos={mousePosition}
         />
         <FloatingShape
           geometry="torus"
           position={[0, -2, 1]}
           rotationSpeed={[0.3, 0.2, 0.5]}
           material="wireframe"
+          mousePos={mousePosition}
         />
         <FloatingShape
           geometry="icosahedron"
           position={[-2, -1, -1]}
           rotationSpeed={[0.1, 0.5, 0.2]}
           material="standard"
+          mousePos={mousePosition}
         />
         <FloatingShape
           geometry="box"
           position={[2, 2, -1]}
           rotationSpeed={[0.4, 0.1, 0.3]}
           material="standard"
+          mousePos={mousePosition}
         />
       </Canvas>
     </div>
