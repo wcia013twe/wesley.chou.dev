@@ -37,7 +37,7 @@ const ProjectsPage = () => {
             textAlign="center"
           />
           <motion.p
-            className="text-lg text-white/80"
+          className="text-lg text-white/80"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.6 }}

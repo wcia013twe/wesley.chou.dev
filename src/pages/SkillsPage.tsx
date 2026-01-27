@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import { motion } from "motion/react";
 // import ScrollStack, { ScrollStackItem } from "@/components/ui/scroll-stack";
 import SplitText from "../components/SplitText";
 import ScrollStack, { ScrollStackItem } from "@/components/ScrollStack.tsx";
@@ -22,11 +23,13 @@ const SkillsPage = () => {
       </Helmet>
 
       <FloatingScrollPrompt />
-      <div className="flex flex-col items-center justify-center ">
-        <div className="mt-15 text-center">
+
+      {/* Header Zone - Glassmorphic (matching Projects page) */}
+      <div className="sticky top-0 z-40 bg-black/40 backdrop-blur-xl border-b border-purple-500/20 shadow-lg shadow-black/10 w-full">
+        <div className="max-w-6xl mx-auto py-12 px-6 text-center">
           <SplitText
             text="Skills"
-            className="text-5xl font-semibold text-center mb-2 pb-3"
+            className="text-5xl font-semibold text-center pb-3"
             delay={100}
             duration={0.4}
             ease="power3.out"
@@ -37,9 +40,14 @@ const SkillsPage = () => {
             rootMargin="-100px"
             textAlign="center"
           />
-          <p className="text-lg text-center">
+          <motion.p
+            className="text-lg text-white/80"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+          >
             Technology and tools I use to bring ideas to life.
-          </p>
+          </motion.p>
         </div>
       </div>
 
