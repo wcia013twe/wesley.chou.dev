@@ -68,14 +68,14 @@ interface Hero3DPlaygroundProps {
 }
 
 const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const mousePositionRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
+      mousePositionRef.current = {
         x: (e.clientX / window.innerWidth) * 2 - 1,
         y: -(e.clientY / window.innerHeight) * 2 + 1,
-      });
+      };
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -96,35 +96,35 @@ const Hero3DPlayground: React.FC<Hero3DPlaygroundProps> = ({ className }) => {
           position={[-3, 2, 0]}
           rotationSpeed={[0.5, 0.3, 0]}
           material="wireframe"
-          mousePos={mousePosition}
+          mousePos={mousePositionRef.current}
         />
         <FloatingShape
           geometry="sphere"
           position={[3, -1, -2]}
           rotationSpeed={[0.2, 0.4, 0.1]}
           material="standard"
-          mousePos={mousePosition}
+          mousePos={mousePositionRef.current}
         />
         <FloatingShape
           geometry="torus"
           position={[0, -2, 1]}
           rotationSpeed={[0.3, 0.2, 0.5]}
           material="wireframe"
-          mousePos={mousePosition}
+          mousePos={mousePositionRef.current}
         />
         <FloatingShape
           geometry="icosahedron"
           position={[-2, -1, -1]}
           rotationSpeed={[0.1, 0.5, 0.2]}
           material="standard"
-          mousePos={mousePosition}
+          mousePos={mousePositionRef.current}
         />
         <FloatingShape
           geometry="box"
           position={[2, 2, -1]}
           rotationSpeed={[0.4, 0.1, 0.3]}
           material="standard"
-          mousePos={mousePosition}
+          mousePos={mousePositionRef.current}
         />
       </Canvas>
     </div>
