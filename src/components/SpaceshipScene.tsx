@@ -8,11 +8,17 @@
  * - Respects prefers-reduced-motion settings (Task 4)
  * - Responsive lighting setup
  */
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree, extend } from '@react-three/fiber';
 import { useGLTF, Stars } from '@react-three/drei';
 import { useRef, useEffect, useState } from 'react';
 import { useInView } from 'framer-motion';
 import * as THREE from 'three';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+
+// Extend R3F with postprocessing
+extend({ EffectComposer, RenderPass, UnrealBloomPass });
 
 interface SpaceshipSceneProps {
   className?: string;
@@ -38,16 +44,50 @@ const usePrefersReducedMotion = () => {
   return prefersReducedMotion;
 };
 
+// Bloom effect component
+function Effects() {
+  const { gl, scene, camera, size } = useThree();
+  const composerRef = useRef<EffectComposer>();
+
+  useEffect(() => {
+    const composer = new EffectComposer(gl);
+    composer.setSize(size.width, size.height);
+
+    const renderPass = new RenderPass(scene, camera);
+    composer.addPass(renderPass);
+
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(size.width, size.height),
+      0.4,   // strength
+      0.8,   // radius
+      0.1    // threshold
+    );
+    composer.addPass(bloomPass);
+
+    composerRef.current = composer;
+  }, [gl, scene, camera, size]);
+
+  useFrame(() => {
+    if (composerRef.current) {
+      composerRef.current.render();
+    }
+  }, 1);
+
+  return null;
+}
+
 // Engine boost ray component
 const EngineBoost: React.FC = () => {
   return (
     <mesh position={[0, 0, -3.5]} rotation-x={Math.PI * 0.5}>
       <cylinderGeometry args={[0.15, 0.05, 4, 15]} />
-      <meshBasicMaterial
+      <meshStandardMaterial
         color={[1.0, 0.4, 0.02]}
+        emissive={[1.0, 0.4, 0.02]}
+        emissiveIntensity={3}
         transparent
-        opacity={0.8}
-        blending={THREE.AdditiveBlending}
+        opacity={0.9}
+        toneMapped={false}
       />
     </mesh>
   );
@@ -135,6 +175,7 @@ const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({ className }) => {
           mousePositionRef={mousePositionRef}
           prefersReducedMotion={prefersReducedMotion}
         />
+        <Effects />
       </Canvas>
     </div>
   );
