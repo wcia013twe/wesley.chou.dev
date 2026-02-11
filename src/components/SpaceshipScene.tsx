@@ -47,9 +47,9 @@ const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
 
   useFrame((_state) => {
     if (meshRef.current && !prefersReducedMotion) {
-      // Mouse parallax rotation
-      const targetRotationY = mousePositionRef.current.x * 0.3;
-      const targetRotationX = -mousePositionRef.current.y * 0.2;
+      // Mouse parallax rotation - primarily Y movement, minimal X lean
+      const targetRotationY = mousePositionRef.current.x * 0.05; // Minimal horizontal rotation
+      const targetRotationX = -mousePositionRef.current.y * 0.3; // Primary vertical movement
 
       // Smooth interpolation
       meshRef.current.rotation.y += (targetRotationY - meshRef.current.rotation.y) * 0.05;
@@ -61,8 +61,8 @@ const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
     <primitive
       ref={meshRef}
       object={scene.clone()}
-      scale={0.3}
-      position={[0, 0, 0]}
+      scale={0.25}
+      position={[-2, 0, 0]}
       rotation={[0, Math.PI * 0.55, 0]}
     />
   );
