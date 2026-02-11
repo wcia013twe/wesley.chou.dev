@@ -9,7 +9,7 @@
  * - Responsive lighting setup
  */
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF } from '@react-three/drei';
+import { useGLTF, Stars } from '@react-three/drei';
 import { useRef, useEffect, useState } from 'react';
 import { useInView } from 'framer-motion';
 import * as THREE from 'three';
@@ -38,6 +38,21 @@ const usePrefersReducedMotion = () => {
   return prefersReducedMotion;
 };
 
+// Engine boost ray component
+const EngineBoost: React.FC = () => {
+  return (
+    <mesh position={[0, 0, -3.5]} rotation-x={Math.PI * 0.5}>
+      <cylinderGeometry args={[0.15, 0.05, 4, 15]} />
+      <meshBasicMaterial
+        color={[1.0, 0.4, 0.02]}
+        transparent
+        opacity={0.8}
+        blending={THREE.AdditiveBlending}
+      />
+    </mesh>
+  );
+};
+
 const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
   mousePositionRef,
   prefersReducedMotion
@@ -47,8 +62,8 @@ const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
 
   // Base rotation - spaceship faces right towards text
   const baseRotation = {
-    x: 0,
-    y: Math.PI * 0.55,
+    x: Math.PI * 0.05,
+    y: Math.PI * 0.25,
   };
 
   useFrame((_state) => {
@@ -64,12 +79,10 @@ const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
   });
 
   return (
-    <primitive
-      ref={meshRef}
-      object={scene.clone()}
-      scale={0.25}
-      position={[-2, 0, 0]}
-    />
+    <group ref={meshRef}>
+      <primitive object={scene.clone()} scale={0.25} position={[-1.5, 0, 0]} />
+      <EngineBoost />
+    </group>
   );
 };
 
@@ -104,6 +117,17 @@ const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({ className }) => {
         camera={{ position: [-5, 6, 10], fov: 25 }}
         gl={{ alpha: true, antialias: true }}
       >
+        {/* Star field background */}
+        <Stars
+          radius={100}
+          depth={50}
+          count={5000}
+          factor={4}
+          saturation={0}
+          fade
+          speed={1}
+        />
+
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 5, 5]} intensity={1} />
         <directionalLight position={[-5, -5, 5]} intensity={0.5} />
