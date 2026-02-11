@@ -61,8 +61,9 @@ const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
     <primitive
       ref={meshRef}
       object={scene.clone()}
-      scale={1.0}
+      scale={0.3}
       position={[0, 0, 0]}
+      rotation={[0, Math.PI * 0.55, 0]}
     />
   );
 };
