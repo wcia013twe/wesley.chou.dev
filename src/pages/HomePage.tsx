@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { MdEmail } from "react-icons/md";
 import { FaArrowRight, FaGithub, FaLinkedin } from "react-icons/fa";
 import { CgFileDocument } from "react-icons/cg";
-import Hero3DPlayground from "@/components/Hero3DPlayground";
+import SpaceshipScene from "@/components/SpaceshipScene";
 import FeatureCard from "@/components/FeatureCard";
 import ScrollIndicator from "@/components/ScrollIndicator";
 import TextType from "@/components/TextType";
@@ -20,67 +20,75 @@ const HomePage = () => {
         />
       </Helmet>
 
-      {/* 3D Background */}
-      <Hero3DPlayground />
 
-      {/* Hero Zone */}
-      <section className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6">
-        <motion.div
-          className="text-center space-y-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <h1 className="text-5xl md:text-7xl font-bold text-white drop-shadow-lg">
-            Hi, I'm Wesley Chou
-          </h1>
+      {/* Hero Zone - Split Screen */}
+      <section className="flex flex-col md:flex-row min-h-screen">
+        {/* Left Section - 3D Spaceship */}
+        <div className="relative w-full md:w-1/2 h-[50vh] md:h-screen bg-gradient-to-br from-purple-900/20 via-black to-black">
+          <SpaceshipScene />
+        </div>
 
-          <div className="text-2xl md:text-4xl text-white/90">
-            <TextType
-              text={[
-                "Software Engineer",
-                "AR Researcher",
-                "Founder",
-              ]}
-              typingSpeed={50}
-              pauseDuration={1500}
-              showCursor={true}
-              cursorCharacter="|"
-            />
-          </div>
-
-          {/* CTA Buttons */}
+        {/* Right Section - Text Content */}
+        <div className="relative w-full md:w-1/2 flex flex-col items-center justify-center px-6 py-12 md:py-0 bg-black">
           <motion.div
-            className="flex flex-wrap gap-4 justify-center pt-8"
+            className="text-center space-y-6 max-w-2xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.8 }}
           >
-            <Link to="/experience">
-              <motion.button
-                className="inline-flex items-center gap-2 px-4 py-3 md:px-6 md:py-4 text-lg md:text-xl font-semibold bg-purple-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-shadow"
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                View Experience
-                <FaArrowRight />
-              </motion.button>
-            </Link>
+            <h1 className="text-5xl md:text-7xl font-bold text-white drop-shadow-lg">
+              Hi, I'm Wesley Chou
+            </h1>
 
-            <a href="mailto:wcia013twe@gmail.com">
-              <motion.button
-                className="inline-flex items-center gap-2 px-4 py-3 md:px-6 md:py-4 text-lg md:text-xl font-semibold bg-transparent border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors"
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Contact Me
-                <MdEmail />
-              </motion.button>
-            </a>
+            <div className="text-2xl md:text-4xl text-white/90">
+              <TextType
+                text={[
+                  "Software Engineer",
+                  "AR Researcher",
+                  "Founder",
+                ]}
+                typingSpeed={50}
+                pauseDuration={1500}
+                showCursor={true}
+                cursorCharacter="|"
+              />
+            </div>
+
+            {/* CTA Buttons */}
+            <motion.div
+              className="flex flex-wrap gap-4 justify-center pt-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <Link to="/experience">
+                <motion.button
+                  className="inline-flex items-center gap-2 px-4 py-3 md:px-6 md:py-4 text-lg md:text-xl font-semibold bg-purple-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  View Experience
+                  <FaArrowRight />
+                </motion.button>
+              </Link>
+
+              <a href="mailto:wcia013twe@gmail.com">
+                <motion.button
+                  className="inline-flex items-center gap-2 px-4 py-3 md:px-6 md:py-4 text-lg md:text-xl font-semibold bg-transparent border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Contact Me
+                  <MdEmail />
+                </motion.button>
+              </a>
+            </motion.div>
           </motion.div>
-        </motion.div>
 
-        <ScrollIndicator />
+          <div className="absolute bottom-8">
+            <ScrollIndicator />
+          </div>
+        </div>
       </section>
 
       {/* Feature Cards Zone */}

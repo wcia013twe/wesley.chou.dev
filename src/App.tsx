@@ -10,13 +10,24 @@ import SkillsPage from "./pages/SkillsPage";
 import Navbar from "./components/NavBar";
 import { HelmetProvider } from "react-helmet-async";
 import ExperiencePage from "./pages/ExperiencePage";
-import PixelBlast from "./components/PixelBlast";
+import Particles from "./components/Particles";
 
 const Layout = () => (
   <>
     <Navbar />
     <div className="fixed inset-0 -z-20 bg-black/80 opacity-85">
-      <PixelBlast variant="square" className="bg-[#000014]"  color="#a78bfa" patternDensity={0.5}/>
+      {/* <PixelBlast variant="square" className="bg-[#000014]"  color="#a78bfa" patternDensity={0.5}/> */}
+      <Particles
+    particleColors={["#ffffff"]}
+    particleCount={200}
+    particleSpread={10}
+    speed={0.1}
+    particleBaseSize={100}
+    moveParticlesOnHover
+    alphaParticles={false}
+    disableRotation={false}
+    pixelRatio={1}
+/>
     </div>
     <main>
       <Outlet />
