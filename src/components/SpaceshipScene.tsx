@@ -9,7 +9,7 @@
  * - Responsive lighting setup
  */
 import { Canvas, useFrame, useThree, extend } from "@react-three/fiber";
-import { useGLTF, Stars } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 import { useRef, useEffect, useState } from "react";
 import { useInView } from "framer-motion";
 import * as THREE from "three";
@@ -167,17 +167,6 @@ const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({ className }) => {
         camera={{ position: [-5, 6, 10], fov: 25 }}
         gl={{ alpha: true, antialias: true }}
       >
-        {/* Star field background - shared across both sections */}
-        <Stars
-          radius={100}
-          depth={50}
-          count={5000}
-          factor={4}
-          saturation={0}
-          fade
-          speed={1}
-        />
-
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 5, 5]} intensity={1} />
         <directionalLight position={[-5, -5, 5]} intensity={0.5} />
