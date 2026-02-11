@@ -15,19 +15,22 @@ import Particles from "./components/Particles";
 const Layout = () => (
   <>
     <Navbar />
-    <div className="fixed inset-0 -z-20 bg-black/80 opacity-85">
+    {/* Black background layer */}
+    <div className="fixed inset-0 -z-30 bg-black" />
+    {/* Particles layer */}
+    <div className="fixed inset-0 -z-20">
       {/* <PixelBlast variant="square" className="bg-[#000014]"  color="#a78bfa" patternDensity={0.5}/> */}
       <Particles
-    particleColors={["#ffffff"]}
-    particleCount={200}
-    particleSpread={10}
-    speed={0.1}
-    particleBaseSize={100}
-    moveParticlesOnHover
-    alphaParticles={false}
-    disableRotation={false}
-    pixelRatio={1}
-/>
+        particleColors={["#ffffff"]}
+        particleCount={200}
+        particleSpread={10}
+        speed={0.1}
+        particleBaseSize={50}
+        moveParticlesOnHover
+        alphaParticles={false}
+        disableRotation={false}
+        pixelRatio={1}
+      />
     </div>
     <main>
       <Outlet />

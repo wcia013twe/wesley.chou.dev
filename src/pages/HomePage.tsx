@@ -8,6 +8,7 @@ import SpaceshipScene from "@/components/SpaceshipScene";
 import FeatureCard from "@/components/FeatureCard";
 import ScrollIndicator from "@/components/ScrollIndicator";
 import TextType from "@/components/TextType";
+import Particles from "@/components/Particles";
 
 const HomePage = () => {
   return (
@@ -22,19 +23,34 @@ const HomePage = () => {
 
 
       {/* Hero Zone - Split Screen */}
-      <section className="relative flex flex-col md:flex-row min-h-screen">
+      <section className="relative flex flex-col md:flex-row min-h-screen overflow-hidden">
+        {/* Particles background layer */}
+        <div className="absolute inset-0 z-50">
+          <Particles
+            particleColors={["#ffffff"]}
+            particleCount={300}
+            particleSpread={10}
+            speed={0.1}
+            particleBaseSize={50}
+            moveParticlesOnHover={false}
+            alphaParticles={false}
+            disableRotation={false}
+            pixelRatio={1}
+          />
+        </div>
+
         {/* Shared 3D background - spans both sections */}
-        <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0 z-10 pointer-events-none">
           <SpaceshipScene />
         </div>
 
         {/* Left Section - Purple glow overlay */}
-        <div className="relative w-full md:w-1/2 h-[50vh] md:h-screen">
+        <div className="relative w-full md:w-1/2 h-[50vh] md:h-screen z-20">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-transparent to-transparent pointer-events-none" />
         </div>
 
         {/* Right Section - Text Content */}
-        <div className="relative w-full md:w-1/2 flex flex-col items-start justify-center px-6 py-12 md:py-0 md:pl-12">
+        <div className="relative w-full md:w-1/2 flex flex-col items-start justify-center px-6 py-12 md:py-0 md:pl-12 z-20">
           <motion.div
             className="space-y-6 max-w-2xl"
             initial={{ opacity: 0, y: 20 }}

@@ -8,17 +8,17 @@
  * - Respects prefers-reduced-motion settings (Task 4)
  * - Responsive lighting setup
  */
-import { Canvas, useFrame, useThree, extend } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
-import { useRef, useEffect, useState } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useGLTF, useTexture } from "@react-three/drei";
+import React, { useRef, useEffect, useState } from "react";
 import { useInView } from "framer-motion";
 import * as THREE from "three";
-import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
-import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
-import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
-
-// Extend R3F with postprocessing
-extend({ EffectComposer, RenderPass, UnrealBloomPass });
+// import { EffectComposer, Bloom } from "@react-three/postprocessing";
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+import MovingRays from "./MovingRays";
 
 interface SpaceshipSceneProps {
   className?: string;
@@ -45,29 +45,41 @@ const usePrefersReducedMotion = () => {
   return prefersReducedMotion;
 };
 
-// Bloom effect component
+// Bloom effect - manual THREE.js postprocessing (matches Svelte implementation)
 function Effects() {
   const { gl, scene, camera, size } = useThree();
   const composerRef = useRef<EffectComposer>();
 
   useEffect(() => {
+    // Create effect composer
     const composer = new EffectComposer(gl);
     composer.setSize(size.width, size.height);
 
+    // Add render pass
     const renderPass = new RenderPass(scene, camera);
     composer.addPass(renderPass);
 
+    // Add bloom pass - threshold between rays (~1.3) and engine (~1.5)
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(size.width, size.height),
-      0.4, // strength
-      0.8, // radius
-      0.1, // threshold
+      0.5,    // strength
+      1,      // radius
+      1.4     // threshold - engine passes, rays don't
     );
     composer.addPass(bloomPass);
 
+    // Add output pass
+    const outputPass = new OutputPass();
+    composer.addPass(outputPass);
+
     composerRef.current = composer;
+
+    return () => {
+      composer.dispose();
+    };
   }, [gl, scene, camera, size]);
 
+  // Render with composer instead of default renderer
   useFrame(() => {
     if (composerRef.current) {
       composerRef.current.render();
@@ -77,17 +89,20 @@ function Effects() {
   return null;
 }
 
-// Engine boost ray component
+// Engine boost ray component - matches Threlte implementation
 const EngineBoost: React.FC = () => {
+  const alphaMap = useTexture('/textures/energy-beam-opacity.png');
+
   return (
-    <mesh position={[0, -0.75, -6.7]} rotation-x={Math.PI * 0.5} renderOrder={-1}>
+    <mesh position={[0, -0.75, -6.7]} rotation-x={Math.PI * 0.5}>
       <cylinderGeometry args={[0.15, 0.05, 4, 15]} />
-      <meshStandardMaterial
-        color={[1.0, 0.4, 0.02]}
-        emissive={[1.0, 0.4, 0.02]}
-        emissiveIntensity={3}
+      <meshBasicMaterial
+        color={[3.0, 1.2, 0.06]}
+        alphaMap={alphaMap}
         transparent
-        opacity={0.9}
+        blending={THREE.CustomBlending}
+        blendDst={THREE.OneFactor}
+        blendEquation={THREE.AddEquation}
         toneMapped={false}
         depthWrite={false}
       />
@@ -161,15 +176,26 @@ const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({ className }) => {
       ref={canvasRef}
       className={`w-full h-full ${className || ""}`}
       aria-hidden="true"
+      style={{ background: 'transparent' }}
     >
       <Canvas
         frameloop={isInView ? "always" : "demand"}
         camera={{ position: [-5, 6, 10], fov: 25 }}
-        gl={{ alpha: true, antialias: true }}
+        style={{ background: 'transparent' }}
+        gl={{
+          alpha: true,
+          antialias: true,
+          preserveDrawingBuffer: true,
+          premultipliedAlpha: false
+        }}
+        onCreated={({ gl }) => {
+          gl.setClearColor(0x000000, 0); // Black with 0 alpha (fully transparent)
+        }}
       >
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 5, 5]} intensity={1} />
         <directionalLight position={[-5, -5, 5]} intensity={0.5} />
+        <MovingRays />
         <SpaceshipModel
           mousePositionRef={mousePositionRef}
           prefersReducedMotion={prefersReducedMotion}
