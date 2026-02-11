@@ -8,14 +8,14 @@
  * - Respects prefers-reduced-motion settings (Task 4)
  * - Responsive lighting setup
  */
-import { Canvas, useFrame, useThree, extend } from '@react-three/fiber';
-import { useGLTF, Stars } from '@react-three/drei';
-import { useRef, useEffect, useState } from 'react';
-import { useInView } from 'framer-motion';
-import * as THREE from 'three';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+import { Canvas, useFrame, useThree, extend } from "@react-three/fiber";
+import { useGLTF, Stars } from "@react-three/drei";
+import { useRef, useEffect, useState } from "react";
+import { useInView } from "framer-motion";
+import * as THREE from "three";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
 
 // Extend R3F with postprocessing
 extend({ EffectComposer, RenderPass, UnrealBloomPass });
@@ -33,12 +33,13 @@ const usePrefersReducedMotion = () => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setPrefersReducedMotion(mediaQuery.matches);
 
-    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
+    const handler = (e: MediaQueryListEvent) =>
+      setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
   }, []);
 
   return prefersReducedMotion;
@@ -58,9 +59,9 @@ function Effects() {
 
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(size.width, size.height),
-      0.4,   // strength
-      0.8,   // radius
-      0.1    // threshold
+      0.4, // strength
+      0.8, // radius
+      0.1, // threshold
     );
     composer.addPass(bloomPass);
 
@@ -79,15 +80,16 @@ function Effects() {
 // Engine boost ray component
 const EngineBoost: React.FC = () => {
   return (
-    <mesh position={[0, 0, -3.5]} rotation-x={Math.PI * 0.5}>
+    <mesh position={[0, -0.75, -8]} rotation-x={Math.PI * 0.5}>
       <cylinderGeometry args={[0.15, 0.05, 4, 15]} />
       <meshStandardMaterial
         color={[1.0, 0.4, 0.02]}
         emissive={[1.0, 0.4, 0.02]}
         emissiveIntensity={3}
         transparent
-        opacity={0.9}
+        opacity={0.7}
         toneMapped={false}
+        depthWrite={false}
       />
     </mesh>
   );
@@ -95,10 +97,10 @@ const EngineBoost: React.FC = () => {
 
 const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
   mousePositionRef,
-  prefersReducedMotion
+  prefersReducedMotion,
 }) => {
   const meshRef = useRef<THREE.Group>(null);
-  const { scene } = useGLTF('/models/spaceship.glb');
+  const { scene } = useGLTF("/models/spaceship.glb");
 
   // Base rotation - spaceship faces right towards text
   const baseRotation = {
@@ -109,18 +111,25 @@ const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
   useFrame((_state) => {
     if (meshRef.current && !prefersReducedMotion) {
       // Mouse parallax rotation - primarily Y movement, minimal X lean
-      const targetRotationY = baseRotation.y + mousePositionRef.current.x * 0.05;
+      const targetRotationY =
+        baseRotation.y + mousePositionRef.current.x * 0.05;
       const targetRotationX = baseRotation.x - mousePositionRef.current.y * 0.3;
 
       // Smooth interpolation
-      meshRef.current.rotation.y += (targetRotationY - meshRef.current.rotation.y) * 0.05;
-      meshRef.current.rotation.x += (targetRotationX - meshRef.current.rotation.x) * 0.05;
+      meshRef.current.rotation.y +=
+        (targetRotationY - meshRef.current.rotation.y) * 0.05;
+      meshRef.current.rotation.x +=
+        (targetRotationX - meshRef.current.rotation.x) * 0.05;
     }
   });
 
   return (
     <group ref={meshRef}>
-      <primitive object={scene.clone()} scale={0.25} position={[-1.5, 0, 0]} />
+      <primitive
+        object={scene.clone()}
+        scale={0.25}
+        position={[-1.5, -0.9, -3.5]}
+      />
       <EngineBoost />
     </group>
   );
@@ -142,18 +151,18 @@ const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({ className }) => {
       };
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [prefersReducedMotion]);
 
   return (
     <div
       ref={canvasRef}
-      className={`w-full h-full ${className || ''}`}
+      className={`w-full h-full ${className || ""}`}
       aria-hidden="true"
     >
       <Canvas
-        frameloop={isInView ? 'always' : 'demand'}
+        frameloop={isInView ? "always" : "demand"}
         camera={{ position: [-5, 6, 10], fov: 25 }}
         gl={{ alpha: true, antialias: true }}
       >
@@ -184,4 +193,4 @@ const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({ className }) => {
 export default SpaceshipScene;
 
 // Preload the model to prevent loading flicker
-useGLTF.preload('/models/spaceship.glb');
+useGLTF.preload("/models/spaceship.glb");
