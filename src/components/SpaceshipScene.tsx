@@ -45,7 +45,7 @@ const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
   const meshRef = useRef<THREE.Group>(null);
   const { scene } = useGLTF('/models/spaceship.glb');
 
-  useFrame((_state, delta) => {
+  useFrame((_state) => {
     if (meshRef.current && !prefersReducedMotion) {
       // Mouse parallax rotation
       const targetRotationY = mousePositionRef.current.x * 0.3;
