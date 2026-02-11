@@ -97,7 +97,7 @@ const EngineBoost: React.FC = () => {
     <mesh position={[0, -0.75, -6.7]} rotation-x={Math.PI * 0.5}>
       <cylinderGeometry args={[0.15, 0.05, 4, 15]} />
       <meshBasicMaterial
-        color={[3.0, 1.2, 0.06]}
+        color={[3.5, 1.2, 0.06]}
         alphaMap={alphaMap}
         transparent
         blending={THREE.CustomBlending}
