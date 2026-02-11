@@ -80,14 +80,14 @@ function Effects() {
 // Engine boost ray component
 const EngineBoost: React.FC = () => {
   return (
-    <mesh position={[0, -0.75, -8]} rotation-x={Math.PI * 0.5}>
+    <mesh position={[0, -0.75, -6.7]} rotation-x={Math.PI * 0.5} renderOrder={-1}>
       <cylinderGeometry args={[0.15, 0.05, 4, 15]} />
       <meshStandardMaterial
         color={[1.0, 0.4, 0.02]}
         emissive={[1.0, 0.4, 0.02]}
         emissiveIntensity={3}
         transparent
-        opacity={0.7}
+        opacity={0.9}
         toneMapped={false}
         depthWrite={false}
       />
@@ -129,6 +129,7 @@ const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
         object={scene.clone()}
         scale={0.25}
         position={[-1.5, -0.9, -3.5]}
+        renderOrder={1}
       />
       <EngineBoost />
     </group>
