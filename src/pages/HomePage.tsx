@@ -22,14 +22,20 @@ const HomePage = () => {
 
 
       {/* Hero Zone - Split Screen */}
-      <section className="flex flex-col md:flex-row min-h-screen">
+      <section className="relative flex flex-col md:flex-row min-h-screen">
+        {/* Full-page star field background */}
+        <div className="fixed inset-0 -z-10">
+          <SpaceshipScene backgroundOnly />
+        </div>
+
         {/* Left Section - 3D Spaceship */}
-        <div className="relative w-full md:w-1/2 h-[50vh] md:h-screen bg-gradient-to-br from-purple-900/20 via-black to-black">
-          <SpaceshipScene />
+        <div className="relative w-full md:w-1/2 h-[50vh] md:h-screen">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-transparent to-transparent" />
+          <SpaceshipScene spaceshipOnly />
         </div>
 
         {/* Right Section - Text Content */}
-        <div className="relative w-full md:w-1/2 flex flex-col items-start justify-center px-6 py-12 md:py-0 md:pl-12 bg-black">
+        <div className="relative w-full md:w-1/2 flex flex-col items-start justify-center px-6 py-12 md:py-0 md:pl-12">
           <motion.div
             className="space-y-6 max-w-2xl"
             initial={{ opacity: 0, y: 20 }}
