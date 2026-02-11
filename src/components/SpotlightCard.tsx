@@ -13,20 +13,11 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
 }) => {
   const divRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseMove: React.MouseEventHandler<HTMLDivElement> = e => {
-    if (!divRef.current) return;
-
-    const rect = divRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    divRef.current.style.setProperty('--mouse-x', `${x}px`);
-    divRef.current.style.setProperty('--mouse-y', `${y}px`);
-    divRef.current.style.setProperty('--spotlight-color', spotlightColor);
-  };
+  // Spotlight is now static - no mouse tracking
+  // The CSS default position (50%, 50%) creates a centered static glow
 
   return (
-    <div ref={divRef} onMouseMove={handleMouseMove} className={`card-spotlight ${className}`}>
+    <div ref={divRef} className={`card-spotlight ${className}`}>
       {children}
     </div>
   );

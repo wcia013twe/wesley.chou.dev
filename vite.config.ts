@@ -8,6 +8,17 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": "/src",
+      "jsm": "three/examples/jsm",
+    },
+  },
+  server: {
+    port: 5173,
+    watch: {
+      usePolling: true,
+    },
+    hmr: {
+      overlay: true,
+      port: 5173,
     },
   },
 });

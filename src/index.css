@@ -35,7 +35,7 @@
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Layout */
-  --nav-height: 6rem; /* 52px nav height */
+  --nav-height: 72px; /* 72px nav height for glassmorphism design */
   --image-size: 2rem;
 
   /* Radii / Spacing (example tokens) */
@@ -46,12 +46,47 @@
 }
 
 @layer utilities {
-  .no-scrollbar::-webkit-scrollbar {
+  .no-scrollbar::-webkit-scrollbar,
+  .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
-  .no-scrollbar {
+  .no-scrollbar,
+  .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  /* Mobile menu slide-in animation */
+  .animate-slide-in {
+    animation: slideIn 300ms ease-out;
+  }
+
+  @keyframes slideIn {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-slide-in {
+      animation: none;
+    }
+  }
+
+  /* Screen reader only - visually hidden but accessible */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 }
 

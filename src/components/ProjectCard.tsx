@@ -25,7 +25,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   badgeColor = "text-cyan-300",
 }) => {
   return (
-    <SpotlightCard className={`rounded-2xl overflow-hidden shadow-lg bg-[#10141c] border border-[var(--color-border)] flex flex-col min-h-[370px] ${badgeColor} hover:-translate-y-2 duration-300 relative` }>
+    <SpotlightCard className={`rounded-2xl overflow-hidden shadow-lg bg-[#10141c] border border-[var(--color-border)] flex flex-col min-h-[370px] ${badgeColor} relative hover:-translate-y-2 hover:shadow-2xl transition-all duration-300` }>
         {/* Badge Overlay */}
         {badge && (
           <div className="absolute top-4 right-0 z-20">

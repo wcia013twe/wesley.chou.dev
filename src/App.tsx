@@ -19,7 +19,6 @@ const Layout = () => (
     <div className="fixed inset-0 -z-30 bg-black" />
     {/* Particles layer */}
     <div className="fixed inset-0 -z-20">
-      {/* <PixelBlast variant="square" className="bg-[#000014]"  color="#a78bfa" patternDensity={0.5}/> */}
       <Particles
         particleColors={["#ffffff"]}
         particleCount={200}
