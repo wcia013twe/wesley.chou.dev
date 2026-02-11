@@ -23,15 +23,14 @@ const HomePage = () => {
 
       {/* Hero Zone - Split Screen */}
       <section className="relative flex flex-col md:flex-row min-h-screen">
-        {/* Full-page star field background */}
-        <div className="fixed inset-0 -z-10">
-          <SpaceshipScene backgroundOnly />
+        {/* Shared 3D background - spans both sections */}
+        <div className="absolute inset-0 -z-10">
+          <SpaceshipScene />
         </div>
 
-        {/* Left Section - 3D Spaceship */}
+        {/* Left Section - Purple glow overlay */}
         <div className="relative w-full md:w-1/2 h-[50vh] md:h-screen">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-transparent to-transparent" />
-          <SpaceshipScene spaceshipOnly />
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-transparent to-transparent pointer-events-none" />
         </div>
 
         {/* Right Section - Text Content */}

@@ -22,8 +22,6 @@ extend({ EffectComposer, RenderPass, UnrealBloomPass });
 
 interface SpaceshipSceneProps {
   className?: string;
-  backgroundOnly?: boolean;
-  spaceshipOnly?: boolean;
 }
 
 interface SpaceshipModelProps {
@@ -128,11 +126,7 @@ const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
   );
 };
 
-const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({
-  className,
-  backgroundOnly = false,
-  spaceshipOnly = false
-}) => {
+const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({ className }) => {
   const canvasRef = useRef(null);
   const isInView = useInView(canvasRef);
   const mousePositionRef = useRef({ x: 0, y: 0 });
@@ -163,32 +157,25 @@ const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({
         camera={{ position: [-5, 6, 10], fov: 25 }}
         gl={{ alpha: true, antialias: true }}
       >
-        {/* Star field background - show in background mode or with spaceship */}
-        {(backgroundOnly || spaceshipOnly) && (
-          <Stars
-            radius={100}
-            depth={50}
-            count={5000}
-            factor={4}
-            saturation={0}
-            fade
-            speed={1}
-          />
-        )}
+        {/* Star field background - shared across both sections */}
+        <Stars
+          radius={100}
+          depth={50}
+          count={5000}
+          factor={4}
+          saturation={0}
+          fade
+          speed={1}
+        />
 
-        {/* Spaceship and effects - only show in spaceship mode */}
-        {spaceshipOnly && (
-          <>
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[5, 5, 5]} intensity={1} />
-            <directionalLight position={[-5, -5, 5]} intensity={0.5} />
-            <SpaceshipModel
-              mousePositionRef={mousePositionRef}
-              prefersReducedMotion={prefersReducedMotion}
-            />
-            <Effects />
-          </>
-        )}
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[5, 5, 5]} intensity={1} />
+        <directionalLight position={[-5, -5, 5]} intensity={0.5} />
+        <SpaceshipModel
+          mousePositionRef={mousePositionRef}
+          prefersReducedMotion={prefersReducedMotion}
+        />
+        <Effects />
       </Canvas>
     </div>
   );
