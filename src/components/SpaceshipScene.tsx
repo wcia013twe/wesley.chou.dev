@@ -95,7 +95,7 @@ const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({ className }) => {
     >
       <Canvas
         frameloop={isInView ? 'always' : 'demand'}
-        camera={{ position: [0, 0, 5], fov: 50 }}
+        camera={{ position: [-5, 6, 10], fov: 25 }}
         gl={{ alpha: true, antialias: true }}
       >
         <ambientLight intensity={0.5} />
