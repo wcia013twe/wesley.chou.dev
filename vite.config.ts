@@ -8,6 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": "/src",
+      "jsm": "three/examples/jsm",
     },
   },
   server: {
