@@ -13,7 +13,7 @@ import { useGLTF, useTexture } from "@react-three/drei";
 import React, { useRef, useEffect, useState } from "react";
 import { useInView } from "framer-motion";
 import * as THREE from "three";
-// import { EffectComposer, Bloom } from "@react-three/postprocessing";
+// import { EffectComposer, Bloom, SelectiveBloom } from "@react-three/postprocessing";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
@@ -45,7 +45,7 @@ const usePrefersReducedMotion = () => {
   return prefersReducedMotion;
 };
 
-// Bloom effect - manual THREE.js postprocessing (matches Svelte implementation)
+// Bloom effect - manual THREE.js postprocessing
 function Effects() {
   const { gl, scene, camera, size } = useThree();
   const composerRef = useRef<EffectComposer>();
@@ -59,14 +59,23 @@ function Effects() {
     const renderPass = new RenderPass(scene, camera);
     composer.addPass(renderPass);
 
-    // Add bloom pass - threshold between rays (~1.3) and engine (~1.5)
-    const bloomPass = new UnrealBloomPass(
+    // First bloom pass - disabled for engine (threshold too high)
+    const engineBloomPass = new UnrealBloomPass(
       new THREE.Vector2(size.width, size.height),
       0.5,    // strength
       1,      // radius
-      1.4     // threshold - engine passes, rays don't
+      14    // threshold - engine won't pass (luminance ~1.6)
     );
-    composer.addPass(bloomPass);
+    composer.addPass(engineBloomPass);
+
+    // Second bloom pass - subtle ship glow
+    const shipBloomPass = new UnrealBloomPass(
+      new THREE.Vector2(size.width, size.height),
+      0.5,   // strength
+      0.4,    // radius - tight
+      0.5     // threshold - catches ship materials
+    );
+    composer.addPass(shipBloomPass);
 
     // Add output pass
     const outputPass = new OutputPass();

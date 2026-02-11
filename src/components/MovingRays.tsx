@@ -17,7 +17,7 @@ interface Ray {
   color: THREE.Color;
 }
 
-const RAYS_COUNT = 12;
+const RAYS_COUNT = 20;
 const COLORS = ['#fcaa67', '#C75D59', '#ffffc7', '#8CC5C6', '#A5898C'];
 
 function random(min: number, max: number): number {
@@ -46,7 +46,7 @@ function resetRay(ray: Ray): void {
   ray.radius = random(0.04, 0.07);
 
   const colorHex = COLORS[Math.floor(Math.random() * COLORS.length)];
-  ray.color = new THREE.Color(colorHex).convertSRGBToLinear().multiplyScalar(1.3);
+  ray.color = new THREE.Color(colorHex).convertSRGBToLinear().multiplyScalar(0.4);
 }
 
 export default function MovingRays() {
@@ -81,7 +81,7 @@ export default function MovingRays() {
     rays.forEach((ray, i) => {
       // Move ray diagonally (bottom-right to top-left)
       ray.position.x -= ray.speed * delta;
-      ray.position.y += ray.speed * delta / 2.5;
+      ray.position.y += ray.speed * delta / 3.5;
 
       // Reset if off-screen (reached top-left)
       if (ray.position.x < -40 || ray.position.y > 40) {
@@ -91,7 +91,7 @@ export default function MovingRays() {
       // Update instance transform
       dummy.position.copy(ray.position);
       dummy.scale.set(ray.length, 1, 1);
-      dummy.rotation.set(0, -1,0);
+      dummy.rotation.set(0, -0.9,0);
       dummy.updateMatrix();
 
       meshRef.current!.setMatrixAt(i, dummy.matrix);
