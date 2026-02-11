@@ -29,18 +29,18 @@ const HomePage = () => {
         </div>
 
         {/* Right Section - Text Content */}
-        <div className="relative w-full md:w-1/2 flex flex-col items-center justify-center px-6 py-12 md:py-0 bg-black">
+        <div className="relative w-full md:w-1/2 flex flex-col items-start justify-center px-6 py-12 md:py-0 md:pl-12 bg-black">
           <motion.div
-            className="text-center space-y-6 max-w-2xl"
+            className="space-y-6 max-w-2xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-5xl md:text-7xl font-bold text-white drop-shadow-lg">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white drop-shadow-lg">
               Hi, I'm Wesley Chou
             </h1>
 
-            <div className="text-2xl md:text-4xl text-white/90">
+            <div className="text-xl md:text-2xl lg:text-3xl text-white/90">
               <TextType
                 text={[
                   "Software Engineer",
@@ -56,7 +56,7 @@ const HomePage = () => {
 
             {/* CTA Buttons */}
             <motion.div
-              className="flex flex-wrap gap-4 justify-center pt-8"
+              className="flex flex-wrap gap-4 pt-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -85,7 +85,7 @@ const HomePage = () => {
             </motion.div>
           </motion.div>
 
-          <div className="absolute bottom-8">
+          <div className="absolute bottom-8 left-6">
             <ScrollIndicator />
           </div>
         </div>
