@@ -8,19 +8,50 @@
  * - Respects prefers-reduced-motion settings (Task 4)
  * - Responsive lighting setup
  */
-// @ts-expect-error - useFrame will be used in Task 3 for spaceship animation
 import { Canvas, useFrame } from '@react-three/fiber';
-// @ts-expect-error - useGLTF will be used in Task 3 for loading spaceship model
 import { useGLTF } from '@react-three/drei';
 // @ts-expect-error - useEffect/useState will be used in Task 4 for mouse tracking
 import { useRef, useEffect, useState } from 'react';
 import { useInView } from 'framer-motion';
-// @ts-expect-error - THREE types will be used in Task 3 for mesh references
 import * as THREE from 'three';
 
 interface SpaceshipSceneProps {
   className?: string;
 }
+
+interface SpaceshipModelProps {
+  mousePositionRef: React.MutableRefObject<{ x: number; y: number }>;
+  prefersReducedMotion: boolean;
+}
+
+const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
+  mousePositionRef,
+  prefersReducedMotion
+}) => {
+  const meshRef = useRef<THREE.Group>(null);
+  const { scene } = useGLTF('/models/spaceship.glb');
+
+  useFrame((_state, delta) => {
+    if (meshRef.current && !prefersReducedMotion) {
+      // Mouse parallax rotation
+      const targetRotationY = mousePositionRef.current.x * 0.3;
+      const targetRotationX = -mousePositionRef.current.y * 0.2;
+
+      // Smooth interpolation
+      meshRef.current.rotation.y += (targetRotationY - meshRef.current.rotation.y) * 0.05;
+      meshRef.current.rotation.x += (targetRotationX - meshRef.current.rotation.x) * 0.05;
+    }
+  });
+
+  return (
+    <primitive
+      ref={meshRef}
+      object={scene.clone()}
+      scale={1.5}
+      position={[0, 0, 0]}
+    />
+  );
+};
 
 const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({ className }) => {
   const canvasRef = useRef(null);
@@ -46,3 +77,6 @@ const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({ className }) => {
 };
 
 export default SpaceshipScene;
+
+// Preload the model to prevent loading flicker
+useGLTF.preload('/models/spaceship.glb');
