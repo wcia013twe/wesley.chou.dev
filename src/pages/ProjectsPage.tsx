@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import SplitText from "@/components/SplitText";
 import ProjectsGrid from "@/components/projects/ProjectsGrid";
 import ProjectModal from "@/components/projects/ProjectModal";
+import SolarSystem from "@/components/SolarSystem";
 import { projects, type Project } from "@/data/projectsData";
 
 const ProjectsPage = () => {
@@ -47,15 +48,20 @@ const ProjectsPage = () => {
         </div>
       </div>
 
+      {/* 3D Solar System - Interactive Projects Explorer */}
+      <div className="w-full h-screen">
+        <SolarSystem />
+      </div>
+
       {/* 3D Grid Zone with Parallax */}
-      <ProjectsGrid projects={projects} onProjectClick={setSelectedProject} />
+      {/* <ProjectsGrid projects={projects} onProjectClick={setSelectedProject} /> */}
 
       {/* Modal */}
-      <ProjectModal
+      {/* <ProjectModal
         project={selectedProject}
         isOpen={!!selectedProject}
         onClose={() => setSelectedProject(null)}
-      />
+      /> */}
     </div>
   );
 };

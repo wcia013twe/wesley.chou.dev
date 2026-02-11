@@ -1,7 +1,6 @@
 import SplitText from "../components/SplitText";
 import Timeline from "@/components/Timeline";
 import { professionalExperience, academicExperience } from "@/lib/experience";
-import SolarSystem from "@/components/SolarSystem";
 
 const ExperiencePage = () => {
   return (
@@ -26,26 +25,21 @@ const ExperiencePage = () => {
         </p>
       </div>
 
-      {/* 3D Solar System - For experimentation */}
-      <div className="w-full h-screen my-16">
-        <SolarSystem />
-      </div>
-
       {/* Professional Experience Section */}
-      {/* <div className="mt-16">
+      <div className="mt-16">
         <h2 className="text-4xl font-bold text-center text-white/90 mb-8">
           Professional Experience
         </h2>
         <Timeline data={professionalExperience} />
-      </div> */}
+      </div>
 
       {/* Academic & Leadership Section */}
-      {/* <div className="mt-20">
+      <div className="mt-20">
         <h2 className="text-4xl font-bold text-center text-white/90 mb-8">
           Academic & Leadership
         </h2>
         <Timeline data={academicExperience} />
-      </div> */}
+      </div>
     </div>
   );
 };

@@ -6,11 +6,14 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 
 // Import solar system helper functions (bypassing TypeScript checks)
 import getSun from './solar-system/src/getSun.js';
-import getNebula from './solar-system/src/getNebula.js';
 import getStarfield from './solar-system/src/getStarfield.js';
 import getPlanet from './solar-system/src/getPlanet.js';
 import getAsteroidBelt from './solar-system/src/getAsteroidBelt.js';
 import getElipticLines from './solar-system/src/getElipticLines.js';
+import getNebula from './solar-system/src/getNebula.js';
+
+// Import projects data
+import { projects } from '../data/projectsData';
 
 export default function SolarSystem() {
   const containerRef = useRef(null);
@@ -28,12 +31,11 @@ export default function SolarSystem() {
     // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 1000);
-    camera.position.set(0, 2.5, 4);
+    camera.position.set(0, 6, 6); // Moved back to see larger scene
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(w, h);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x000011); // Very dark blue instead of pure black
     container.appendChild(renderer.domElement);
 
     console.log('Solar System initialized:', { w, h, container });
@@ -59,62 +61,61 @@ export default function SolarSystem() {
     function initScene(data) {
       const { objs } = data;
 
-      // Add sun
+      // Add sun (scaled up for larger scene)
       const sun = getSun();
+      sun.scale.setScalar(2.0); // Make sun 2x bigger
       solarSystem.add(sun);
 
-      // Add planets
-      const mercury = getPlanet({ size: 0.1, distance: 1.25, img: 'mercury.png' });
-      solarSystem.add(mercury);
+      // Create planets from projects data
+      const baseDistance = 3.5;
+      const distanceIncrement = 1.8;
 
-      const venus = getPlanet({ size: 0.2, distance: 1.65, img: 'venus.png' });
-      solarSystem.add(venus);
+      projects.forEach((project, index) => {
+        const distance = baseDistance + (index * distanceIncrement);
+        const planetSize = 0.6;
 
-      const moon = getPlanet({ size: 0.075, distance: 0.4, img: 'moon.png' });
-      const earth = getPlanet({ children: [moon], size: 0.225, distance: 2.0, img: 'earth.png' });
-      solarSystem.add(earth);
+        // Create text label for project
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 128;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+        ctx.fillRect(0, 0, 512, 128);
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 42px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(project.title, 256, 60);
+        ctx.font = '22px Arial';
+        ctx.fillText(project.date, 256, 95);
 
-      const mars = getPlanet({ size: 0.15, distance: 2.25, img: 'mars.png' });
-      solarSystem.add(mars);
+        const labelTexture = new THREE.CanvasTexture(canvas);
+        const spriteMaterial = new THREE.SpriteMaterial({ map: labelTexture, transparent: true });
+        const sprite = new THREE.Sprite(spriteMaterial);
+        sprite.scale.set(3, 0.75, 1);
+        sprite.position.set(0, 1.3, 0);
 
-      // Add asteroid belt if rocks are loaded
-      if (objs.length > 0) {
-        const asteroidBelt = getAsteroidBelt(objs);
-        solarSystem.add(asteroidBelt);
-        console.log('Asteroid belt added with', objs.length, 'rock types');
-      } else {
-        console.log('Asteroid belt skipped - no rocks loaded yet');
-      }
+        // Use different planet textures for variety
+        const planetTextures = ['earth.png', 'mars.png', 'jupiter.png', 'venus.png', 'mercury.png', 'uranus.png'];
+        const texture = planetTextures[index % planetTextures.length];
 
-      const jupiter = getPlanet({ size: 0.4, distance: 2.75, img: 'jupiter.png' });
-      solarSystem.add(jupiter);
-
-      const sRingGeo = new THREE.TorusGeometry(0.6, 0.15, 8, 64);
-      const sRingMat = new THREE.MeshStandardMaterial();
-      const saturnRing = new THREE.Mesh(sRingGeo, sRingMat);
-      saturnRing.scale.z = 0.1;
-      saturnRing.rotation.x = Math.PI * 0.5;
-      const saturn = getPlanet({ children: [saturnRing], size: 0.35, distance: 3.25, img: 'saturn.png' });
-      solarSystem.add(saturn);
-
-      const uRingGeo = new THREE.TorusGeometry(0.5, 0.05, 8, 64);
-      const uRingMat = new THREE.MeshStandardMaterial();
-      const uranusRing = new THREE.Mesh(uRingGeo, uRingMat);
-      uranusRing.scale.z = 0.1;
-      const uranus = getPlanet({ children: [uranusRing], size: 0.3, distance: 3.75, img: 'uranus.png' });
-      solarSystem.add(uranus);
-
-      const neptune = getPlanet({ size: 0.3, distance: 4.25, img: 'neptune.png' });
-      solarSystem.add(neptune);
+        const planet = getPlanet({
+          children: [sprite],
+          size: planetSize,
+          distance: distance,
+          img: texture
+        });
+        solarSystem.add(planet);
+        console.log(`Added planet for ${project.title} at distance ${distance}`);
+      });
 
       // Add orbital lines
       const elipticLines = getElipticLines();
       solarSystem.add(elipticLines);
 
-      // Add starfield (more stars, larger)
-      const starfield = getStarfield({ numStars: 2000, size: 0.5 });
+      // Add starfield (more stars, larger, white color)
+      const starfield = getStarfield({ numStars: 2000, size: 0.5, saturation: 0 });
       scene.add(starfield);
-      console.log('Starfield added with 2000 stars');
+      console.log('Starfield added with 2000 white stars');
 
       // Add ambient lighting
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
@@ -125,33 +126,31 @@ export default function SolarSystem() {
       dirLight.position.set(0, 1, 0);
       scene.add(dirLight);
 
-      // Add nebulas (more visible)
+      // Add nebula background layers
       const nebula = getNebula({
         hue: 0.6,
-        numSprites: 15,
-        opacity: 0.4,
+        numSprites: 10,
+        opacity: 0.2,
         radius: 40,
-        size: 100,
+        size: 80,
         z: -50.5,
       });
       scene.add(nebula);
-      console.log('Purple nebula added');
 
       const anotherNebula = getNebula({
         hue: 0.0,
-        numSprites: 15,
-        opacity: 0.4,
+        numSprites: 10,
+        opacity: 0.2,
         radius: 40,
-        size: 100,
+        size: 80,
         z: 50.5,
       });
       scene.add(anotherNebula);
-      console.log('Orange nebula added');
 
       // Animation loop
       const cameraDistance = 5;
       function animate(t = 0) {
-        const time = t * 0.0002;
+        const time = t * 0.00005; // Slowed down 4x (was 0.0002)
         animationId = requestAnimationFrame(animate);
         solarSystem.userData.update(time);
         renderer.render(scene, camera);
@@ -169,18 +168,16 @@ export default function SolarSystem() {
       animate();
     }
 
-    // Initialize scene data
+    // Initialize scene
     const sceneData = { objs: [] };
-    let rocksLoaded = 0;
-    const totalRocks = 3;
-
-    // Initialize scene immediately (don't wait for rocks)
     initScene(sceneData);
 
-    // Load asteroid rocks asynchronously
+    // Load asteroid rocks for the belt (asynchronous)
     const loader = new OBJLoader();
-    const objs = ['Rock1', 'Rock2', 'Rock3'];
-    objs.forEach((name) => {
+    const rockNames = ['Rock1', 'Rock2', 'Rock3'];
+    let rocksLoaded = 0;
+
+    rockNames.forEach((name) => {
       const path = `/rocks/${name}.obj`;
       loader.load(
         path,
@@ -192,18 +189,15 @@ export default function SolarSystem() {
           });
           rocksLoaded++;
 
-          // When all rocks are loaded, add asteroid belt
-          if (rocksLoaded === totalRocks) {
+          // When all rocks loaded, add asteroid belt
+          if (rocksLoaded === rockNames.length) {
             console.log('All rocks loaded, adding asteroid belt');
-            const asteroidBelt = getAsteroidBelt(sceneData.objs);
+            const asteroidBelt = getAsteroidBelt(sceneData.objs, 8.0);
             solarSystem.add(asteroidBelt);
           }
         },
         undefined,
-        (error) => {
-          console.warn(`Could not load ${name}:`, error);
-          rocksLoaded++;
-        }
+        (error) => console.warn(`Could not load ${name}:`, error)
       );
     });
 
@@ -241,7 +235,6 @@ export default function SolarSystem() {
     <div
       ref={containerRef}
       className="w-full h-full"
-      style={{ background: 'radial-gradient(circle, #1a1a2e 0%, #0a0a0f 100%)' }}
     />
   );
 }
