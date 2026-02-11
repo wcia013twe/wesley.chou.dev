@@ -10,7 +10,6 @@
  */
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
-// @ts-expect-error - useEffect/useState will be used in Task 4 for mouse tracking
 import { useRef, useEffect, useState } from 'react';
 import { useInView } from 'framer-motion';
 import * as THREE from 'three';
@@ -23,6 +22,21 @@ interface SpaceshipModelProps {
   mousePositionRef: React.MutableRefObject<{ x: number; y: number }>;
   prefersReducedMotion: boolean;
 }
+
+const usePrefersReducedMotion = () => {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  return prefersReducedMotion;
+};
 
 const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
   mousePositionRef,
@@ -56,6 +70,22 @@ const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
 const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({ className }) => {
   const canvasRef = useRef(null);
   const isInView = useInView(canvasRef);
+  const mousePositionRef = useRef({ x: 0, y: 0 });
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      mousePositionRef.current = {
+        x: (e.clientX / window.innerWidth) * 2 - 1,
+        y: -(e.clientY / window.innerHeight) * 2 + 1,
+      };
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [prefersReducedMotion]);
 
   return (
     <div
@@ -71,6 +101,10 @@ const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({ className }) => {
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 5, 5]} intensity={1} />
         <directionalLight position={[-5, -5, 5]} intensity={0.5} />
+        <SpaceshipModel
+          mousePositionRef={mousePositionRef}
+          prefersReducedMotion={prefersReducedMotion}
+        />
       </Canvas>
     </div>
   );
