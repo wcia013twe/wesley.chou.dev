@@ -53,16 +53,26 @@ const ScrollIndicator: React.FC = () => {
           repeat: Infinity,
           ease: 'easeInOut'
         }}
-        className="flex flex-col items-center gap-2 text-white/60"
+        className="flex flex-col items-center gap-2"
+        style={{ color: "rgba(34,211,238,0.45)" }}
       >
-        <span className="text-sm">Scroll</span>
+        <span
+          style={{
+            fontFamily:    "ui-monospace, SFMono-Regular, monospace",
+            fontSize:      "9px",
+            letterSpacing: "0.35em",
+            textTransform: "uppercase" as const,
+          }}
+        >
+          Scroll
+        </span>
         <svg
-          width="24"
-          height="24"
+          width="20"
+          height="20"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="2"
+          strokeWidth="1.5"
         >
           <polyline points="6 9 12 15 18 9" />
         </svg>

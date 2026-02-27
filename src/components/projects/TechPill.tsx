@@ -40,29 +40,28 @@ export default function TechPill({
 
   return (
     <motion.div
-      className={`
-        relative
-        bg-gradient-to-r from-gray-800/50 to-gray-700/50
-        border border-white/10
-        rounded-full
-        whitespace-nowrap
-        ${isModal ? 'px-4 py-2.5 text-sm font-medium' : 'px-3 py-1 text-xs'}
-        text-white/80
-      `}
       style={{
-        borderBottom: `2px solid ${categoryColor}`,
+        fontFamily: 'ui-monospace, SFMono-Regular, monospace',
+        fontSize: isModal ? '12px' : '10px',
+        letterSpacing: '0.1em',
+        color: categoryColor,
+        background: `${categoryColor}12`,
+        border: `1px solid ${categoryColor}40`,
+        borderRadius: '3px',
+        padding: isModal ? '5px 12px' : '3px 8px',
+        whiteSpace: 'nowrap',
       }}
       whileHover={
         isModal
           ? {
-              scale: 1.05,
-              backgroundColor: 'rgba(75, 85, 99, 0.6)', // from-gray-700/60 to-gray-600/60
-              boxShadow: `0 10px 15px -3px ${categoryColor}30`,
+              scale: 1.04,
+              background: `${categoryColor}22`,
+              boxShadow: `0 0 12px ${categoryColor}30`,
             }
           : undefined
       }
       transition={{
-        duration: 0.2,
+        duration: 0.15,
         ease: 'easeOut',
       }}
     >

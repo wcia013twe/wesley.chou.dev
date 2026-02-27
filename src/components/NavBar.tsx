@@ -1,194 +1,275 @@
 import { useState } from "react";
-import { Tab, TabGroup, TabList } from "@headlessui/react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { CgFileDocument } from "react-icons/cg";
 import { LuRocket } from "react-icons/lu";
-
 import {
   Tooltip,
   TooltipTrigger,
   TooltipPanel,
 } from "@/components/animate-ui/components/base/tooltip";
 
-function Navbar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+// ── Design tokens ─────────────────────────────────────────────────────────────
+const MONO    = "ui-monospace, SFMono-Regular, monospace";
+const C_CYAN  = "#22d3ee";
+const C_BRIGHT= "#67e8f9";
+const C_DIM   = "rgba(34,211,238,0.45)";
+const C_MUTED = "rgba(255,255,255,0.38)";
 
-  const TAB_CLASS = "rounded-full md:px-4 md:py-2 lg:px-5 lg:py-2.5 md:text-base lg:text-lg font-semibold text-white/70 border border-transparent transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 data-hover:bg-white/10 data-hover:border-white/10 data-hover:text-white data-hover:scale-105 data-selected:bg-gradient-to-r data-selected:from-purple-600 data-selected:to-purple-500 data-selected:text-white data-selected:shadow-lg data-selected:shadow-purple-500/50 data-selected:scale-105 motion-reduce:scale-100 motion-reduce:transition-colors";
-  const SOCIAL_ICON_CLASS = "inline-flex p-2.5 rounded-lg text-white/80 hover:text-purple-500 hover:bg-purple-500/20 hover:backdrop-blur-sm hover:scale-110 hover:rotate-6 hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-250 motion-reduce:scale-100 motion-reduce:rotate-0 motion-reduce:shadow-none";
-  const HAMBURGER_LINE_CLASS = "w-6 h-0.5 bg-current transition-all duration-300 motion-reduce:transition-none";
-  const MOBILE_NAV_LINK_CLASS = "text-2xl font-semibold text-white/70 hover:text-purple-500 py-6 transition-colors";
+// ── Nav link with text-width underline ────────────────────────────────────────
+const NAV_LINKS = [
+  { to: "/",           label: "HOME"       },
+  { to: "/experience", label: "EXPERIENCE" },
+  { to: "/projects",   label: "PROJECTS"   },
+  { to: "/skills",     label: "SKILLS"     },
+];
+
+function NavLink({ to, label, onClick }: { to: string; label: string; onClick?: () => void }) {
+  const { pathname } = useLocation();
+  const active = pathname === to;
+  const [hovered, setHovered] = useState(false);
+  const lit = active || hovered;
 
   return (
-    <TabGroup>
-      <div className="fixed top-0 left-0 z-50 flex h-[var(--nav-height)] w-full items-center justify-between border-b border-purple-500/20 bg-[var(--color-bg)]/60 backdrop-blur-xl supports-[backdrop-filter]:bg-[var(--color-bg)]/60 shadow-lg shadow-black/10 px-6 font-sans text-xl font-medium tracking-wide text-[var(--color-fg)] transition-all duration-300">
-        {/* Tabs */}
-        <Link
-          to="/"
-          aria-label="Navigate to home page"
-          className="flex items-center gap-2 px-6 group transition-all duration-300"
-        >
-          <LuRocket className="text-3xl transition-all duration-300 group-hover:text-purple-500 group-hover:-translate-y-1 group-hover:-rotate-12 group-hover:drop-shadow-[0_0_8px_rgba(147,51,234,0.6)] motion-reduce:transform-none motion-reduce:drop-shadow-none"/>
-          <p className="text-2xl transition-all duration-300 group-hover:text-purple-500 group-hover:tracking-wider motion-reduce:tracking-normal">Wesley Chou</p>
-        </Link>
-        {/* Hamburger Menu Button (Mobile Only) */}
-        <button
-          className="md:hidden flex flex-col gap-1.5 p-2 hover:text-purple-500 transition-colors duration-300"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle menu"
-          aria-expanded={mobileMenuOpen}
-        >
-          <span className={`${HAMBURGER_LINE_CLASS} ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-          <span className={`${HAMBURGER_LINE_CLASS} ${mobileMenuOpen ? 'opacity-0' : ''}`} />
-          <span className={`${HAMBURGER_LINE_CLASS} ${mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
-        </button>
-        <TabList className="hidden md:flex items-center gap-1">
-          <Tab
-            className={TAB_CLASS}
-            as={Link}
+    <Link
+      to={to}
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display:        "inline-flex",
+        flexDirection:  "column",
+        alignItems:     "center",
+        gap:            "5px",
+        textDecoration: "none",
+        fontFamily:     MONO,
+        fontSize:       "13px",
+        fontWeight:     500,
+        letterSpacing:  "0.3em",
+        textTransform:  "uppercase" as const,
+        color:          active ? C_BRIGHT : hovered ? C_CYAN : C_MUTED,
+        textShadow:     active
+          ? `0 0 12px ${C_CYAN}, 0 0 24px rgba(34,211,238,0.4)`
+          : hovered
+          ? `0 0 8px rgba(34,211,238,0.5)`
+          : "none",
+        transition:     "color 0.25s ease, text-shadow 0.25s ease",
+        padding:        "4px 0",
+      }}
+    >
+      {label}
+      {/* Underline — expands from center, width matches text */}
+      <span
+        style={{
+          display:      "block",
+          height:       "1px",
+          width:        lit ? "100%" : "0%",
+          background:   active
+            ? `linear-gradient(90deg, transparent, ${C_BRIGHT}, transparent)`
+            : `linear-gradient(90deg, transparent, ${C_CYAN}, transparent)`,
+          boxShadow:    lit ? `0 0 6px ${C_CYAN}` : "none",
+          transition:   "width 0.3s ease, box-shadow 0.25s ease",
+        }}
+      />
+    </Link>
+  );
+}
+
+// ── Social icon wrapper ───────────────────────────────────────────────────────
+function SocialIcon({ children }: { children: React.ReactNode }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <span
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display:    "inline-flex",
+        alignItems: "center",
+        padding:    "8px",
+        color:      hovered ? C_BRIGHT : C_DIM,
+        filter:     hovered ? `drop-shadow(0 0 6px ${C_CYAN})` : "none",
+        transition: "color 0.2s ease, filter 0.2s ease",
+        cursor:     "pointer",
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
+// ── Main Navbar ───────────────────────────────────────────────────────────────
+function Navbar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const revealHeader = () => window.dispatchEvent(new Event("nav-reveal-header"));
+
+  const tooltipPanelStyle: React.CSSProperties = {
+    fontFamily:     MONO,
+    fontSize:       "10px",
+    letterSpacing:  "0.2em",
+    textTransform:  "uppercase",
+    background:     "rgba(0,4,8,0.96)",
+    border:         `1px solid rgba(34,211,238,0.22)`,
+    color:          C_BRIGHT,
+    boxShadow:      `0 0 20px rgba(34,211,238,0.12)`,
+    padding:        "4px 10px",
+  };
+
+  return (
+    <>
+      {/* ── Bar ─────────────────────────────────────────────────────────────── */}
+      <header
+        className="fixed top-0 left-0 z-50 w-full backdrop-blur-xl"
+        style={{
+          height:       "var(--nav-height)",
+          background:   "rgba(0, 3, 8, 0.92)",
+          borderBottom: `1px solid rgba(34,211,238,0.1)`,
+          boxShadow:    "0 4px 40px rgba(0,0,0,0.5)",
+          display:      "flex",
+          alignItems:   "center",
+          padding:      "0 28px",
+        }}
+      >
+        {/* Corner accents */}
+        <span className="pointer-events-none absolute top-0 left-0 h-px w-20"
+          style={{ background: `linear-gradient(90deg, ${C_CYAN}, transparent)` }} />
+        <span className="pointer-events-none absolute top-0 left-0 w-px h-5"
+          style={{ background: `linear-gradient(180deg, ${C_CYAN}, transparent)` }} />
+        <span className="pointer-events-none absolute top-0 right-0 h-px w-20"
+          style={{ background: `linear-gradient(270deg, ${C_CYAN}, transparent)` }} />
+        <span className="pointer-events-none absolute top-0 right-0 w-px h-5"
+          style={{ background: `linear-gradient(180deg, ${C_CYAN}, transparent)` }} />
+
+        {/* ── LEFT: Brand ─────────────────────────────────────────────────── */}
+        <div style={{ flex: 1, display: "flex", alignItems: "center" }}>
+          <Link
             to="/"
+            style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}
           >
-            Home
-          </Tab>
-          <Tab
-            className={TAB_CLASS}
-            as={Link}
-            to="/experience"
-          >
-            Experience
-          </Tab>
-          <Tab
-            className={TAB_CLASS}
-            as={Link}
-            to="/projects"
-          >
-            Projects
-          </Tab>
-          <Tab
-            className={TAB_CLASS}
-            as={Link}
-            to="/skills"
-          >
-            Skills
-          </Tab>
- 
-        </TabList>
-        {/* Icons */}
-        <div className="flex items-center gap-3 border-l border-purple-500/20 pl-3">
-          <Tooltip>
-            <TooltipTrigger
-              render={
-                <a
-                  href="https://github.com/wcia013twe"
-                  aria-label="GitHub"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={SOCIAL_ICON_CLASS}
-                >
-                  <FaGithub className="text-4xl md:text-3xl lg:text-4xl" />
-                </a>
-              }
-            />
-            <TooltipPanel side="bottom" sideOffset={6} className="text-xs bg-black/95 backdrop-blur-md border-2 border-purple-400/60 text-white font-semibold shadow-xl shadow-purple-500/50 px-3 py-1.5">
-              GitHub
-            </TooltipPanel>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger
-              render={
-                <a
-                  href="https://www.linkedin.com/in/weschou013/"
-                  aria-label="LinkedIn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={SOCIAL_ICON_CLASS}
-                >
-                  <FaLinkedin className="text-4xl md:text-3xl lg:text-4xl" />
-                </a>
-              }
-            />
-            <TooltipPanel side="bottom" sideOffset={6} className="text-xs bg-black/95 backdrop-blur-md border-2 border-purple-400/60 text-white font-semibold shadow-xl shadow-purple-500/50 px-3 py-1.5">
-              LinkedIn
-            </TooltipPanel>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger
-              render={
-                <a
-                  href="documents/IWesChouResume2026_1120.pdf"
-                  aria-label="Resume"
-                  className={SOCIAL_ICON_CLASS}
-                >
-                  <CgFileDocument className="text-4xl md:text-3xl lg:text-4xl" />
-                </a>
-              }
-            />
-            <TooltipPanel side="bottom" sideOffset={6} className="text-xs bg-black/95 backdrop-blur-md border-2 border-purple-400/60 text-white font-semibold shadow-xl shadow-purple-500/50 px-3 py-1.5">
-              Resume
-            </TooltipPanel>
-          </Tooltip>
+            <LuRocket style={{ fontSize: "18px", color: C_DIM, flexShrink: 0 }} />
+            <span
+              style={{
+                fontFamily:    MONO,
+                fontSize:      "12px",
+                fontWeight:    600,
+                letterSpacing: "0.3em",
+                textTransform: "uppercase" as const,
+                color:         C_DIM,
+                whiteSpace:    "nowrap",
+              }}
+            >
+              Wesley Chou
+            </span>
+          </Link>
         </div>
-      </div>
 
-      {/* Mobile Menu Overlay */}
-      {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 z-40 md:hidden"
-          onClick={() => setMobileMenuOpen(false)}
+        {/* ── CENTER: Nav links (desktop) ──────────────────────────────────── */}
+        <nav
+          className="hidden md:flex"
+          style={{ flex: 1, justifyContent: "center", alignItems: "center", gap: "36px" }}
         >
-          <div className="fixed inset-0 bg-black/95 backdrop-blur-2xl" />
+          {NAV_LINKS.map(({ to, label }) => (
+            <NavLink key={to} to={to} label={label} onClick={revealHeader} />
+          ))}
+        </nav>
+
+        {/* ── RIGHT: Social icons ──────────────────────────────────────────── */}
+        <div
+          style={{
+            flex:        1,
+            display:     "flex",
+            alignItems:  "center",
+            justifyContent: "flex-end",
+            gap:         "4px",
+          }}
+        >
+          <Tooltip>
+            <TooltipTrigger render={
+              <a href="https://github.com/wcia013twe" aria-label="GitHub"
+                target="_blank" rel="noopener noreferrer">
+                <SocialIcon><FaGithub size={20} /></SocialIcon>
+              </a>
+            } />
+            <TooltipPanel side="bottom" sideOffset={6} style={tooltipPanelStyle}>GitHub</TooltipPanel>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger render={
+              <a href="https://www.linkedin.com/in/weschou013/" aria-label="LinkedIn"
+                target="_blank" rel="noopener noreferrer">
+                <SocialIcon><FaLinkedin size={20} /></SocialIcon>
+              </a>
+            } />
+            <TooltipPanel side="bottom" sideOffset={6} style={tooltipPanelStyle}>LinkedIn</TooltipPanel>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger render={
+              <a href="documents/IWesChouResume2026_1120.pdf" aria-label="Resume">
+                <SocialIcon><CgFileDocument size={20} /></SocialIcon>
+              </a>
+            } />
+            <TooltipPanel side="bottom" sideOffset={6} style={tooltipPanelStyle}>Resume</TooltipPanel>
+          </Tooltip>
+
+          {/* Hamburger (mobile only) */}
+          <button
+            className="md:hidden flex flex-col gap-1.5 p-2 ml-2"
+            style={{ color: C_DIM, background: "none", border: "none", cursor: "pointer" }}
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
+          >
+            <span className={`block w-6 h-px bg-current transition-all duration-300 ${mobileOpen ? "rotate-45 translate-y-[7px]" : ""}`} />
+            <span className={`block w-6 h-px bg-current transition-all duration-300 ${mobileOpen ? "opacity-0" : ""}`} />
+            <span className={`block w-6 h-px bg-current transition-all duration-300 ${mobileOpen ? "-rotate-45 -translate-y-[7px]" : ""}`} />
+          </button>
+        </div>
+      </header>
+
+      {/* ── Mobile overlay ────────────────────────────────────────────────────── */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-40 md:hidden" onClick={() => setMobileOpen(false)}>
           <nav
-            className="fixed right-0 top-0 h-full w-full bg-black/95 backdrop-blur-2xl animate-slide-in"
+            className="fixed inset-0 flex flex-col items-center justify-center animate-slide-in"
+            style={{ background: "rgba(0,3,8,0.97)", backdropFilter: "blur(24px)" }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
+            {/* Corner accents */}
+            <span className="pointer-events-none absolute top-0 left-0 h-px w-40"
+              style={{ background: `linear-gradient(90deg, ${C_CYAN}, transparent)` }} />
+            <span className="pointer-events-none absolute top-0 left-0 w-px h-20"
+              style={{ background: `linear-gradient(180deg, ${C_CYAN}, transparent)` }} />
+            <span className="pointer-events-none absolute bottom-0 right-0 h-px w-40"
+              style={{ background: `linear-gradient(270deg, ${C_CYAN}, transparent)` }} />
+            <span className="pointer-events-none absolute bottom-0 right-0 w-px h-20"
+              style={{ background: `linear-gradient(0deg, ${C_CYAN}, transparent)` }} />
+
+            {/* Close */}
             <button
-              className="absolute top-6 right-6 p-2 text-white hover:text-purple-500 transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
+              className="absolute top-5 right-5 p-2"
+              style={{ color: C_DIM, background: "none", border: "none", cursor: "pointer" }}
+              onClick={() => setMobileOpen(false)}
               aria-label="Close menu"
             >
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
 
-            {/* Menu Items */}
-            <div className="flex flex-col items-center justify-center h-full gap-8">
-              <Link
-                to="/"
-                className={MOBILE_NAV_LINK_CLASS}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Home
-              </Link>
-              <Link
-                to="/experience"
-                className={MOBILE_NAV_LINK_CLASS}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Experience
-              </Link>
-              <Link
-                to="/projects"
-                className={MOBILE_NAV_LINK_CLASS}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Projects
-              </Link>
-              <Link
-                to="/skills"
-                className={MOBILE_NAV_LINK_CLASS}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Skills
-              </Link>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "40px" }}>
+              {NAV_LINKS.map(({ to, label }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  label={label}
+                  onClick={() => { setMobileOpen(false); revealHeader(); }}
+                />
+              ))}
             </div>
           </nav>
         </div>
       )}
-    </TabGroup>
+    </>
   );
 }
 

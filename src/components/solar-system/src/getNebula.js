@@ -1,13 +1,30 @@
 import * as THREE from "three";
 
-const loader = new THREE.TextureLoader();
+// Generate a soft radial gradient texture procedurally (rad-grad.png is not in public/)
+function createRadialGradientTexture() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 128;
+  canvas.height = 128;
+  const ctx = canvas.getContext("2d");
+  const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  gradient.addColorStop(0,   "rgba(255,255,255,1)");
+  gradient.addColorStop(0.4, "rgba(255,255,255,0.4)");
+  gradient.addColorStop(1,   "rgba(255,255,255,0)");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, 128, 128);
+  return new THREE.CanvasTexture(canvas);
+}
+
+const gradientTexture = createRadialGradientTexture();
 
 function getSprite({ color, opacity, pos, size }) {
   const spriteMat = new THREE.SpriteMaterial({
     color,
-    map: loader.load("./src/rad-grad.png"),
+    map: gradientTexture,
     transparent: true,
     opacity,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
   });
   spriteMat.color.offsetHSL(0, 0, Math.random() * 0.2 - 0.1);
   const sprite = new THREE.Sprite(spriteMat);

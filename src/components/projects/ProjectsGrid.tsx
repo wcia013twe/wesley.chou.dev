@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import Particles from '@/components/Particles';
 import ProjectCard from '@/components/projects/ProjectCard';
 import { Project } from '@/data/projectsData';
 
@@ -23,6 +22,8 @@ import { Project } from '@/data/projectsData';
 interface ProjectsGridProps {
   projects: Project[];
   onProjectClick: (project: Project) => void;
+  /** Planet atmosphere color — overrides generic badge glow on all cards */
+  glowColor?: string;
 }
 
 // Depth layer configuration
@@ -32,7 +33,7 @@ const DEPTH_CONFIG = {
   3: { scale: 1.0, parallaxMultiplier: 2, scrollMultiplier: 0.6, zIndex: 10 },
 } as const;
 
-export default function ProjectsGrid({ projects, onProjectClick }: ProjectsGridProps) {
+export default function ProjectsGrid({ projects, onProjectClick, glowColor }: ProjectsGridProps) {
   // Mouse parallax state
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrollY, setScrollY] = useState(0);
@@ -178,27 +179,6 @@ export default function ProjectsGrid({ projects, onProjectClick }: ProjectsGridP
 
   return (
     <div className="relative w-full">
-      {/* Background Particles */}
-      <div className="fixed inset-0 w-full h-full pointer-events-none" style={{ zIndex: -1 }}>
-        <Particles
-          particleCount={500}
-          particleColors={['#ffffff', '#ffffff', '#9333ea', '#a78bfa', '#c084fc']}
-          alphaParticles={true}
-          particleBaseSize={120}
-          sizeRandomness={1.5}
-          speed={0.15}
-          disableRotation={false}
-        />
-      </div>
-
-      {/* Ambient Gradient Overlay */}
-      <div
-        className="fixed top-0 left-1/2 -translate-x-1/2 w-full h-screen pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle at 50% 0%, rgba(147, 51, 234, 0.1) 0%, transparent 50%)',
-          zIndex: 0,
-        }}
-      />
 
       {/* Grid Container */}
       <div
@@ -245,6 +225,7 @@ export default function ProjectsGrid({ projects, onProjectClick }: ProjectsGridP
                       : { x: 0, y: 0 }
                   }
                   depth={project.depth}
+                  glowColor={glowColor}
                 />
               </motion.div>
             );

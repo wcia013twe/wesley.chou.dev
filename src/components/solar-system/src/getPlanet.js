@@ -3,7 +3,7 @@ import { getFresnelMat } from './getFresnelMat.js';
 
 const texLoader = new THREE.TextureLoader();
 const geo = new THREE.IcosahedronGeometry(1, 6);
-function getPlanet({ children = [], distance = 0, img = '', size = 1 }) {
+function getPlanet({ children = [], distance = 0, img = '', size = 1, rings = false }) {
     const orbitGroup = new THREE.Group();
     // Reduced orbital tilt - only slight variation instead of full random rotation
     orbitGroup.rotation.x = (Math.random() - 0.5) * 0.1; // Small tilt: -0.1 to +0.1 radians (~6 degrees)
@@ -16,8 +16,7 @@ function getPlanet({ children = [], distance = 0, img = '', size = 1 }) {
     const planet = new THREE.Mesh(geo, planetMat);
     planet.scale.setScalar(size);
 
-    // Start all planets in a line (angle = 0 means they align along X axis)
-    const startAngle = Math.random() * Math.PI * 0.01; // Was: Math.random() * Math.PI * 2
+    const startAngle = Math.random() * Math.PI * 2;
     planet.position.x = Math.cos(startAngle) * distance;
     planet.position.z = Math.sin(startAngle) * distance;
     
@@ -25,6 +24,20 @@ function getPlanet({ children = [], distance = 0, img = '', size = 1 }) {
     const planetRimMesh = new THREE.Mesh(geo, planetRimMat);
     planetRimMesh.scale.setScalar(1.01);
     planet.add(planetRimMesh);
+
+    if (rings) {
+      const ringGeo = new THREE.RingGeometry(1.3, 1.8, 40);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0xc2a97a,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.75,
+        depthWrite: false,
+      });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = Math.PI * 0.42;
+      planet.add(ring);
+    }
 
     children.forEach((child) => {
       child.position.x = Math.cos(startAngle) * distance;

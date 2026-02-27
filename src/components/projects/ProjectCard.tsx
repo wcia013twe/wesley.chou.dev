@@ -27,6 +27,8 @@ interface ProjectCardProps {
   depth: number;
   parallaxOffset: { x: number; y: number };
   onClick: () => void;
+  /** If provided, overrides per-project badge color for all glow/border effects */
+  glowColor?: string;
 }
 
 interface Particle {
@@ -41,6 +43,7 @@ export default function ProjectCard({
   depth,
   parallaxOffset,
   onClick,
+  glowColor,
 }: ProjectCardProps) {
   const cardRef = useRef<HTMLButtonElement>(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -75,7 +78,8 @@ export default function ProjectCard({
     return colorMap[colorClass] || '#a5b4fc';
   };
 
-  const badgeColorHex = getBadgeColorHex(project.badgeColor);
+  // Planet atmosphere color wins when in descent mode; fall back to per-project badge color
+  const badgeColorHex = glowColor ?? getBadgeColorHex(project.badgeColor);
 
   // Handle mouse move for tilt effect
   const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {

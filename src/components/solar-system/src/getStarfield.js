@@ -11,9 +11,15 @@ export default function getStarfield({ numStars = 500, size = 0.2, saturation = 
     let y = radius * Math.sin(phi) * Math.sin(theta);
     let z = radius * Math.cos(phi);
 
+    // Blue (+x side, hue ~0.6) vs red (-x side, hue ~0.0), blending toward white in the middle
+    const xNorm = x / radius; // -1 to 1
+    const hue = xNorm > 0 ? 0.6 : 0.0;
+    const sat = Math.abs(xNorm); // 0 (white middle) → 1 (fully saturated at extremes)
+
     return {
       pos: new THREE.Vector3(x, y, z),
-      hue: 0.6, // radius * 0.02 + 0.5
+      hue,
+      sat,
       minDist: radius,
     };
   }
@@ -23,9 +29,9 @@ export default function getStarfield({ numStars = 500, size = 0.2, saturation = 
   let col;
   for (let i = 0; i < numStars; i += 1) {
     let p = randomSpherePoint();
-    const { pos, hue } = p;
+    const { pos, hue, sat } = p;
     positions.push(p);
-    col = new THREE.Color().setHSL(hue, saturation, Math.random());
+    col = new THREE.Color().setHSL(hue, sat, Math.random() * 0.5 + 0.5);
     verts.push(pos.x, pos.y, pos.z);
     colors.push(col.r, col.g, col.b);
   }
@@ -35,9 +41,9 @@ export default function getStarfield({ numStars = 500, size = 0.2, saturation = 
   const mat = new THREE.PointsMaterial({
     size,
     vertexColors: true,
-    map: new THREE.TextureLoader().load(
-      "./src/circle.png"
-    ),
+    map: new THREE.TextureLoader().load("/textures/circle.png"),
+    transparent: true,
+    depthWrite: false,
   });
   const points = new THREE.Points(geo, mat);
   return points;

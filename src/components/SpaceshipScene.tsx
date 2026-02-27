@@ -10,7 +10,7 @@
  */
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, useTexture } from "@react-three/drei";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import { useInView } from "framer-motion";
 import * as THREE from "three";
 // import { EffectComposer, Bloom, SelectiveBloom } from "@react-three/postprocessing";
@@ -45,58 +45,89 @@ const usePrefersReducedMotion = () => {
   return prefersReducedMotion;
 };
 
+// Pre-compiles all shaders and uploads textures to the GPU before the first
+// animated frame.  Eliminates the shader-compilation stall that spikes delta
+// and causes the fly-in to jump on first render.
+function Precompile() {
+  const { gl, scene, camera } = useThree();
+  useEffect(() => {
+    gl.compile(scene, camera);
+  }, [gl, scene, camera]);
+  return null;
+}
+
 // Bloom effect - manual THREE.js postprocessing
 function Effects() {
   const { gl, scene, camera, size } = useThree();
   const composerRef = useRef<EffectComposer>();
+  const bloomPassRef = useRef<UnrealBloomPass>();
 
+  // Create the pipeline once — recreating on every resize was discarding and
+  // rebuilding all passes (render targets, ping-pong buffers) unnecessarily.
   useEffect(() => {
-    // Create effect composer
     const composer = new EffectComposer(gl);
-    composer.setSize(size.width, size.height);
+    composer.addPass(new RenderPass(scene, camera));
 
-    // Add render pass
-    const renderPass = new RenderPass(scene, camera);
-    composer.addPass(renderPass);
-
-    // First bloom pass - disabled for engine (threshold too high)
-    const engineBloomPass = new UnrealBloomPass(
+    const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(size.width, size.height),
-      0.5,    // strength
-      1,      // radius
-      14    // threshold - engine won't pass (luminance ~1.6)
+      0.4,   // strength
+      0.35,  // radius — tight to prevent halo spread
+      0.5    // threshold
     );
-    composer.addPass(engineBloomPass);
-
-    // Second bloom pass - subtle ship glow
-    const shipBloomPass = new UnrealBloomPass(
-      new THREE.Vector2(size.width, size.height),
-      0.5,   // strength
-      0.4,    // radius - tight
-      0.5     // threshold - catches ship materials
-    );
-    composer.addPass(shipBloomPass);
-
-    // Add output pass
-    const outputPass = new OutputPass();
-    composer.addPass(outputPass);
+    composer.addPass(bloomPass);
+    composer.addPass(new OutputPass());
 
     composerRef.current = composer;
+    bloomPassRef.current  = bloomPass;
+    return () => { composer.dispose(); };
+  }, [gl, scene, camera]); // no `size` — handled separately below
 
-    return () => {
-      composer.dispose();
-    };
-  }, [gl, scene, camera, size]);
+  // Resize only — no pass recreation
+  useEffect(() => {
+    composerRef.current?.setSize(size.width, size.height);
+    bloomPassRef.current?.setSize(size.width, size.height);
+  }, [size]);
 
-  // Render with composer instead of default renderer
   useFrame(() => {
-    if (composerRef.current) {
-      composerRef.current.render();
-    }
+    composerRef.current?.render();
   }, 1);
 
   return null;
 }
+
+// Cinematic rim lights — separate ship silhouette from the black background.
+// Warm point light at the engine rear (motivated by engine glow) + cool point
+// light at the upper hull (ambient space).  Both live in world space so they
+// shift naturally as the ship rotates with mouse parallax.
+//
+// Positions sit far behind the ship (deep negative Z) so they only graze the
+// back-facing silhouette edges, not the camera-facing surfaces.
+// Point-light falloff (decay=2) naturally produces feathered, non-uniform edges.
+const RimLights: React.FC = () => (
+  <>
+    {/* Warm amber — engine-rear motivated.
+        Intensity is high enough that specular peaks on beveled back-edges
+        clear the bloom threshold (at ~2 units away: ~1.2 luminance on metal),
+        while flat back-faces fall below it — producing feathered, non-uniform glow. */}
+    <pointLight
+      position={[0.6, -2.1, -8.3]}
+      color="#ff7030"
+      intensity={5}
+      distance={11}
+      decay={2}
+    />
+    {/* Cool blue-gray — ambient space fill, slightly weaker so warm side dominates. */}
+    <pointLight
+      position={[-2.6, 2.3, -8.8]}
+      color="#7799cc"
+      intensity={2.5}
+      distance={10}
+      decay={2}
+    />
+  </>
+);
+
+const BASE_ROTATION = { x: Math.PI * 0.05, y: Math.PI * 0.25 };
 
 // Engine boost ray component - matches Threlte implementation
 const EngineBoost: React.FC = () => {
@@ -126,20 +157,106 @@ const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
   const meshRef = useRef<THREE.Group>(null);
   const { scene } = useGLTF("/models/spaceship.glb");
 
-  // Base rotation - spaceship faces right towards text
-  const baseRotation = {
-    x: Math.PI * 0.05,
-    y: Math.PI * 0.25,
-  };
+  // Single clone pass — builds both the enhanced scene and the rim overlay.
+  // rimScene clones from enhancedScene so BufferGeometry is shared across all
+  // three (original, enhanced, rim) — no geometry is duplicated in GPU memory.
+  const [enhancedScene, rimScene] = useMemo(() => {
+    const clone = scene.clone(true);
 
-  useFrame((_state) => {
-    if (meshRef.current && !prefersReducedMotion) {
-      // Mouse parallax rotation - primarily Y movement, minimal X lean
+    // Enhance materials for rim specular catch-lights
+    clone.traverse((child) => {
+      const mesh = child as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      const enhanced = mats.map((mat) => {
+        if (!(mat instanceof THREE.MeshStandardMaterial)) return mat;
+        const m = mat.clone();
+        m.roughness = Math.max(0.25, m.roughness - 0.12);
+        m.metalness = Math.min(1.0,  m.metalness + 0.18);
+        return m;
+      });
+      mesh.material = Array.isArray(mesh.material) ? enhanced : enhanced[0];
+    });
+
+    // Rim overlay — clones from the already-cloned scene so geometry is shared
+    const rim = clone.clone(true);
+    const rimMat = new THREE.ShaderMaterial({
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      side: THREE.FrontSide,
+      uniforms: {
+        uWarm:      { value: new THREE.Color(2.2, 0.38, 0.05) },
+        uPower:     { value: 2.2 },
+        uIntensity: { value: 1.5 },
+      },
+      vertexShader: /* glsl */`
+        varying vec3 vViewNormal;
+        varying vec3 vViewDir;
+        void main() {
+          vViewNormal = normalize(normalMatrix * normal);
+          vec4 mvPos  = modelViewMatrix * vec4(position, 1.0);
+          vViewDir    = normalize(-mvPos.xyz);
+          gl_Position = projectionMatrix * mvPos;
+        }
+      `,
+      fragmentShader: /* glsl */`
+        uniform vec3  uWarm;
+        uniform float uPower;
+        uniform float uIntensity;
+        varying vec3  vViewNormal;
+        varying vec3  vViewDir;
+        void main() {
+          float rim = 1.0 - abs(dot(vViewNormal, vViewDir));
+          rim = pow(rim, uPower) * uIntensity;
+          float rightBoost = mix(0.2, 1.8, clamp(-vViewNormal.x * 0.8 + 0.5, 0.0, 1.0));
+          rim *= rightBoost;
+          gl_FragColor = vec4(uWarm * rim, rim);
+        }
+      `,
+      toneMapped: false,
+    });
+    rim.traverse((child) => {
+      const mesh = child as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      mesh.material = rimMat;
+    });
+
+    return [clone, rim];
+  }, [scene]);
+
+  // Intro fly-in: ship enters from the left over ~1.5 s then settles.
+  const introProgress = useRef(0);
+  // Skip the first 3 frames while WebGL compiles shaders — those frames have
+  // a spiked delta (200–500 ms) that would make the ease-out jump too far.
+  const warmupFrames = useRef(0);
+
+  useFrame((_state, delta) => {
+    if (!meshRef.current) return;
+
+    if (warmupFrames.current < 3) {
+      warmupFrames.current++;
+      meshRef.current.position.x = -14; // hold off-screen during warmup
+      return;
+    }
+
+    // Cap delta to max one frame at 30 fps — prevents GPU-spike jumps
+    const safeDelta = Math.min(delta, 1 / 30);
+
+    if (introProgress.current < 1) {
+      introProgress.current = Math.min(1, introProgress.current + safeDelta * 0.65);
+    }
+    // Ease-out cubic: fast start, smooth settle
+    const t = introProgress.current;
+    const eased = 1 - Math.pow(1 - t, 3);
+    meshRef.current.position.x = (1 - eased) * -14; // slides in from -X
+
+    if (!prefersReducedMotion) {
+      // Mouse parallax rotation
       const targetRotationY =
-        baseRotation.y + mousePositionRef.current.x * 0.05;
-      const targetRotationX = baseRotation.x - mousePositionRef.current.y * 0.3;
+        BASE_ROTATION.y + mousePositionRef.current.x * 0.05;
+      const targetRotationX = BASE_ROTATION.x - mousePositionRef.current.y * 0.3;
 
-      // Smooth interpolation
       meshRef.current.rotation.y +=
         (targetRotationY - meshRef.current.rotation.y) * 0.05;
       meshRef.current.rotation.x +=
@@ -148,13 +265,9 @@ const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
   });
 
   return (
-    <group ref={meshRef}>
-      <primitive
-        object={scene.clone()}
-        scale={0.25}
-        position={[-1.5, -0.9, -3.5]}
-        renderOrder={1}
-      />
+    <group ref={meshRef} position={[-14, 0, 0]}>
+      <primitive object={enhancedScene} scale={0.25} position={[-1.5, -0.9, -3.5]} renderOrder={1} />
+      <primitive object={rimScene}      scale={0.25} position={[-1.5, -0.9, -3.5]} renderOrder={2} />
       <EngineBoost />
     </group>
   );
@@ -190,20 +303,22 @@ const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({ className }) => {
       <Canvas
         frameloop={isInView ? "always" : "demand"}
         camera={{ position: [-5, 6, 10], fov: 25 }}
+        dpr={[1, 2]}
         style={{ background: 'transparent' }}
         gl={{
           alpha: true,
-          antialias: true,
-          preserveDrawingBuffer: true,
-          premultipliedAlpha: false
+          premultipliedAlpha: false,
+          powerPreference: 'high-performance',
         }}
         onCreated={({ gl }) => {
-          gl.setClearColor(0x000000, 0); // Black with 0 alpha (fully transparent)
+          gl.setClearColor(0x000000, 0);
         }}
       >
+        <Precompile />
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 5, 5]} intensity={1} />
         <directionalLight position={[-5, -5, 5]} intensity={0.5} />
+        <RimLights />
         <MovingRays />
         <SpaceshipModel
           mousePositionRef={mousePositionRef}

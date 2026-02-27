@@ -1,14 +1,17 @@
 import SplitText from "../components/SplitText";
 import Timeline from "@/components/Timeline";
 import { professionalExperience, academicExperience } from "@/lib/experience";
-
 const ExperiencePage = () => {
   return (
-    <div>
-      <div className="my-15 text-center">
+    <div className="relative">
+      <div className="fixed inset-0 z-0 bg-black/40" aria-hidden="true" />
+
+      {/* Page content */}
+      <div className="relative z-10">
+      <div className="mt-6 mb-12 text-center">
         <SplitText
           text="Experience"
-          className="text-5xl font-semibold text-center  pb-3"
+          className="text-6xl font-semibold text-center pb-3"
           delay={100}
           duration={0.4}
           ease="power3.out"
@@ -19,7 +22,7 @@ const ExperiencePage = () => {
           rootMargin="-100px"
           textAlign="center"
         />
-        <p className="text-lg text-center text-white">
+        <p className="text-xl text-center text-white">
           A snapshot of my professional journey, growth, and the amazing people
           I've worked with
         </p>
@@ -39,6 +42,7 @@ const ExperiencePage = () => {
           Academic & Leadership
         </h2>
         <Timeline data={academicExperience} />
+      </div>
       </div>
     </div>
   );

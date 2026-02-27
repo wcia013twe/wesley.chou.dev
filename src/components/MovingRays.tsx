@@ -17,7 +17,7 @@ interface Ray {
   color: THREE.Color;
 }
 
-const RAYS_COUNT = 20;
+const RAYS_COUNT = 100;
 const COLORS = ['#fcaa67', '#C75D59', '#ffffc7', '#8CC5C6', '#A5898C'];
 
 function random(min: number, max: number): number {
@@ -28,7 +28,7 @@ function resetRay(ray: Ray): void {
   // Start at bottom-right, varying depth layers
   if (Math.random() > 0.8) {
     ray.position.set(
-      random(10, 30),      // Right side (positive X)
+      random(10, 40),      // Right side (positive X)
       random(-15, -10),    // Bottom (negative Y)
       random(6, -6)
     );
@@ -72,16 +72,17 @@ export default function MovingRays() {
     return raysArray;
   }, []);
 
+  // Reused across frames — avoids allocating a new Object3D every frame
+  const dummy = useRef(new THREE.Object3D());
+
   // Animate rays
   useFrame((_, delta) => {
     if (!meshRef.current) return;
 
-    const dummy = new THREE.Object3D();
-
     rays.forEach((ray, i) => {
       // Move ray diagonally (bottom-right to top-left)
       ray.position.x -= ray.speed * delta;
-      ray.position.y += ray.speed * delta / 3.5;
+      ray.position.y += ray.speed * delta / 3;
 
       // Reset if off-screen (reached top-left)
       if (ray.position.x < -40 || ray.position.y > 40) {
@@ -89,12 +90,12 @@ export default function MovingRays() {
       }
 
       // Update instance transform
-      dummy.position.copy(ray.position);
-      dummy.scale.set(ray.length, 1, 1);
-      dummy.rotation.set(0, -0.9,0);
-      dummy.updateMatrix();
+      dummy.current.position.copy(ray.position);
+      dummy.current.scale.set(ray.length, 1, 1);
+      dummy.current.rotation.set(0, -0.8, 0);
+      dummy.current.updateMatrix();
 
-      meshRef.current!.setMatrixAt(i, dummy.matrix);
+      meshRef.current!.setMatrixAt(i, dummy.current.matrix);
       meshRef.current!.setColorAt(i, ray.color);
     });
 

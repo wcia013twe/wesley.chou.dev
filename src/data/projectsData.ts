@@ -8,6 +8,41 @@
 
 // ==================== TypeScript Interfaces ====================
 
+export type PlanetId = 'ai-infra' | 'full-stack' | 'machine-learning' | 'hardware' | 'open-source';
+
+export interface CategoryPlanet {
+  /** Display label shown in the solar system and overlay header */
+  name: string;
+  /** Must match a PlanetId — used to filter projects */
+  id: PlanetId;
+  /** Filename inside /public/textures/ */
+  img: string;
+  /** Orbital radius scale — affects planet size in the solar system */
+  size: number;
+  /**
+   * How large the planet appears in its own tab (the horizon zone preview).
+   * 2.2 is the default. Go higher for a more immersive/looming look,
+   * lower for planets that should feel distant.
+   */
+  previewScale?: number;
+  /** Accent color used for glow, header borders, and text highlights */
+  glowColor: string;
+  /** Set true only for Saturn — renders RingGeometry */
+  rings?: boolean;
+}
+
+// ─── Planet Configuration ─────────────────────────────────────────────────────
+// Add / remove planets here. Change a project's `planetId` below to reassign it.
+// `previewScale` controls how big the planet looks when you enter its tab.
+
+export const categoryPlanets: CategoryPlanet[] = [
+  { name: 'AI Infra',         id: 'ai-infra',        img: 'jupiter.png',  size: 0.8,  previewScale: 3, glowColor: '#c5a84e' },
+  { name: 'Full Stack',       id: 'full-stack',       img: 'earth.png',    size: 0.65, previewScale: 2.0, glowColor: '#4ecdc4' },
+  { name: 'Machine Learning', id: 'machine-learning', img: 'saturn.png',   size: 0.7,  previewScale: 2.2, glowColor: '#d4a843', rings: true },
+  { name: 'Hardware',         id: 'hardware',         img: 'mars.png',     size: 0.55, previewScale: 1.6, glowColor: '#c1440e' },
+  { name: 'Open Source',      id: 'open-source',      img: 'neptune.png',  size: 0.6,  previewScale: 1.8, glowColor: '#4a6fa5' },
+];
+
 export interface TechItem {
   name: string;
   category: 'frontend' | 'backend' | 'database' | 'ai' | 'devops';
@@ -16,6 +51,7 @@ export interface TechItem {
 
 export interface Project {
   id: string;
+  planetId: PlanetId;
   badge?: boolean;
   title: string;
   description: string; // Short version for card
@@ -44,6 +80,7 @@ export const techCategoryColors = {
 export const projects: Project[] = [
   {
     id: 'emergent',
+    planetId: 'ai-infra',
     badge: true,
     title: 'Emergent',
     description: 'An AI-powered crisis simulation platform enabling emergency managers to test plans against a dynamic community of 50+ intelligent personas using Google ADK agents. Features interactive GIS mapping, real-time agent simulation, and emergent disaster scenarios.',
@@ -69,6 +106,7 @@ Built with Next.js 14 and FastAPI for high-performance backend processing, Emerg
   },
   {
     id: 'insightai',
+    planetId: 'machine-learning',
     badge: false,
     title: 'InsightAI',
     description: 'A real-time attention-driven UX optimization tool using eye tracking and AI to help developers build more accessible websites. Developers rank component importance, InsightAI measures user attention, identifies mismatches, and uses Gemini AI to suggest concrete HTML improvements applied instantly. Generates comprehensive performance summaries for informed design decisions.',
@@ -93,6 +131,7 @@ Built with Python and Tkinter for the desktop interface, the tool integrates Ten
   },
   {
     id: 'sonara',
+    planetId: 'full-stack',
     badge: false,
     title: 'Sonara',
     description: 'Sonara is a dating platform for people moving into a new city to build new connections through voice',
@@ -116,6 +155,7 @@ Built with Next.js 15 and styled with Tailwind CSS, Sonara features a modern, re
   },
   {
     id: 'fitlink',
+    planetId: 'full-stack',
     badge: false,
     title: 'FitLink',
     description: 'FitLink is an AI-powered client management tool for personal trainers',
@@ -140,6 +180,7 @@ The dual-platform approach features a React web dashboard for trainers and a Flu
   },
   {
     id: 'fairmap',
+    planetId: 'open-source',
     badge: false,
     title: 'FairMap',
     description: 'FairMap provides a map comparison of the congressional voting data',
@@ -164,6 +205,7 @@ Built with Django and SQLite for robust data management, and featuring an intera
   },
   {
     id: 'findmyfriend',
+    planetId: 'open-source',
     badge: false,
     title: 'FindMyFriend',
     description: "FindMyFriend is a LAMP stack project for tracking your friends' locations.",

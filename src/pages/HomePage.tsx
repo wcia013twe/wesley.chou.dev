@@ -5,10 +5,16 @@ import { MdEmail } from "react-icons/md";
 import { FaArrowRight, FaGithub, FaLinkedin } from "react-icons/fa";
 import { CgFileDocument } from "react-icons/cg";
 import SpaceshipScene from "@/components/SpaceshipScene";
+import SpaceshipDiagram from "@/components/SpaceshipDiagram";
 import FeatureCard from "@/components/FeatureCard";
 import ScrollIndicator from "@/components/ScrollIndicator";
 import TextType from "@/components/TextType";
 import Particles from "@/components/Particles";
+
+const MONO = "ui-monospace, SFMono-Regular, monospace";
+const C_CYAN   = "#22d3ee";
+const C_BRIGHT = "#67e8f9";
+const C_DIM    = "rgba(34,211,238,0.45)";
 
 const HomePage = () => {
   return (
@@ -21,11 +27,10 @@ const HomePage = () => {
         />
       </Helmet>
 
-
       {/* Hero Zone - Split Screen */}
       <section className="relative flex flex-col md:flex-row min-h-screen overflow-hidden">
         {/* Particles background layer */}
-        <div className="absolute inset-0 z-50">
+        <div className="absolute inset-0 z-50 pointer-events-none">
           <Particles
             particleColors={["#ffffff"]}
             particleCount={300}
@@ -44,9 +49,9 @@ const HomePage = () => {
           <SpaceshipScene />
         </div>
 
-        {/* Left Section - Purple glow overlay */}
+        {/* Left Section - subtle cyan glow overlay */}
         <div className="relative w-full md:w-1/2 h-[50vh] md:h-screen z-20">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/10 via-transparent to-transparent pointer-events-none" />
         </div>
 
         {/* Right Section - Text Content */}
@@ -57,11 +62,19 @@ const HomePage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white drop-shadow-lg">
+            <h1
+              className="text-4xl md:text-6xl lg:text-7xl font-bold"
+              style={{
+                fontFamily:    MONO,
+                letterSpacing: "0.06em",
+                color:         "white",
+                textShadow:    "0 0 30px rgba(34,211,238,0.5), 0 0 80px rgba(34,211,238,0.15)",
+              }}
+            >
               Hi, I'm Wesley Chou
             </h1>
 
-            <div className="text-xl md:text-2xl lg:text-3xl text-white/90">
+            <div className="text-xl md:text-2xl lg:text-3xl">
               <TextType
                 text={[
                   "Software Engineer",
@@ -72,6 +85,7 @@ const HomePage = () => {
                 pauseDuration={1500}
                 showCursor={true}
                 cursorCharacter="|"
+                textColors={[C_BRIGHT]}
               />
             </div>
 
@@ -84,23 +98,35 @@ const HomePage = () => {
             >
               <Link to="/experience">
                 <motion.button
-                  className="inline-flex items-center gap-2 px-4 py-3 md:px-6 md:py-4 text-lg md:text-xl font-semibold bg-purple-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-shadow"
-                  whileHover={{ scale: 1.05, y: -2 }}
+                  className="inline-flex items-center gap-3 px-6 py-3 md:py-4 border border-cyan-400/50 bg-cyan-400/5 text-cyan-400 hover:bg-cyan-400/10 hover:border-cyan-300/70 hover:text-cyan-300 transition-all duration-250"
+                  style={{
+                    fontFamily:    MONO,
+                    fontSize:      "13px",
+                    letterSpacing: "0.25em",
+                    textTransform: "uppercase",
+                  }}
+                  whileHover={{ scale: 1.03, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   View Experience
-                  <FaArrowRight />
+                  <FaArrowRight size={12} />
                 </motion.button>
               </Link>
 
               <a href="mailto:wcia013twe@gmail.com">
                 <motion.button
-                  className="inline-flex items-center gap-2 px-4 py-3 md:px-6 md:py-4 text-lg md:text-xl font-semibold bg-transparent border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors"
-                  whileHover={{ scale: 1.05, y: -2 }}
+                  className="inline-flex items-center gap-3 px-6 py-3 md:py-4 border border-cyan-400/20 text-cyan-400/55 hover:border-cyan-400/45 hover:text-cyan-400 transition-all duration-250"
+                  style={{
+                    fontFamily:    MONO,
+                    fontSize:      "13px",
+                    letterSpacing: "0.25em",
+                    textTransform: "uppercase",
+                  }}
+                  whileHover={{ scale: 1.03, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   Contact Me
-                  <MdEmail />
+                  <MdEmail size={14} />
                 </motion.button>
               </a>
             </motion.div>
@@ -148,16 +174,22 @@ const HomePage = () => {
       </section>
 
       {/* Quick Links Footer */}
-      <footer className="relative z-10 bg-black/80 border-t border-gray-800">
+      <footer
+        className="relative z-10"
+        style={{ borderTop: "1px solid rgba(34,211,238,0.10)", background: "rgba(0,3,8,0.80)" }}
+      >
         <div className="max-w-7xl mx-auto px-6 py-8">
           {/* Row 1: Social Icons */}
-          <div className="flex justify-center gap-4 mb-4">
+          <div className="flex justify-center gap-5 mb-5">
             <a
               href="https://github.com/wcia013twe"
               aria-label="GitHub"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-3xl text-white/80 hover:text-purple-500 hover:scale-110 transition-all"
+              className="text-2xl transition-all duration-200 hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]"
+              style={{ color: C_DIM }}
+              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = C_BRIGHT)}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = C_DIM)}
             >
               <FaGithub />
             </a>
@@ -166,34 +198,64 @@ const HomePage = () => {
               aria-label="LinkedIn"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-3xl text-white/80 hover:text-purple-500 hover:scale-110 transition-all"
+              className="text-2xl transition-all duration-200 hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]"
+              style={{ color: C_DIM }}
+              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = C_BRIGHT)}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = C_DIM)}
             >
               <FaLinkedin />
             </a>
             <a
               href="documents/IWesChouResume2026_1120.pdf"
               aria-label="Resume"
-              className="text-3xl text-white/80 hover:text-purple-500 hover:scale-110 transition-all"
+              className="text-2xl transition-all duration-200 hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]"
+              style={{ color: C_DIM }}
+              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = C_BRIGHT)}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = C_DIM)}
             >
               <CgFileDocument />
             </a>
           </div>
 
           {/* Row 2: Copyright & Navigation */}
-          <div className="flex flex-col md:flex-row justify-center items-center gap-4 text-sm text-white/60">
+          <div
+            className="flex flex-col md:flex-row justify-center items-center gap-4"
+            style={{
+              fontFamily:    MONO,
+              fontSize:      "10px",
+              letterSpacing: "0.2em",
+              textTransform: "uppercase" as const,
+              color:         "rgba(34,211,238,0.3)",
+            }}
+          >
             <p>© 2025 Wesley Chou</p>
-            <div className="flex gap-2">
-              <Link to="/experience" className="hover:text-purple-500 hover:underline transition-colors">
-                Experience
-              </Link>
-              <span>|</span>
-              <Link to="/projects" className="hover:text-purple-500 hover:underline transition-colors">
-                Projects
-              </Link>
-              <span>|</span>
-              <Link to="/skills" className="hover:text-purple-500 hover:underline transition-colors">
-                Skills
-              </Link>
+            <div className="flex gap-3 items-center">
+              {[
+                { to: "/experience", label: "Experience" },
+                { to: "/projects",   label: "Projects"   },
+                { to: "/skills",     label: "Skills"     },
+              ].map(({ to, label }, i, arr) => (
+                <span key={to} className="flex items-center gap-3">
+                  <Link
+                    to={to}
+                    className="transition-colors duration-200"
+                    style={{ color: "rgba(34,211,238,0.3)", textDecoration: "none" }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.color = C_CYAN;
+                      (e.currentTarget as HTMLElement).style.textShadow = `0 0 8px ${C_CYAN}`;
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.color = "rgba(34,211,238,0.3)";
+                      (e.currentTarget as HTMLElement).style.textShadow = "none";
+                    }}
+                  >
+                    {label}
+                  </Link>
+                  {i < arr.length - 1 && (
+                    <span style={{ color: "rgba(34,211,238,0.15)" }}>·</span>
+                  )}
+                </span>
+              ))}
             </div>
           </div>
         </div>
