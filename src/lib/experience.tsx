@@ -300,6 +300,42 @@ export const academicExperience: ExperienceItem[] = [
       "UCF SARC": "https://academicsuccess.ucf.edu/sarc/",
     },
   },
+  {
+    date: "Aug 2023 - May 2026",
+    imageSrc: "assets/experience/UCF_Knights_logo.svg",
+    hero: "assets/experience/SDES_SARC.avif",
+    altText: "UCF Logo",
+    captionText: "University of Central Florida",
+    title: "B.S. Computer Science",
+    workplace: "University of Central Florida",
+    location: "Orlando, FL",
+    description:
+      "Bachelor of Science in Computer Science, expected graduation May 2026.",
+    skills: [
+      "Computer Science",
+      "Data Structures & Algorithms",
+      "Software Engineering",
+      "Machine Learning",
+      "Operating Systems",
+      "Systems Programming",
+    ],
+    overview:
+      "Pursuing a Bachelor of Science in Computer Science at UCF, building a strong foundation in software engineering, algorithms, and applied machine learning.",
+    key_responsibilities: [
+      "Completed coursework in data structures, algorithms, operating systems, and machine learning.",
+      "Maintained active involvement in research, entrepreneurship, and professional development organizations.",
+    ],
+    icon: (
+      <img
+        src="assets/experience/UCF_Knights_logo.svg"
+        alt="UCF Logo"
+        className="rounded-full h-14 w-13 ml-0.75 mt-0.75"
+      />
+    ),
+    links: {
+      "UCF Computer Science": "https://www.cs.ucf.edu/",
+    },
+  },
 ];
 
 

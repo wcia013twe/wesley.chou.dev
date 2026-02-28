@@ -1,150 +1,106 @@
-import { Helmet } from "react-helmet-async";
+import { useEffect } from "react";
 import { motion } from "motion/react";
-// import ScrollStack, { ScrollStackItem } from "@/components/ui/scroll-stack";
-import SplitText from "../components/SplitText";
-import ScrollStack, { ScrollStackItem } from "@/components/ScrollStack.tsx";
-
-import ScrollStackCard from "@/components/ScrollStackCard";
-import StackIcon from "tech-stack-icons";
-import CustomIcon from "@/components/CustomIcon";
-import FallingText from "@/components/FallingText";
-import { RiResetLeftFill } from "react-icons/ri";
-import { useState } from "react";
-import FloatingScrollPrompt from "@/components/FloatingScrollPrompt";
 import SpaceshipDiagram from "@/components/SpaceshipDiagram";
+import HudPanel from "@/components/HudPanel";
+
+const MONO = "ui-monospace, SFMono-Regular, monospace";
+const ACCENT = "#22d3ee";
+
+const ControlsHint = () => (
+  <motion.div
+    className="absolute left-6 z-20 pointer-events-none select-none"
+    style={{ top: "170px" }}
+    initial={{ opacity: 0, x: -8 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ duration: 0.5, delay: 0.6, ease: "easeOut" }}
+  >
+    <div style={{ display: "flex", gap: "10px" }}>
+      {/* Left accent bar */}
+      <div style={{
+        width: "2px",
+        background: `linear-gradient(180deg, ${ACCENT} 0%, ${ACCENT}44 100%)`,
+        flexShrink: 0,
+      }} />
+
+      <div style={{
+        background: "rgba(0,0,0,0.45)",
+        border: `1px solid ${ACCENT}2e`,
+        borderLeft: "none",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+        padding: "10px 14px 10px 12px",
+      }}>
+        <p style={{
+          fontFamily: MONO, fontSize: "8px", letterSpacing: "0.3em",
+          color: `${ACCENT}aa`, textTransform: "uppercase", margin: "0 0 8px",
+        }}>
+          Controls
+        </p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+
+          {/* Left click — open system detail */}
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <svg width="14" height="20" viewBox="0 0 14 20" fill="none" style={{ flexShrink: 0 }}>
+              <rect x="0.75" y="0.75" width="12.5" height="18.5" rx="6.25" stroke={`${ACCENT}73`} strokeWidth="1.5"/>
+              <line x1="7" y1="0.75" x2="7" y2="9" stroke={`${ACCENT}4d`} strokeWidth="1"/>
+              <path d="M1.2 9 L1.2 5 Q1.2 1.2 7 1.2 L7 9 Z" fill={`${ACCENT}cc`}/>
+            </svg>
+            <span style={{ fontFamily: MONO, fontSize: "9px", letterSpacing: "0.08em", color: "rgba(255,255,255,0.45)" }}>
+              Open system detail
+            </span>
+          </div>
+
+          {/* Drag — rotate model */}
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <svg width="14" height="20" viewBox="0 0 14 20" fill="none" style={{ flexShrink: 0 }}>
+              <rect x="0.75" y="0.75" width="12.5" height="18.5" rx="6.25" stroke={`${ACCENT}73`} strokeWidth="1.5"/>
+              <line x1="7" y1="0.75" x2="7" y2="9" stroke={`${ACCENT}4d`} strokeWidth="1"/>
+              {/* both buttons dim = drag */}
+              <path d="M1.2 9 L1.2 5 Q1.2 1.2 7 1.2 L7 9 Z" fill={`${ACCENT}55`}/>
+              <path d="M12.8 9 L12.8 5 Q12.8 1.2 7 1.2 L7 9 Z" fill={`${ACCENT}55`}/>
+              {/* drag arrows on body */}
+              <path d="M4 14 L7 11.5 L10 14" stroke={`${ACCENT}cc`} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              <path d="M4 17 L7 19.5 L10 17" stroke={`${ACCENT}cc`} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            </svg>
+            <span style={{ fontFamily: MONO, fontSize: "9px", letterSpacing: "0.08em", color: "rgba(255,255,255,0.45)" }}>
+              Rotate model
+            </span>
+          </div>
+
+          {/* Close key — close panel */}
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0 }}>
+              <rect x="0.75" y="0.75" width="12.5" height="12.5" rx="2.5" stroke={`${ACCENT}73`} strokeWidth="1.5" fill={`${ACCENT}1a`}/>
+              <path d="M4.5 4.5 L9.5 9.5 M9.5 4.5 L4.5 9.5" stroke={`${ACCENT}cc`} strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+            <span style={{ fontFamily: MONO, fontSize: "9px", letterSpacing: "0.08em", color: "rgba(255,255,255,0.45)" }}>
+              Close panel
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </motion.div>
+);
 
 const SkillsPage = () => {
-  const [fallingTextKey, setFallingTextKey] = useState(0);
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, []);
 
   return (
-    // <div className="min-h-screen flex flex-col items-center justify-center">
-    //   <Helmet>
-    //     <title>Skills | Wesley Chou</title>
-    //     <meta name="description" content="Welcome to Wesley Chou's skills." />
-    //   </Helmet>
-
-    //   <FloatingScrollPrompt />
-
-    //   {/* Header Zone - Glassmorphic (matching Projects page) */}
-    //   <div className="sticky top-0 z-40 bg-black/40 backdrop-blur-xl border-b border-purple-500/20 shadow-lg shadow-black/10 w-full">
-    //     <div className="max-w-6xl mx-auto py-12 px-6 text-center">
-    //       <SplitText
-    //         text="Skills"
-    //         className="text-5xl font-semibold text-center pb-3"
-    //         delay={100}
-    //         duration={0.4}
-    //         ease="power3.out"
-    //         splitType="chars"
-    //         from={{ opacity: 0, y: 40 }}
-    //         to={{ opacity: 1, y: 0 }}
-    //         threshold={0.1}
-    //         rootMargin="-100px"
-    //         textAlign="center"
-    //       />
-    //       <motion.p
-    //         className="text-lg text-white/80"
-    //         initial={{ opacity: 0 }}
-    //         animate={{ opacity: 1 }}
-    //         transition={{ delay: 0.6, duration: 0.6 }}
-    //       >
-    //         Technology and tools I use to bring ideas to life.
-    //       </motion.p>
-    //     </div>
-    //   </div>
-
-      
-    //   <div className="w-[50vw] h-[100vh]">
-    //     <ScrollStack className="align-center no-scrollbar -mt-30">
-    //       <ScrollStackCard
-    //         title="Languages & Frontend"
-    //         images={[
-    //           <StackIcon name="java" />,
-    //           <StackIcon name="python" />,
-    //           <StackIcon name="c++" />,
-    //           <StackIcon name="typescript" />,
-    //           <StackIcon name="js" />,
-    //           <StackIcon name="html5" />,
-    //           <StackIcon name="css3" />,
-    //           <StackIcon name="react" />,
-    //           <StackIcon name="tailwindcss" />,
-    //           <StackIcon name="nextjs" />,
-    //           <StackIcon name="flutter" />,
-    //         ]}
-    //       />
-    //       <ScrollStackCard
-    //         title="Backend & Databases"
-    //         images={[
-    //           <StackIcon name="nodejs" />,
-    //           <StackIcon name="spring" />,
-    //           <CustomIcon title="FastAPI" src="icons/fastapi.png" />,
-    //           <StackIcon name="langchain" />,
-    //           <StackIcon name="mongodb" />,
-    //           <StackIcon name="postgresql" />,
-    //           <StackIcon name="mysql" />,
-    //           <StackIcon name="supabase" />,
-    //           <StackIcon name="supabase" />,
-    //         ]}
-    //       />
-    //       <ScrollStackCard
-    //         title="DevOps & Infrastructure"
-    //         images={[
-    //           <StackIcon name="docker" />,
-    //           <StackIcon name="kubernetes" />,
-    //           <StackIcon name="linux" />,
-    //           <StackIcon name="git" />,
-    //           <StackIcon name="digitalocean" />,
-    //           <StackIcon name="colab" />,
-    //            <StackIcon name="cloudflare" />,
-    //         ]}
-    //       />
-    //       <ScrollStackCard
-    //         title="Tools & Collaboration"
-    //         images={[
-    //           <StackIcon name="github" />,
-    //           <StackIcon name="gitlab" />,
-    //           <StackIcon name="postman" />,
-    //           <StackIcon name="jira" />,
-    //           <CustomIcon
-    //             title="Confluence"
-    //             src="icons/confluence-removebg-preview.png"
-    //           />,
-    //           <StackIcon name="figma" />,
-    //           <CustomIcon
-    //             title="Google ADK"
-    //             src="/icons/agent-development-kit.png"
-    //           />,
-    //         ]}
-    //       />
-    //       <ScrollStackItem itemClassName="bg-gray-900 text-xs border border-gray-700 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
-    //         <h2 className="text-2xl font-semibold mb-4 text-white p-5">
-    //           Leadership
-    //         </h2>
-    //         <FallingText
-    //           key={fallingTextKey}
-    //           text="Mentorship|High Resiliency|Appetite For Rejection|Research|Shipping Relentlessly|Market Research|High Agency| Pitching|Project Ownership|Mentorship|Stakeholder Communication"
-    //           trigger="click"
-    //           backgroundColor="transparent"
-    //           wireframes={false}
-    //           gravity={0.56}
-    //           fontSize="1.5rem"
-    //           mouseConstraintStiffness={0.9}
-    //         />
-    //         <button
-    //           type="button"
-    //           onClick={() => setFallingTextKey((k: number) => k + 1)}
-    //           className="absolute z-10 bottom-6 right-6 rounded-md  text-primary text-lg shadow hover:opacity-90 transition"
-    //           aria-label="Scatter and reset bubbles"
-    //         >
-    //           <RiResetLeftFill />
-    //         </button>
-    //       </ScrollStackItem>
-    //     </ScrollStack>
-    //   </div>
-    // </div>
-    <>
-      {/* Spaceship Diagram — interactive systems overlay */}
+    <div className="relative h-screen overflow-hidden">
       <SpaceshipDiagram />
-    </>
+      <HudPanel
+        title="Technical Skills"
+        systemPath="SYS / SKILL / ACTIVE"
+        coords="41.2°N · 12.4°E"
+      />
+      <ControlsHint />
+    </div>
   );
 };
 

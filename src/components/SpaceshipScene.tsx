@@ -59,14 +59,13 @@ function Precompile() {
 // Bloom effect - manual THREE.js postprocessing
 function Effects() {
   const { gl, scene, camera, size } = useThree();
-  const composerRef = useRef<EffectComposer>();
   const bloomPassRef = useRef<UnrealBloomPass>();
 
-  // Create the pipeline once — recreating on every resize was discarding and
-  // rebuilding all passes (render targets, ping-pong buffers) unnecessarily.
-  useEffect(() => {
-    const composer = new EffectComposer(gl);
-    composer.addPass(new RenderPass(scene, camera));
+  // useMemo initializes synchronously so the composer is ready on frame 1,
+  // preventing a flash of unprocessed materials on the first render.
+  const composer = useMemo(() => {
+    const c = new EffectComposer(gl);
+    c.addPass(new RenderPass(scene, camera));
 
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(size.width, size.height),
@@ -74,23 +73,21 @@ function Effects() {
       0.35,  // radius — tight to prevent halo spread
       0.5    // threshold
     );
-    composer.addPass(bloomPass);
-    composer.addPass(new OutputPass());
-
-    composerRef.current = composer;
-    bloomPassRef.current  = bloomPass;
-    return () => { composer.dispose(); };
+    bloomPassRef.current = bloomPass;
+    c.addPass(bloomPass);
+    c.addPass(new OutputPass());
+    return c;
   }, [gl, scene, camera]); // no `size` — handled separately below
+
+  useEffect(() => () => { composer.dispose(); }, [composer]);
 
   // Resize only — no pass recreation
   useEffect(() => {
-    composerRef.current?.setSize(size.width, size.height);
+    composer.setSize(size.width, size.height);
     bloomPassRef.current?.setSize(size.width, size.height);
-  }, [size]);
+  }, [size, composer]);
 
-  useFrame(() => {
-    composerRef.current?.render();
-  }, 1);
+  useFrame(() => { composer.render(); }, 1);
 
   return null;
 }
@@ -225,47 +222,31 @@ const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
     return [clone, rim];
   }, [scene]);
 
-  // Intro fly-in: ship enters from the left over ~1.5 s then settles.
-  const introProgress = useRef(0);
-  // Skip the first 3 frames while WebGL compiles shaders — those frames have
-  // a spiked delta (200–500 ms) that would make the ease-out jump too far.
-  const warmupFrames = useRef(0);
+  // Hide for the first 2 frames while bloom render targets initialize,
+  // otherwise the bright engine materials spike the bloom red on frame 1.
+  const warmup = useRef(0);
 
-  useFrame((_state, delta) => {
+  useFrame(() => {
     if (!meshRef.current) return;
 
-    if (warmupFrames.current < 3) {
-      warmupFrames.current++;
-      meshRef.current.position.x = -14; // hold off-screen during warmup
+    if (warmup.current < 2) {
+      warmup.current++;
+      meshRef.current.visible = false;
       return;
     }
+    meshRef.current.visible = true;
 
-    // Cap delta to max one frame at 30 fps — prevents GPU-spike jumps
-    const safeDelta = Math.min(delta, 1 / 30);
+    if (prefersReducedMotion) return;
 
-    if (introProgress.current < 1) {
-      introProgress.current = Math.min(1, introProgress.current + safeDelta * 0.65);
-    }
-    // Ease-out cubic: fast start, smooth settle
-    const t = introProgress.current;
-    const eased = 1 - Math.pow(1 - t, 3);
-    meshRef.current.position.x = (1 - eased) * -14; // slides in from -X
+    const targetRotationY = BASE_ROTATION.y + mousePositionRef.current.x * 0.05;
+    const targetRotationX = BASE_ROTATION.x - mousePositionRef.current.y * 0.3;
 
-    if (!prefersReducedMotion) {
-      // Mouse parallax rotation
-      const targetRotationY =
-        BASE_ROTATION.y + mousePositionRef.current.x * 0.05;
-      const targetRotationX = BASE_ROTATION.x - mousePositionRef.current.y * 0.3;
-
-      meshRef.current.rotation.y +=
-        (targetRotationY - meshRef.current.rotation.y) * 0.05;
-      meshRef.current.rotation.x +=
-        (targetRotationX - meshRef.current.rotation.x) * 0.05;
-    }
+    meshRef.current.rotation.y += (targetRotationY - meshRef.current.rotation.y) * 0.05;
+    meshRef.current.rotation.x += (targetRotationX - meshRef.current.rotation.x) * 0.05;
   });
 
   return (
-    <group ref={meshRef} position={[-14, 0, 0]}>
+    <group ref={meshRef}>
       <primitive object={enhancedScene} scale={0.25} position={[-1.5, -0.9, -3.5]} renderOrder={1} />
       <primitive object={rimScene}      scale={0.25} position={[-1.5, -0.9, -3.5]} renderOrder={2} />
       <EngineBoost />

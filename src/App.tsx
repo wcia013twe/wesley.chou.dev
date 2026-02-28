@@ -1,16 +1,20 @@
 import "./App.css";
+import { lazy, Suspense } from "react";
 import {
   createBrowserRouter,
   RouterProvider,
   Outlet,
 } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import ProjectsPage from "./pages/ProjectsPage";
-import SkillsPage from "./pages/SkillsPage";
 import Navbar from "./components/NavBar";
 import { HelmetProvider } from "react-helmet-async";
-import ExperiencePage from "./pages/ExperiencePage";
 import Particles from "./components/Particles";
+
+// Lazy-load each page so their JS (including Three.js) is only downloaded
+// when the user navigates to that route, not on the initial page load.
+const HomePage       = lazy(() => import("./pages/HomePage"));
+const ExperiencePage = lazy(() => import("./pages/ExperiencePage"));
+const ProjectsPage   = lazy(() => import("./pages/ProjectsPage"));
+const SkillsPage     = lazy(() => import("./pages/SkillsPage"));
 
 const Layout = () => (
   <>
@@ -32,7 +36,10 @@ const Layout = () => (
       />
     </div>
     <main>
-      <Outlet />
+      {/* Suspense boundary for lazy-loaded page chunks */}
+      <Suspense fallback={null}>
+        <Outlet />
+      </Suspense>
     </main>
   </>
 );

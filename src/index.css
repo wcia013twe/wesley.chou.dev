@@ -119,6 +119,53 @@ main { padding-top: var(--nav-height); }
 .card { @apply rounded-lg p-4 bg-surface shadow-sm border border-[var(--color-border)]; }
 .btn-primary { @apply inline-flex items-center gap-1 px-4 py-2 rounded-md font-medium bg-primary text-primary-foreground hover:opacity-90 transition; }
 
+/* Orbit data panel — responsive positioning (bottom-sheet on mobile, right-dock on desktop) */
+.orbit-panel {
+  /* mobile: bottom sheet */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60vh;
+  top: auto;
+  z-index: 50;
+}
+@media (min-width: 768px) {
+  .orbit-panel {
+    /* desktop: right-docked sidebar */
+    top: var(--nav-height);
+    right: 0;
+    bottom: 0;
+    left: auto;
+    width: 50%;
+    height: auto;
+  }
+}
+
+/* Command Center data pane — sci-fi scrollbar */
+.command-pane {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-color, #888888) transparent;
+}
+.command-pane::-webkit-scrollbar {
+  width: 3px;
+}
+.command-pane::-webkit-scrollbar-track {
+  background: transparent;
+}
+.command-pane::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-color, #888888);
+  border-radius: 2px;
+  opacity: 0.7;
+}
+
+/* Modal grid stacks on small screens */
+@media (max-width: 640px) {
+  .flex-col-mobile {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 
 
 

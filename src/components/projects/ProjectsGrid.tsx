@@ -24,6 +24,8 @@ interface ProjectsGridProps {
   onProjectClick: (project: Project) => void;
   /** Planet atmosphere color — overrides generic badge glow on all cards */
   glowColor?: string;
+  /** When true, disables window scroll parallax (for use inside a scrollable pane) */
+  disableScrollParallax?: boolean;
 }
 
 // Depth layer configuration
@@ -33,7 +35,7 @@ const DEPTH_CONFIG = {
   3: { scale: 1.0, parallaxMultiplier: 2, scrollMultiplier: 0.6, zIndex: 10 },
 } as const;
 
-export default function ProjectsGrid({ projects, onProjectClick, glowColor }: ProjectsGridProps) {
+export default function ProjectsGrid({ projects, onProjectClick, glowColor, disableScrollParallax }: ProjectsGridProps) {
   // Mouse parallax state
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrollY, setScrollY] = useState(0);
@@ -92,16 +94,20 @@ export default function ProjectsGrid({ projects, onProjectClick, glowColor }: Pr
     if (isFinePointer) {
       window.addEventListener('mousemove', handleMouseMove);
     }
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    if (!disableScrollParallax) {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+    }
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('scroll', handleScroll);
+      if (!disableScrollParallax) {
+        window.removeEventListener('scroll', handleScroll);
+      }
       if (rafIdRef.current !== null) {
         cancelAnimationFrame(rafIdRef.current);
       }
     };
-  }, [handleMouseMove, handleScroll, isFinePointer]);
+  }, [handleMouseMove, handleScroll, isFinePointer, disableScrollParallax]);
 
   // Intersection Observer for card reveal animations
   useEffect(() => {
@@ -145,7 +151,7 @@ export default function ProjectsGrid({ projects, onProjectClick, glowColor }: Pr
       : 0;
 
     // Scroll parallax
-    const scrollOffset = scrollY * (1 - config.scrollMultiplier);
+    const scrollOffset = disableScrollParallax ? 0 : scrollY * (1 - config.scrollMultiplier);
 
     // Combine transforms using translate3d for GPU acceleration
     return {
@@ -183,10 +189,10 @@ export default function ProjectsGrid({ projects, onProjectClick, glowColor }: Pr
       {/* Grid Container */}
       <div
         ref={gridRef}
-        className="relative max-w-6xl mx-auto px-6 py-16 mb-20"
+        className="relative px-5 pt-4 pb-8"
         style={{ perspective: '1000px' }}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 gap-5">
           {projects.map((project, index) => {
             const isRevealed = revealedCards.has(project.id);
             const parallaxStyle = getParallaxTransform(project.depth, index);

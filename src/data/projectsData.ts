@@ -29,6 +29,24 @@ export interface CategoryPlanet {
   glowColor: string;
   /** Set true only for Saturn — renders RingGeometry */
   rings?: boolean;
+  /**
+   * Override the orbit camera distance for this planet.
+   * Smaller = tighter zoom, larger = more distant.
+   * Defaults to `size * 1 + 0.5` if omitted.
+   */
+  zoomDist?: number;
+  /**
+   * Orbit tier index. Planets that share the same tier share the same orbital
+   * radius. Tiers are sorted 0 → N (innermost → outermost).
+   * Defaults to each planet having its own unique tier if omitted.
+   */
+  orbitTier?: number;
+  /**
+   * Starting angle in degrees for this planet's initial position on its orbit.
+   * 0 = positive-X axis. Use 180 to place a planet directly opposite another
+   * planet on the same tier. Defaults to 0 if omitted.
+   */
+  startAngleDeg?: number;
 }
 
 // ─── Planet Configuration ─────────────────────────────────────────────────────
@@ -36,11 +54,11 @@ export interface CategoryPlanet {
 // `previewScale` controls how big the planet looks when you enter its tab.
 
 export const categoryPlanets: CategoryPlanet[] = [
-  { name: 'AI Infra',         id: 'ai-infra',        img: 'jupiter.png',  size: 0.8,  previewScale: 3, glowColor: '#c5a84e' },
-  { name: 'Full Stack',       id: 'full-stack',       img: 'earth.png',    size: 0.65, previewScale: 2.0, glowColor: '#4ecdc4' },
-  { name: 'Machine Learning', id: 'machine-learning', img: 'saturn.png',   size: 0.7,  previewScale: 2.2, glowColor: '#d4a843', rings: true },
-  { name: 'Hardware',         id: 'hardware',         img: 'mars.png',     size: 0.55, previewScale: 1.6, glowColor: '#c1440e' },
-  { name: 'Open Source',      id: 'open-source',      img: 'neptune.png',  size: 0.6,  previewScale: 1.8, glowColor: '#4a6fa5' },
+  { name: 'AI Infra',         id: 'ai-infra',        img: 'jupiter.png',  size: 0.8,  previewScale: 3,   glowColor: '#c5a84e', orbitTier: 0, startAngleDeg: 0   },
+  { name: 'Open Source',      id: 'open-source',      img: 'neptune.png',  size: 0.6,  previewScale: 1.8, glowColor: '#4a6fa5', orbitTier: 0, startAngleDeg: 180 },
+  { name: 'Full Stack',       id: 'full-stack',       img: 'earth.png',    size: 0.65, previewScale: 2.0, glowColor: '#4ecdc4', orbitTier: 1, startAngleDeg: 0   },
+  { name: 'Hardware',         id: 'hardware',         img: 'mars.png',     size: 0.55, previewScale: 1.6, glowColor: '#c1440e', orbitTier: 1, startAngleDeg: 180 },
+  { name: 'Machine Learning', id: 'machine-learning', img: 'saturn.png',   size: 0.7,  previewScale: 2.2, glowColor: '#d4a843', orbitTier: 2, startAngleDeg: 0,  rings: true },
 ];
 
 export interface TechItem {
@@ -61,6 +79,7 @@ export interface Project {
   detailsUrl: string; // Project demo/Devpost link
   githubUrl?: string; // GitHub repository (optional)
   tech: TechItem[];
+  awards?: string[]; // Optional list of awards / recognitions
   badgeColor: string;
   depth: 1 | 2 | 3; // Depth layer assignment
 }
@@ -100,6 +119,10 @@ Built with Next.js 14 and FastAPI for high-performance backend processing, Emerg
       { name: 'FastAPI', category: 'backend' },
       { name: 'Google ADK', category: 'ai' },
       { name: 'Parallel Processing', category: 'devops' },
+    ],
+    awards: [
+      '🏆 1st Place Overall — HackWestern 11',
+      '🥇 Best Use of Google ADK',
     ],
     badgeColor: 'text-indigo-300',
     depth: 1, // Front layer

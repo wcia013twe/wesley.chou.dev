@@ -16,6 +16,23 @@ const C_BRIGHT= "#67e8f9";
 const C_DIM   = "rgba(34,211,238,0.45)";
 const C_MUTED = "rgba(255,255,255,0.38)";
 
+// ── Speculative prefetch for heavy experience-page assets ─────────────────────
+// Injecting a <link rel="prefetch"> queues a low-priority background fetch that
+// the browser stores in HTTP cache. By the time the user clicks and the
+// component mounts, GLTFLoader finds the 32 MB GLB already cached.
+let experiencePrefetchStarted = false;
+function prefetchExperienceAssets() {
+  if (experiencePrefetchStarted) return;
+  experiencePrefetchStarted = true;
+  ['/models/spaceship.glb', '/textures/energy-beam-opacity.png'].forEach((href) => {
+    const link = document.createElement('link');
+    link.rel  = 'prefetch';
+    link.as   = 'fetch';
+    link.href = href;
+    document.head.appendChild(link);
+  });
+}
+
 // ── Nav link with text-width underline ────────────────────────────────────────
 const NAV_LINKS = [
   { to: "/",           label: "HOME"       },
@@ -34,7 +51,7 @@ function NavLink({ to, label, onClick }: { to: string; label: string; onClick?: 
     <Link
       to={to}
       onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
+      onMouseEnter={() => { setHovered(true); if (to === '/experience') prefetchExperienceAssets(); }}
       onMouseLeave={() => setHovered(false)}
       style={{
         display:        "inline-flex",

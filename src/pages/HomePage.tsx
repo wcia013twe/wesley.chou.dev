@@ -139,7 +139,22 @@ const HomePage = () => {
       </section>
 
       {/* Feature Cards Zone */}
-      <section className="relative z-10 max-w-7xl mx-auto px-6 py-20">
+      <section className="relative z-10 bg-black px-6 py-20">
+        {/* Starfield */}
+        <div className="absolute inset-0 pointer-events-none">
+          <Particles
+            particleColors={["#ffffff"]}
+            particleCount={200}
+            particleSpread={10}
+            speed={0.1}
+            particleBaseSize={50}
+            moveParticlesOnHover={false}
+            alphaParticles={false}
+            disableRotation={false}
+            pixelRatio={1}
+          />
+        </div>
+        <div className="relative max-w-7xl mx-auto">
         <motion.div
           className="grid grid-cols-1 md:grid-cols-3 gap-6"
           initial="hidden"
@@ -171,12 +186,13 @@ const HomePage = () => {
             imageSrc="assets/gallery/duck.jpeg"
           />
         </motion.div>
+        </div>
       </section>
 
       {/* Quick Links Footer */}
       <footer
         className="relative z-10"
-        style={{ borderTop: "1px solid rgba(34,211,238,0.10)", background: "rgba(0,3,8,0.80)" }}
+        style={{ borderTop: "1px solid rgba(34,211,238,0.10)", background: "#000" }}
       >
         <div className="max-w-7xl mx-auto px-6 py-8">
           {/* Row 1: Social Icons */}

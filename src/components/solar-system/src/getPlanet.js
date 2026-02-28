@@ -3,10 +3,8 @@ import { getFresnelMat } from './getFresnelMat.js';
 
 const texLoader = new THREE.TextureLoader();
 const geo = new THREE.IcosahedronGeometry(1, 6);
-function getPlanet({ children = [], distance = 0, img = '', size = 1, rings = false }) {
+function getPlanet({ children = [], distance = 0, img = '', size = 1, rings = false, rate = -0.5, startAngle = 0 }) {
     const orbitGroup = new THREE.Group();
-    // Reduced orbital tilt - only slight variation instead of full random rotation
-    orbitGroup.rotation.x = (Math.random() - 0.5) * 0.1; // Small tilt: -0.1 to +0.1 radians (~6 degrees)
 
     const path = `/textures/${img}`;
     const map = texLoader.load(path);
@@ -16,7 +14,6 @@ function getPlanet({ children = [], distance = 0, img = '', size = 1, rings = fa
     const planet = new THREE.Mesh(geo, planetMat);
     planet.scale.setScalar(size);
 
-    const startAngle = Math.random() * Math.PI * 2;
     planet.position.x = Math.cos(startAngle) * distance;
     planet.position.z = Math.sin(startAngle) * distance;
     
@@ -45,9 +42,9 @@ function getPlanet({ children = [], distance = 0, img = '', size = 1, rings = fa
       orbitGroup.add(child);
     });
 
-    const rate = Math.random() * 1 - 1.0;
     orbitGroup.userData.update = (t) => {
       orbitGroup.rotation.y = t * rate;
+      planet.rotation.y = t * 3; // slow self-rotation
       children.forEach((child) => {
         child.userData.update?.(t);
       });

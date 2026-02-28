@@ -1,126 +1,47 @@
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
-import { useState, useRef, useEffect } from 'react';
-import { Calendar } from 'lucide-react';
+import { useState, useRef } from 'react';
 import { Project } from '@/data/projectsData';
-import TechPill from './TechPill';
-import NeonBorder from './NeonBorder';
 
-/**
- * ProjectCard Component
- *
- * An enhanced 3D card component with neon borders, parallax effects, and hover interactions.
- * Features:
- * - Uniform card sizing for all depth layers
- * - Mouse position-based tilt (±3deg)
- * - Particle trail emission on hover
- * - Sequential tech pill brightening
- * - Glassmorphic styling with neon accents
- *
- * @param project - Project data from projectsData.ts
- * @param depth - Depth layer (1, 2, or 3) for parallax effects
- * @param parallaxOffset - Mouse-based offset from parent grid { x, y }
- * @param onClick - Handler for opening project modal
- */
+const MONO = 'ui-monospace, SFMono-Regular, monospace';
+const GOLD = '#f0b429';
+
+const techColors: Record<string, string> = {
+  frontend: '#9333ea',
+  backend:  '#3b82f6',
+  database: '#10b981',
+  ai:       '#ec4899',
+  devops:   '#f59e0b',
+};
 
 interface ProjectCardProps {
   project: Project;
   depth: number;
   parallaxOffset: { x: number; y: number };
   onClick: () => void;
-  /** If provided, overrides per-project badge color for all glow/border effects */
   glowColor?: string;
 }
 
-interface Particle {
-  id: number;
-  x: number;
-  y: number;
-  delay: number;
-}
-
-export default function ProjectCard({
-  project,
-  depth,
-  parallaxOffset,
-  onClick,
-  glowColor,
-}: ProjectCardProps) {
+export default function ProjectCard({ project, parallaxOffset, onClick, glowColor }: ProjectCardProps) {
   const cardRef = useRef<HTMLButtonElement>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [particles, setParticles] = useState<Particle[]>([]);
 
-  // All cards same scale for uniformity
-  const depthScale = 1.0;
-
-  // Mouse position tracking for tilt effect
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [2, -2]), { damping: 20, stiffness: 200 });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-2, 2]), { damping: 20, stiffness: 200 });
 
-  // Spring physics for smooth tilt following
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [3, -3]), {
-    damping: 15,
-    stiffness: 150,
-  });
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-3, 3]), {
-    damping: 15,
-    stiffness: 150,
-  });
+  const accent = glowColor ?? '#22d3ee';
+  const missionId = `MSN-${project.id.toUpperCase().slice(0, 4)}`;
+  const visibleTech = project.tech.slice(0, 4);
+  const extra = project.tech.length - 4;
 
-  // Parse badge color to hex
-  const getBadgeColorHex = (colorClass: string): string => {
-    const colorMap: Record<string, string> = {
-      'text-indigo-300': '#a5b4fc',
-      'text-blue-300': '#93c5fd',
-      'text-lime-300': '#bef264',
-      'text-red-300': '#fca5a5',
-      'text-purple-300': '#d8b4fe',
-    };
-    return colorMap[colorClass] || '#a5b4fc';
-  };
-
-  // Planet atmosphere color wins when in descent mode; fall back to per-project badge color
-  const badgeColorHex = glowColor ?? getBadgeColorHex(project.badgeColor);
-
-  // Handle mouse move for tilt effect
   const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!cardRef.current) return;
-
-    const rect = cardRef.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-
-    // Normalize to [-0.5, 0.5] range
-    const x = (e.clientX - centerX) / rect.width;
-    const y = (e.clientY - centerY) / rect.height;
-
-    mouseX.set(x);
-    mouseY.set(y);
+    const r = cardRef.current.getBoundingClientRect();
+    mouseX.set((e.clientX - r.left - r.width / 2) / r.width);
+    mouseY.set((e.clientY - r.top - r.height / 2) / r.height);
   };
 
-  // Emit particles on hover entry
-  useEffect(() => {
-    if (isHovered && particles.length === 0) {
-      const newParticles: Particle[] = [];
-      const particleCount = 6;
-
-      // Generate particles from card corners
-      for (let i = 0; i < particleCount; i++) {
-        newParticles.push({
-          id: Date.now() + i,
-          x: Math.random() > 0.5 ? 10 : 90, // Left or right edge
-          y: Math.random() > 0.5 ? 10 : 90, // Top or bottom edge
-          delay: i * 50, // Stagger emission
-        });
-      }
-
-      setParticles(newParticles);
-
-      // Clear particles after animation completes
-      setTimeout(() => setParticles([]), 700);
-    }
-  }, [isHovered]);
-
-  // Reset mouse position on hover exit
   const handleMouseLeave = () => {
     setIsHovered(false);
     mouseX.set(0);
@@ -134,164 +55,182 @@ export default function ProjectCard({
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
-      className="relative w-full aspect-[4/3] overflow-hidden cursor-pointer focus:outline-none"
+      className="relative w-full cursor-pointer focus:outline-none text-left"
+      style={{ x: parallaxOffset.x, y: parallaxOffset.y, perspective: '800px' }}
+      whileHover={{ scale: 1.02 }}
+      transition={{ type: 'spring', damping: 20, stiffness: 200 }}
       aria-label={`View details for ${project.title}`}
-      style={{
-        scale: depthScale,
-        x: parallaxOffset.x,
-        y: parallaxOffset.y,
-      }}
-      whileHover={{
-        scale: depthScale * 1.03,
-        z: 40,
-      }}
-      animate={{
-        rotateX: isHovered ? rotateX.get() : 0,
-        rotateY: isHovered ? rotateY.get() : 0,
-      }}
-      transition={{
-        type: 'spring',
-        damping: 15,
-        stiffness: 150,
-      }}
     >
-      {/* Focus ring for accessibility */}
-      <div className="absolute inset-0 rounded-2xl ring-2 ring-purple-500 ring-offset-2 ring-offset-black opacity-0 focus-visible:opacity-100 transition-opacity pointer-events-none z-10" />
+      <motion.div style={{ rotateX: isHovered ? rotateX : 0, rotateY: isHovered ? rotateY : 0 }}>
+        {/* Shell */}
+        <div style={{
+          clipPath: 'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px))',
+          position: 'relative',
+        }}>
+          {/* Blur fill */}
+          <div className="absolute inset-0" style={{ backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }} />
+          {/* Tint */}
+          <div className="absolute inset-0" style={{ background: 'rgba(4,6,20,0.92)' }} />
+          {/* Border */}
+          <div className="absolute inset-0" style={{ border: `1px solid ${accent}28` }} />
 
-      {/* Neon border wrapper */}
-      <NeonBorder
-        color={badgeColorHex}
-        animated={true}
-        className="w-full h-full rounded-2xl overflow-hidden bg-black/60 backdrop-blur-md shadow-xl shadow-purple-500/10 flex flex-col"
-      >
-        {/* Image section (top 60%) */}
-        <div className="relative flex-[6] overflow-hidden min-h-0">
-          <motion.img
-            src={project.imageUrl}
-            alt={project.title}
-            className="w-full h-full object-cover"
-            animate={{
-              scale: isHovered ? 1.1 : 1.0,
-            }}
-            transition={{
-              duration: 0.4,
-              ease: 'easeOut',
-            }}
+          {/* Hover ambient glow */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            animate={{ opacity: isHovered ? 1 : 0 }}
+            transition={{ duration: 0.25 }}
+            style={{ background: `radial-gradient(ellipse at 19% 0%, ${accent}14 0%, transparent 65%)` }}
           />
 
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 pointer-events-none" />
+          {/* Corner reticles */}
+          <span className="absolute top-0 left-0 h-px w-8"  style={{ background: `linear-gradient(90deg,  ${accent}, transparent)` }} />
+          <span className="absolute top-0 left-0 w-px h-6"  style={{ background: `linear-gradient(180deg, ${accent}, transparent)` }} />
+          <span className="absolute bottom-0 right-0 h-px w-8" style={{ background: `linear-gradient(270deg, ${accent}, transparent)` }} />
+          <span className="absolute bottom-0 right-0 w-px h-6" style={{ background: `linear-gradient(0deg,   ${accent}, transparent)` }} />
 
-          {/* Featured badge */}
-          {project.badge && (
-            <motion.div
-              className={`absolute top-4 right-4 z-10 px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide ${project.badgeColor} bg-black/80 backdrop-blur-sm`}
-              style={{
-                border: `2px solid ${badgeColorHex}`,
-                boxShadow: `0 10px 15px -3px ${badgeColorHex}60`,
-              }}
-              animate={{
-                boxShadow: [
-                  `0 10px 15px -3px ${badgeColorHex}60`,
-                  `0 10px 15px -3px ${badgeColorHex}ff`,
-                  `0 10px 15px -3px ${badgeColorHex}60`,
-                ],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            >
-              Featured
-            </motion.div>
-          )}
-        </div>
+          <div className="relative z-10">
 
-        {/* Content section (bottom 40%) */}
-        <div className="relative flex-[4] p-5 bg-black/40 flex flex-col min-h-0">
-          {/* Title */}
-          <h3 className="text-xl font-bold text-white mb-2 line-clamp-1">
-            {project.title}
-          </h3>
+            {/* Horizontal flex row */}
+            <div style={{ display: 'flex', flexDirection: 'row', minHeight: '160px' }}>
 
-          {/* Date with calendar icon */}
-          <div className="flex items-center gap-2 mb-4 text-sm text-white/60">
-            <Calendar className="w-4 h-4" />
-            <time dateTime={project.date}>{project.date}</time>
-          </div>
-
-          {/* Tech pills container - horizontal scrollable */}
-          <div className="relative flex-1 overflow-hidden">
-            <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
-              {project.tech.map((tech, index) => (
-                <motion.div
-                  key={`${tech.name}-${index}`}
-                  initial={{ opacity: 1 }}
-                  animate={{
-                    opacity: isHovered ? 1 : 1,
-                    scale: isHovered ? 1.02 : 1,
-                    borderColor: isHovered ? tech.category : tech.category,
-                  }}
-                  transition={{
-                    delay: isHovered ? index * 0.05 : 0,
-                    duration: 0.2,
-                  }}
-                >
-                  <TechPill
-                    name={tech.name}
-                    category={tech.category}
-                    variant="card"
+              {/* LEFT: image column */}
+              <div style={{ width: '38%', flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
+                {project.imageUrl ? (
+                  <motion.img
+                    src={project.imageUrl}
+                    alt={project.title}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    animate={{ scale: isHovered ? 1.05 : 1 }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
                   />
-                </motion.div>
-              ))}
+                ) : (
+                  <div style={{
+                    width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontFamily: MONO, fontSize: '9px', color: `${accent}40`, letterSpacing: '0.2em',
+                  }}>
+                    NO IMG
+                  </div>
+                )}
+                {/* Right-edge vignette to blend into content */}
+                <div className="absolute inset-0 pointer-events-none" style={{
+                  background: `linear-gradient(to right, transparent 60%, rgba(4,6,20,0.55) 100%)`,
+                }} />
+                {/* Left-side corner reticles only */}
+                <span className="absolute top-2 left-2 h-px w-4" style={{ background: `${accent}b0` }} />
+                <span className="absolute top-2 left-2 w-px h-3" style={{ background: `${accent}b0` }} />
+                <span className="absolute bottom-2 left-2 h-px w-4" style={{ background: `${accent}b0` }} />
+                <span className="absolute bottom-2 left-2 w-px h-3" style={{ background: `${accent}70` }} />
+                {/* Featured corner ribbon */}
+                {project.badge && (
+                  <div style={{
+                    position: 'absolute', top: '2px', left: '-44px',
+                    width: '96px', textAlign: 'center',
+                    background: GOLD, color: '#000',
+                    fontFamily: MONO, fontSize: '10px', fontWeight: 700,
+                    letterSpacing: '0.1em', textTransform: 'uppercase',
+                    padding: '4px 0',
+                    transform: 'rotate(-45deg)',
+                    boxShadow: `0 2px 10px rgba(0,0,0,0.5)`,
+                    pointerEvents: 'none',
+                    zIndex: 10,
+                  }}>
+                    ★ FEAT
+                  </div>
+                )}
+              </div>
+
+              {/* SEPARATOR: 1px vertical */}
+              <div style={{ width: '1px', flexShrink: 0, background: `${accent}20`, alignSelf: 'stretch' }} />
+
+              {/* RIGHT: content column */}
+              <div style={{ flex: 1, minWidth: 0, padding: '12px 16px', display: 'flex', flexDirection: 'column', transform: 'translateZ(0)', WebkitFontSmoothing: 'antialiased' } as React.CSSProperties}>
+
+                {/* Sub-header row */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '9px' }}>
+                  <span style={{ fontFamily: MONO, fontSize: '9px', letterSpacing: '0.22em', color: `${accent}70`, textTransform: 'uppercase', flexShrink: 0 }}>
+                    {missionId}
+                  </span>
+                  <span style={{ fontFamily: MONO, fontSize: '9px', letterSpacing: '0.16em', color: `${accent}45`, textTransform: 'uppercase', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginLeft: '8px' }}>
+                    {project.date}
+                  </span>
+                </div>
+
+                {/* Title row */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <motion.span
+                    style={{ width: 5, height: 5, borderRadius: '50%', background: accent, boxShadow: `0 0 6px ${accent}`, flexShrink: 0 }}
+                    animate={{ opacity: [1, 0.15, 1] }}
+                    transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                  />
+                  <h3 style={{
+                    fontFamily: MONO, fontSize: '16px', fontWeight: 700, color: '#fff',
+                    letterSpacing: '0.05em', flex: 1, margin: 0, textTransform: 'uppercase',
+                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                  }}>
+                    {project.title}
+                  </h3>
+                </div>
+
+                {/* Description */}
+                <p style={{
+                  fontFamily: MONO, fontSize: '11px', lineHeight: 1.65,
+                  color: 'rgba(255,255,255,0.65)', margin: '0 0 8px',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 3,
+                  WebkitBoxOrient: 'vertical' as const,
+                  overflow: 'hidden',
+                }}>
+                  {project.description}
+                </p>
+
+                {/* Bottom row */}
+                <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                  {/* Tech tags */}
+                  <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', alignItems: 'center', minWidth: 0 }}>
+                    {visibleTech.map((tech) => {
+                      const c = techColors[tech.category] ?? '#888';
+                      return (
+                        <span key={tech.name} style={{
+                          fontFamily: MONO, fontSize: '9px', letterSpacing: '0.06em',
+                          color: c, background: `${c}10`, border: `1px solid ${c}30`,
+                          padding: '2px 6px', whiteSpace: 'nowrap',
+                        }}>
+                          {tech.name}
+                        </span>
+                      );
+                    })}
+                    {extra > 0 && (
+                      <span style={{ fontFamily: MONO, fontSize: '9px', color: `${accent}55`, letterSpacing: '0.1em', whiteSpace: 'nowrap' }}>
+                        +{extra}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* CTA */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '3px', flexShrink: 0 }}>
+                    <motion.span
+                      style={{ fontFamily: MONO, fontSize: '10px', letterSpacing: '0.18em', color: accent, textTransform: 'uppercase' }}
+                      animate={{ opacity: isHovered ? 1 : 0.4 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      OPEN MISSION
+                    </motion.span>
+                    <motion.span
+                      style={{ fontFamily: MONO, fontSize: '11px', color: accent, lineHeight: 1 }}
+                      animate={{ x: isHovered ? 3 : 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      →
+                    </motion.span>
+                  </div>
+                </div>
+
+              </div>
             </div>
 
-            {/* Fade gradient at right edge */}
-            <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-black/40 to-transparent pointer-events-none" />
           </div>
         </div>
-
-        {/* Particle trail effect */}
-        {particles.map((particle) => (
-          <motion.div
-            key={particle.id}
-            className="absolute rounded-full pointer-events-none"
-            style={{
-              width: '4px',
-              height: '4px',
-              backgroundColor: badgeColorHex,
-              left: `${particle.x}%`,
-              top: `${particle.y}%`,
-            }}
-            initial={{ opacity: 1, scale: 1 }}
-            animate={{
-              opacity: 0,
-              scale: 0.5,
-              x: (particle.x > 50 ? 1 : -1) * (20 + Math.random() * 10),
-              y: (particle.y > 50 ? 1 : -1) * (20 + Math.random() * 10),
-            }}
-            transition={{
-              duration: 0.6,
-              delay: particle.delay / 1000,
-              ease: 'easeOut',
-            }}
-          />
-        ))}
-
-        {/* Enhanced shadow on hover */}
-        {isHovered && (
-          <motion.div
-            className="absolute inset-0 pointer-events-none rounded-2xl"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{
-              boxShadow: `0 25px 50px -12px ${badgeColorHex}30`,
-            }}
-          />
-        )}
-      </NeonBorder>
+      </motion.div>
     </motion.button>
   );
 }

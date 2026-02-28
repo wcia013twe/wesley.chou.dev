@@ -64,16 +64,20 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, imageSrc 
       }}
       whileHover={prefersReducedMotion ? {} : { y: -6 }}
     >
-      {/* Background Image */}
+      {/* Background Image — with outer glow */}
       <motion.div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${imageSrc})` }}
-        animate={{ scale: isHovered ? 1.1 : 1 }}
-        transition={{ duration: 0.3 }}
+        style={{
+          backgroundImage: `url(${imageSrc})`,
+          filter: isHovered
+            ? "brightness(0.55) drop-shadow(0 0 32px rgba(34,211,238,0.30))"
+            : "brightness(0.45) drop-shadow(0 0 16px rgba(34,211,238,0.12))",
+          transition: "filter 0.4s ease",
+        }}
+        animate={{ scale: isHovered ? 1.08 : 1 }}
+        transition={{ duration: 0.4 }}
         aria-hidden="true"
-      >
-        <div className="absolute inset-0 bg-black/60" />
-      </motion.div>
+      />
 
       {/* Corner accents — top-left */}
       <span
@@ -111,20 +115,38 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, imageSrc 
           — PROFILE
         </p>
 
-        {/* Bottom: title + description */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        {/* Bottom: opaque panel behind title + description */}
+        <div
+          style={{
+            display:        "flex",
+            flexDirection:  "column",
+            gap:            "12px",
+            background:     isHovered
+              ? "rgba(0, 4, 10, 0.88)"
+              : "rgba(0, 4, 10, 0.78)",
+            backdropFilter: "blur(8px)",
+            borderTop:      `1px solid rgba(34,211,238,${isHovered ? 0.30 : 0.14})`,
+            /* Shadow spreads outside the panel to push image content away */
+            boxShadow:      isHovered
+              ? "0 -12px 30px rgba(0,4,10,0.80), 0 0 0 8px rgba(0,4,10,0.50)"
+              : "0 -8px 20px rgba(0,4,10,0.70), 0 0 0 6px rgba(0,4,10,0.40)",
+            padding:        "14px 16px",
+            margin:         "-6px",          /* bleed slightly into card edges */
+            transition:     "all 0.35s ease",
+          }}
+        >
           <h3
             style={{
               fontFamily:    MONO,
               fontSize:      "clamp(18px, 2.2vw, 26px)",
               fontWeight:    600,
               letterSpacing: "0.08em",
-              color:         isHovered ? 'whitesmoke' : 'white',
+              color:         "white",
               textShadow:    isHovered
-                ? `0 0 20px rgba(103,232,249,0.8), 0 0 40px rgba(34,211,238,0.4)`
-                : `0 0 12px rgba(34,211,238,0.4)`,
+                ? "0 0 16px rgba(34,211,238,0.9), 0 0 32px rgba(34,211,238,0.4)"
+                : "0 0 10px rgba(34,211,238,0.35)",
               margin:        0,
-              transition:    "color 0.3s ease, text-shadow 0.3s ease",
+              transition:    "text-shadow 0.3s ease",
             }}
           >
             {title}
@@ -136,7 +158,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, imageSrc 
               fontSize:      "12px",
               letterSpacing: "0.04em",
               lineHeight:    1.75,
-              color:         "rgba(34,211,238,0.55)",
+              color:         "rgba(255,255,255,0.62)",
               margin:        0,
               overflow:      "hidden",
             }}
