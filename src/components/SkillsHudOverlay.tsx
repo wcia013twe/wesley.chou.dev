@@ -59,41 +59,54 @@ export default function SkillsHudOverlay() {
       style={{ zIndex: 2 }}
     >
 
-      {/* ── Coordinate Grid (fades to transparent in center) ────────────── */}
+      {/* ── Hierarchical grid with centred vignette mask ─────────────────── */}
+      {/*
+          Layer order (bottom → top):
+            1. Minor grid  — 20 px cells, 0.5 px, 5 % opacity
+            2. Major grid  — 100 px cells, 1 px, 12 % opacity
+            3. Intersection dots — 3 px dots at every major-grid intersection
+          Vignette mask: transparent at centre (inner ~45 %), opaque at edges
+      */}
       <svg
         className="absolute inset-0 w-full h-full"
         xmlns="http://www.w3.org/2000/svg"
         style={{
-          maskImage: [
-            'radial-gradient(ellipse at 0% 0%,   black 0%, transparent 52%)',
-            'radial-gradient(ellipse at 100% 0%,  black 0%, transparent 52%)',
-            'radial-gradient(ellipse at 0% 100%,  black 0%, transparent 52%)',
-            'radial-gradient(ellipse at 100% 100%,black 0%, transparent 52%)',
-          ].join(', '),
-          WebkitMaskImage: [
-            'radial-gradient(ellipse at 0% 0%,   black 0%, transparent 52%)',
-            'radial-gradient(ellipse at 100% 0%,  black 0%, transparent 52%)',
-            'radial-gradient(ellipse at 0% 100%,  black 0%, transparent 52%)',
-            'radial-gradient(ellipse at 100% 100%,black 0%, transparent 52%)',
-          ].join(', '),
-          maskComposite: 'add',
-          WebkitMaskComposite: 'source-over',
+          /* Large centre vignette — grid visible only in the outermost ~25 % band */
+          maskImage:        'radial-gradient(ellipse at 50% 50%, transparent 65%, black 88%)',
+          WebkitMaskImage:  'radial-gradient(ellipse at 50% 50%, transparent 65%, black 88%)',
         }}
       >
         <defs>
-          {/* Minor grid lines every 80 px */}
-          <pattern id="hud-minor" width="80" height="80" patternUnits="userSpaceOnUse">
-            <line x1="80" y1="0"  x2="0"  y2="0"  stroke="rgba(34,211,238,0.09)" strokeWidth="0.4" />
-            <line x1="0"  y1="0"  x2="0"  y2="80" stroke="rgba(34,211,238,0.09)" strokeWidth="0.4" />
+          {/* ① Minor sub-grid: 20 px (= 100 / 5), ultra-thin, very faint */}
+          <pattern id="hud-minor" width="20" height="20" patternUnits="userSpaceOnUse">
+            <line x1="20" y1="0"  x2="0"  y2="0"  stroke="rgba(0,255,255,0.05)" strokeWidth="0.5" />
+            <line x1="0"  y1="0"  x2="0"  y2="20" stroke="rgba(0,255,255,0.05)" strokeWidth="0.5" />
           </pattern>
-          {/* Major crosshairs every 240 px */}
-          <pattern id="hud-major" width="240" height="240" patternUnits="userSpaceOnUse">
-            <line x1="-7" y1="0" x2="7"  y2="0" stroke="rgba(34,211,238,0.26)" strokeWidth="0.8" />
-            <line x1="0"  y1="-7" x2="0" y2="7"  stroke="rgba(34,211,238,0.26)" strokeWidth="0.8" />
+
+          {/* ② Major grid: 100 px, 1 px, 12 % cyan */}
+          <pattern id="hud-major" width="100" height="100" patternUnits="userSpaceOnUse">
+            <line x1="100" y1="0"   x2="0"   y2="0"   stroke="rgba(0,255,255,0.12)" strokeWidth="1" />
+            <line x1="0"   y1="0"   x2="0"   y2="100" stroke="rgba(0,255,255,0.12)" strokeWidth="1" />
+          </pattern>
+
+          {/*
+            ③ Intersection dots at every 100 px major-grid point.
+            Placing r=1.5 circles at all four corners of the tile:
+            when four adjacent tiles meet at an intersection each
+            contributes one quadrant, forming a complete ~3 px dot.
+          */}
+          <pattern id="hud-dots" width="100" height="100" patternUnits="userSpaceOnUse">
+            <circle cx="0"   cy="0"   r="1.5" fill="rgba(0,255,255,0.38)" />
+            <circle cx="100" cy="0"   r="1.5" fill="rgba(0,255,255,0.38)" />
+            <circle cx="0"   cy="100" r="1.5" fill="rgba(0,255,255,0.38)" />
+            <circle cx="100" cy="100" r="1.5" fill="rgba(0,255,255,0.38)" />
           </pattern>
         </defs>
+
+        {/* Render layers in order */}
         <rect width="100%" height="100%" fill="url(#hud-minor)" />
         <rect width="100%" height="100%" fill="url(#hud-major)" />
+        <rect width="100%" height="100%" fill="url(#hud-dots)"  />
       </svg>
 
       {/* ── Top-right: XYZ coordinates + status ─────────────────────────── */}

@@ -44,6 +44,7 @@ export default function getStarfield({ numStars = 500, size = 0.2, saturation = 
     map: new THREE.TextureLoader().load("/textures/circle.png"),
     transparent: true,
     depthWrite: false,
+    blending: THREE.AdditiveBlending,
   });
   const points = new THREE.Points(geo, mat);
   return points;
