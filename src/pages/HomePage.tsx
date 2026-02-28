@@ -5,12 +5,10 @@ import { MdEmail } from "react-icons/md";
 import { FaArrowRight, FaGithub, FaLinkedin } from "react-icons/fa";
 import { CgFileDocument } from "react-icons/cg";
 import SpaceshipScene from "@/components/SpaceshipScene";
-import SpaceshipDiagram from "@/components/SpaceshipDiagram";
 import FeatureCard from "@/components/FeatureCard";
 import ScrollIndicator from "@/components/ScrollIndicator";
 import TextType from "@/components/TextType";
 import Particles from "@/components/Particles";
-import ConstellationPreview from "@/components/ConstellationPreview";
 
 const MONO = "ui-monospace, SFMono-Regular, monospace";
 const C_CYAN   = "#22d3ee";
@@ -31,7 +29,6 @@ const HomePage = () => {
       {/* Hero Zone - Split Screen */}
       <section className="relative flex flex-col md:flex-row min-h-screen overflow-hidden">
         {/* Particles background layer */}
-        <ConstellationPreview />
         <div className="absolute inset-0 z-50 pointer-events-none">
           <Particles
             particleColors={["#ffffff"]}

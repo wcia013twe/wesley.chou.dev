@@ -17,6 +17,85 @@ interface ExperienceItem {
 
 export const professionalExperience: ExperienceItem[] = [
   {
+    date: "Jan 2025 - Present",
+    imageSrc: "assets/experience/kylogo.png",
+    hero: "assets/experience/kyrinLabs.jpg",
+    altText: "Kyrin Labs Logo",
+    captionText: "Kyrin Labs LLC",
+    title: "Product Consultant & Engineer",
+    workplace: "Kyrin Labs LLC",
+    location: "Remote / Freelance",
+    description:
+      "Design and develop custom AI applications and agentic AI solutions for clients across industries, delivering end-to-end intelligent systems from concept to deployment.",
+    skills: [
+      "Agentic AI / Autonomous Agents",
+      "Python / TypeScript",
+      "Custom AI Applications",
+      "Machine Learning & LLMs",
+      "Full-stack Development",
+      "Rapid Prototyping",
+    ],
+    overview:
+      "Leading projects that integrate AI agents, autonomous workflows, and client-specific intelligent systems. Focused on building scalable AI solutions, agent orchestration, and practical deployments for real-world problems.",
+    key_responsibilities: [
+      "Develop custom AI applications tailored to client needs",
+      "Design, implement, and orchestrate agentic AI workflows",
+      "Consult on AI system architecture and deployment strategies",
+      "Rapid prototyping of ML/LLM solutions",
+      "Deliver end-to-end solutions from backend AI pipelines to interactive frontends",
+    ],
+    icon: (
+      <img
+        src="assets/experience/kyrin-labs-logo.svg"
+        alt="Kyrin Labs Logo"
+        className="rounded-full h-14 w-14 ml-0.75 mt-0.75"
+      />
+    ),
+    links: {
+      // "Kyrin Labs Website": "https://kyrinlabs.com", // replace with your actual URL
+      // "Portfolio / Projects": "https://kyrinlabs.com/projects",
+    },
+  },
+  {
+    date: "Aug 2025 - Present",
+    imageSrc: "assets/experience/creol.jpg",
+    hero: "assets/experience/research-centers-creol.avif",
+    altText: "UCF Creol PNG",
+    captionText: "UCF College of Optics and Photonics",
+    title: "XR Research Assistant",
+    workplace: "UCF College of Optics and Photonics",
+    location: "Orlando, FL",
+    description:
+      "Conduct research and development on power optimization and deep learning applications in augmented reality technologies.",
+    skills: [
+      "Research Methodology",
+      "VR/AR",
+      "Deep Learning",
+      "Computer Vision",
+      "Data Analysis",
+      "Academic Writing",
+    ],
+    overview:
+      "Working on deep learning applications and geometrical modeling of gaze tracking algorithms \
+      to optimize foveated rendering in augmented reality technologies.",
+    key_responsibilities: [
+      "Identify research gaps in AR power optimization",
+      "Work with deep learning models for computer vision tasks",
+      "Cross-functional collaboration with hardware research team",
+    ],
+    icon: (
+      <img
+        src="assets/experience/UCF_Knights_logo.svg"
+        alt="UCF Logo"
+        className="rounded-full h-14 w-13 ml-0.75 mt-0.75"
+      />
+    ),
+    links: {
+      "Creol Research Center": "https://www.creol.ucf.edu/research/",
+      "Creol Team": "https://creol.ucf.edu/person/shin-tson-wu/",
+    },
+  },
+  {
     date: "May 2025 - Aug 2025",
     imageSrc: "assets/experience/Goldman_Sachs.png",
     hero: "assets/experience/goldman_team.JPEG",
@@ -136,20 +215,56 @@ export const professionalExperience: ExperienceItem[] = [
       />
     ),
     links: {
-      "The Queer Mathematics Teacher": "https://www.thequeermathematicsteacher.com/",
+      "The Queer Mathematics Teacher":
+        "https://www.thequeermathematicsteacher.com/",
     },
-
   },
 ];
 
 export const academicExperience: ExperienceItem[] = [
+  {
+    date: "Aug 2023 - May 2026",
+    imageSrc: "assets/experience/UCF_Knights_logo.svg",
+    hero: "/assets/experience/ucf-linkedin-banner.avif",
+    altText: "UCF Logo",
+    captionText: "University of Central Florida",
+    title: "B.S. Computer Science",
+    workplace: "University of Central Florida",
+    location: "Orlando, FL",
+    description:
+      "Bachelor of Science in Computer Science, expected graduation May 2026.",
+    skills: [
+      "Computer Science",
+      "Data Structures & Algorithms",
+      "Software Engineering",
+      "Machine Learning",
+      "Operating Systems",
+      "Systems Programming",
+    ],
+    overview:
+      "Pursuing a Bachelor of Science in Computer Science at UCF, building a strong foundation in software engineering, algorithms, and applied machine learning.",
+    key_responsibilities: [
+      "Completed coursework in data structures, algorithms, operating systems, and machine learning.",
+      "Maintained active involvement in research, entrepreneurship, and professional development organizations.",
+    ],
+    icon: (
+      <img
+        src="assets/experience/UCF_Knights_logo.svg"
+        alt="UCF Logo"
+        className="rounded-full h-14 w-13 ml-0.75 mt-0.75"
+      />
+    ),
+    links: {
+      "UCF Computer Science": "https://www.cs.ucf.edu/",
+    },
+  },
   {
     date: "Oct 2025 - Present",
     imageSrc: "assets/experience/UCF-UpStarts-Logo.png",
     hero: "assets/experience/Mark-Bruckert-and-Owen-Burns.avif",
     altText: "UCF Upstarts PNG",
     captionText: "UCF Upstarts",
-    title: "Startup Founder ",
+    title: "Student Entrepreneur",
     workplace: "UCF Upstarts",
     location: "Orlando, FL",
     description:
@@ -180,45 +295,6 @@ export const academicExperience: ExperienceItem[] = [
     links: {
       "UCF Upstarts": "https://cel.ucf.edu/incubator/",
       Pitch: "https://youtu.be/0uELuWH24Jo?si=ejtgtBWu9BVhJUXp",
-    },
-  },
-  {
-    date: "Aug 2025 - Present",
-    imageSrc: "assets/experience/creol.jpg",
-    hero: "assets/experience/research-centers-creol.avif",
-    altText: "UCF Creol PNG",
-    captionText: "UCF College of Optics and Photonics",
-    title: "XR Research Assistant",
-    workplace: "UCF College of Optics and Photonics",
-    location: "Orlando, FL",
-    description:
-      "Conduct research and development on power optimization and deep learning applications in augmented reality technologies.",
-    skills: [
-      "Research Methodology",
-      "VR/AR",
-      "Deep Learning",
-      "Computer Vision",
-      "Data Analysis",
-      "Academic Writing",
-    ],
-    overview:
-      "Working on deep learning applications and geometrical modeling of gaze tracking algorithms \
-      to optimize foveated rendering in augmented reality technologies.",
-    key_responsibilities: [
-      "Identify research gaps in AR power optimization",
-      "Work with deep learning models for computer vision tasks",
-      "Cross-functional collaboration with hardware research team",
-    ],
-    icon: (
-      <img
-        src="assets/experience/UCF_Knights_logo.svg"
-        alt="UCF Logo"
-        className="rounded-full h-14 w-13 ml-0.75 mt-0.75"
-      />
-    ),
-    links: {
-      "Creol Research Center": "https://www.creol.ucf.edu/research/",
-      "Creol Team": "https://creol.ucf.edu/person/shin-tson-wu/",
     },
   },
   {
@@ -300,44 +376,7 @@ export const academicExperience: ExperienceItem[] = [
       "UCF SARC": "https://academicsuccess.ucf.edu/sarc/",
     },
   },
-  {
-    date: "Aug 2023 - May 2026",
-    imageSrc: "assets/experience/UCF_Knights_logo.svg",
-    hero: "assets/experience/SDES_SARC.avif",
-    altText: "UCF Logo",
-    captionText: "University of Central Florida",
-    title: "B.S. Computer Science",
-    workplace: "University of Central Florida",
-    location: "Orlando, FL",
-    description:
-      "Bachelor of Science in Computer Science, expected graduation May 2026.",
-    skills: [
-      "Computer Science",
-      "Data Structures & Algorithms",
-      "Software Engineering",
-      "Machine Learning",
-      "Operating Systems",
-      "Systems Programming",
-    ],
-    overview:
-      "Pursuing a Bachelor of Science in Computer Science at UCF, building a strong foundation in software engineering, algorithms, and applied machine learning.",
-    key_responsibilities: [
-      "Completed coursework in data structures, algorithms, operating systems, and machine learning.",
-      "Maintained active involvement in research, entrepreneurship, and professional development organizations.",
-    ],
-    icon: (
-      <img
-        src="assets/experience/UCF_Knights_logo.svg"
-        alt="UCF Logo"
-        className="rounded-full h-14 w-13 ml-0.75 mt-0.75"
-      />
-    ),
-    links: {
-      "UCF Computer Science": "https://www.cs.ucf.edu/",
-    },
-  },
 ];
-
 
 export const timelineData = [...professionalExperience, ...academicExperience];
 export default timelineData;

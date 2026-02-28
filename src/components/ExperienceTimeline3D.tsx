@@ -28,11 +28,10 @@ import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import getStarfield from "./solar-system/src/getStarfield.js";
 import getNebula from "./getExperienceNebula.js";
 import getAurora from "./getAurora.js";
-import { getConstellationLines } from "./getConstellationLines.js";
+import { getConstellationLines, CONSTELLATIONS } from "./getConstellationLines.js";
 import { professionalExperience, academicExperience } from "@/lib/experience";
 
 // ── Feature flags ─────────────────────────────────────────────────────────────
-const SHOW_WARP_INTRO = true; // set true to enable the hyperspeed warp intro animation
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const CARD_SPACING = 22; // world units between entries along Z
@@ -481,6 +480,9 @@ export default function ExperienceTimeline3D() {
     if (!container) return;
 
     let disposed = false;
+
+    // Play the warp intro on every fresh page load; skip if already seen this session
+    const showWarpIntro = sessionStorage.getItem('warpIntroSeen') !== 'true';
     let w = container.clientWidth;
     let h = container.clientHeight;
 
@@ -628,7 +630,7 @@ export default function ExperienceTimeline3D() {
     const constellationProgress = new Float32Array(allEntries.length);
     const constellations = allEntries.map((_, i) => {
       const off = CONSTELLATION_OFFSETS[i];
-      if (off === null) return null;
+      if (off == null) return null; // catches both null (explicit skip) and undefined (out of bounds)
       return getConstellationLines({  // also returns null if definition is null in getConstellationLines.js
         position: new THREE.Vector3(
           entryX[i] + off[0],
@@ -645,7 +647,7 @@ export default function ExperienceTimeline3D() {
 
     // ── Raycaster for constellation hover ────────────────────────────────────
     const raycaster = new THREE.Raycaster();
-    raycaster.params.Points = { threshold: 0.5 };
+    raycaster.params.Points = { threshold: 2.5 };
     const constellationStarPoints = constellations.map(
       (c) => c?.starsPoints ?? null,
     );
@@ -777,7 +779,7 @@ export default function ExperienceTimeline3D() {
       new THREE.TubeGeometry(spineCurve, 60, 0.015, 8, false),
       new THREE.MeshBasicMaterial({ color: 0xcccccc, toneMapped: false }),
     );
-    spine.visible = !SHOW_WARP_INTRO;
+    spine.visible = !showWarpIntro;
     scene.add(spine);
 
     // ── Entry nodes + connectors + CSS2D cards ────────────────────────────────
@@ -810,7 +812,7 @@ export default function ExperienceTimeline3D() {
       // Glowing node on spine
       const node = new THREE.Mesh(nodeGeo, nodeMat);
       node.position.set(0, 0, z);
-      node.visible = !SHOW_WARP_INTRO;
+      node.visible = !showWarpIntro;
       scene.add(node);
       timelineNodes.push(node);
 
@@ -827,7 +829,7 @@ export default function ExperienceTimeline3D() {
           toneMapped: false,
         }),
       );
-      conn.visible = !SHOW_WARP_INTRO;
+      conn.visible = !showWarpIntro;
       scene.add(conn);
       timelineConns.push(conn);
 
@@ -864,7 +866,7 @@ export default function ExperienceTimeline3D() {
     const proRing = new THREE.Mesh(proRingGeo, proRingMat);
     proRing.rotation.x = Math.PI * 0.5;
     proRing.position.set(0, 0, 6);
-    proRing.visible = !SHOW_WARP_INTRO;
+    proRing.visible = !showWarpIntro;
     scene.add(proRing);
 
     // Label floated below the ring
@@ -917,7 +919,7 @@ export default function ExperienceTimeline3D() {
     const ring = new THREE.Mesh(ringGeo, ringMat);
     ring.rotation.x = Math.PI * 0.5;
     ring.position.set(0, 0, dividerZ);
-    ring.visible = !SHOW_WARP_INTRO;
+    ring.visible = !showWarpIntro;
     scene.add(ring);
 
     const divEl = document.createElement("div");
@@ -1001,7 +1003,7 @@ export default function ExperienceTimeline3D() {
       navDots.push(dot);
     });
     container.appendChild(navContainer);
-    navContainer.style.opacity = SHOW_WARP_INTRO ? "0" : "1";
+    navContainer.style.opacity = showWarpIntro ? "0" : "1";
     navContainer.style.transition = "opacity 0.8s ease";
 
     // ── Scroll hint ───────────────────────────────────────────────────────────
@@ -1024,6 +1026,37 @@ export default function ExperienceTimeline3D() {
     hint.innerHTML = "↓ &nbsp;SCROLL OR ↑↓ TO NAVIGATE&nbsp; ↓";
     container.appendChild(hint);
 
+    // ── Constellation hover tooltip ───────────────────────────────────────────
+    const CONST_DESCRIPTIONS: Record<string, string> = {
+      'Big Dipper':  'Seven stars forming the iconic bowl-and-handle ladle. The two outer bowl stars point toward Polaris.',
+      'Orion':       'The hunter — belt anchors the figure, with raised club (left) and shield/bow (right) framing the silhouette.',
+      'Cassiopeia':  'Queen of Ethiopia — a compact W-shaped zigzag of five bright stars, circumpolar and instantly recognizable.',
+      'Cygnus':      'The swan in flight. Spine forms the Northern Cross; wings fan outward from Sadr at the hub.',
+      'Scorpius':    'The scorpion — Antares marks the heart, claws fan upward, and a J-hook tail curves back to the stinger.',
+    };
+    const constTooltip = document.createElement("div");
+    Object.assign(constTooltip.style, {
+      position: "absolute",
+      pointerEvents: "none",
+      zIndex: "30",
+      background: "rgba(8,10,32,0.88)",
+      border: "1px solid rgba(100,136,255,0.35)",
+      borderRadius: "8px",
+      padding: "10px 14px",
+      maxWidth: "220px",
+      opacity: "0",
+      transition: "opacity 0.15s ease",
+      backdropFilter: "blur(8px)",
+    });
+    constTooltip.innerHTML = `
+      <div id="ct-name" style="font-family:ui-monospace,monospace;font-size:14px;letter-spacing:0.14em;color:rgba(200,215,255,0.95);margin-bottom:5px;"></div>
+      <div id="ct-desc" style="font-family:ui-monospace,monospace;font-size:12px;letter-spacing:0.05em;color:rgba(140,170,255,0.65);line-height:1.55;"></div>
+    `;
+    container.appendChild(constTooltip);
+    const ctName = constTooltip.querySelector("#ct-name") as HTMLElement;
+    const ctDesc = constTooltip.querySelector("#ct-desc") as HTMLElement;
+    let lastHoveredConstIdx = -1;
+
     let hintDismissed = false;
     const dismissHint = () => {
       if (hintDismissed) return;
@@ -1034,9 +1067,9 @@ export default function ExperienceTimeline3D() {
     // ── Intro state machine ───────────────────────────────────────────────────
     // warp → resolve → landing → idle  (waiting = resolve done but ship GLTF not yet loaded)
     type IntroPhase = "warp" | "resolve" | "waiting" | "landing" | "idle";
-    let introPhase: IntroPhase = SHOW_WARP_INTRO ? "warp" : "idle";
+    let introPhase: IntroPhase = showWarpIntro ? "warp" : "idle";
     let introProg = 0; // 0→1 within current phase
-    if (!SHOW_WARP_INTRO) buildAllCards();
+    if (!showWarpIntro) buildAllCards();
 
     const PHASE_DUR = {
       warp: WARP_DUR,
@@ -1075,7 +1108,7 @@ export default function ExperienceTimeline3D() {
       }),
     );
     scene.add(warpLines);
-    warpLines.visible = SHOW_WARP_INTRO;
+    warpLines.visible = showWarpIntro;
 
     const resetBeamsAhead = () => {
       const camZ = currentZ + CAM_Z_OFFSET;
@@ -1214,9 +1247,13 @@ export default function ExperienceTimeline3D() {
     // ── Mouse ─────────────────────────────────────────────────────────────────
     let mouseX = 0;
     let mouseY = 0;
+    let mouseClientX = 0;
+    let mouseClientY = 0;
     const onMouseMove = (e: MouseEvent) => {
       mouseX = (e.clientX / w) * 2 - 1;
       mouseY = -((e.clientY / h) * 2 - 1);
+      mouseClientX = e.clientX;
+      mouseClientY = e.clientY;
     };
     window.addEventListener("mousemove", onMouseMove);
 
@@ -1286,8 +1323,10 @@ export default function ExperienceTimeline3D() {
       const delta = lastT === 0 ? 0 : Math.min((t - lastT) * 0.001, 1 / 20);
       lastT = t;
 
-      // ── Asteroids (rotate every frame regardless of intro phase) ─────────────
+      // ── Asteroids (hidden during warp intro, visible only in idle) ───────────
+      const showAsteroids = introPhase === "idle";
       asteroidMeshes.forEach((mesh, i) => {
+        mesh.visible = showAsteroids;
         mesh.rotation.x += astRotVel[i].x * delta;
         mesh.rotation.y += astRotVel[i].y * delta;
         mesh.rotation.z += astRotVel[i].z * delta;
@@ -1449,6 +1488,7 @@ export default function ExperienceTimeline3D() {
           targetZ = RING_PRO_STOP;
           buildAllCards();
           introPhase = "idle";
+          sessionStorage.setItem('warpIntroSeen', 'true');
           hint.style.opacity = "1";
           navContainer.style.opacity = "1";
           proLabelEl.style.opacity = "1";
@@ -1611,6 +1651,7 @@ export default function ExperienceTimeline3D() {
         ? raycaster.intersectObjects(visiblePoints)
         : [];
       const hitObj = hits.length > 0 ? hits[0].object : null;
+      let hoveredConstIdx = -1;
       constellations.forEach((c, i) => {
         if (!c) return;
         const visible =
@@ -1618,8 +1659,32 @@ export default function ExperienceTimeline3D() {
           activeIdx >= 0 &&
           i <= activeIdx &&
           constellationProgress[i] > 0;
-        c.setHighlight(visible && constellationStarPoints[i] === hitObj);
+        const isHit = visible && constellationStarPoints[i] === hitObj;
+        c.setHighlight(isHit);
+        if (isHit) hoveredConstIdx = i;
       });
+
+      // Update tooltip
+      if (hoveredConstIdx >= 0) {
+        const def = CONSTELLATIONS[hoveredConstIdx % CONSTELLATIONS.length];
+        if (def) {
+          if (hoveredConstIdx !== lastHoveredConstIdx) {
+            ctName.textContent = def.name;
+            ctDesc.textContent = CONST_DESCRIPTIONS[def.name] ?? "";
+            lastHoveredConstIdx = hoveredConstIdx;
+          }
+          const rect = container.getBoundingClientRect();
+          const tx = mouseClientX - rect.left + 18;
+          const ty = mouseClientY - rect.top - 12;
+          // Keep tooltip within container bounds
+          constTooltip.style.left = `${Math.min(tx, rect.width - 240)}px`;
+          constTooltip.style.top = `${Math.max(4, ty)}px`;
+          constTooltip.style.opacity = "1";
+        }
+      } else {
+        constTooltip.style.opacity = "0";
+        lastHoveredConstIdx = -1;
+      }
 
       // Ring labels — only visible when near their own ring
       proLabelEl.style.opacity = atProRing ? "1" : "0";
@@ -1709,6 +1774,7 @@ export default function ExperienceTimeline3D() {
         container.removeChild(labelRenderer.domElement);
       if (container.contains(navContainer)) container.removeChild(navContainer);
       if (container.contains(hint)) container.removeChild(hint);
+      if (container.contains(constTooltip)) container.removeChild(constTooltip);
       if (rimOverlay) scene.remove(rimOverlay);
       scene.remove(shipWarmLight);
       scene.remove(shipCoolLight);

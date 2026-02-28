@@ -1,0 +1,145 @@
+tech-stack-icons — valid name values
+=====================================
+adobe         adobefirefly  ae            affinity
+affinitydesigner              affinityphoto affinitypublisher
+ai            ai360         aihubmix      aimass
+aionlabs      airtable      aistudio      alacritty
+algolia       algorand      alibabacloud  alpinejs
+amp           amznwebserv   analytics     android
+angular       angular17     animaapp      antd
+antgroup      anthropic     anyscale      apache
+appwrite      arc           assemblyai    astro
+atlassian     atom          augment       auth0
+automatic     avajs         aws           axiom
+axm           axure         aya           azure
+azureai
+
+babel         backbonejs    baichuan      baidu
+baiducloud    bash          bedrock       bing
+bitbucket     bitnami       blueprintjs   bolt
+bootstrap4    bootstrap5    brave         bulmaui
+bunjs         bytedance
+
+cakephp       canva         cassandradb   centml
+cerebras      chakraui      chatglm       chrome
+chromium      circleci      civitai       claude
+clickhouse    cline         clojure       cloudflare
+cloudinary    codefresh     codegeex      codeigniter
+cogvideo      cogview       cohere        colab
+comfyui       commanda      copilotgithub copilotms
+coqui         crewai        crusoe        cpp           crystal
+csharp        css3          cypress
+
+dalle         dart          datadog       dbrx
+deepinfra     deepmind      deepseek      deno
+digitalocean  django        dlang         doc2x
+docker        docsearch     docusaurus    doubao
+dovetail
+
+ec2           edge          elastic       electron
+elementui     elixir        ember         erlang
+esbuild       eslint        exa           expressjs
+
+fastgpt       faunadb       featherless   figma
+firebase      firefox       fireworks     flask
+flutter       flutterflow   flyio         framer
+
+gatsby        gcloud        gemini        gemma
+git           github        gitlab        go
+google        gradio        grafana       grafbase
+graphite      graphql       greptile      gridsome
+gruntjs       gsap          gulp
+
+hailuo        haskell       headlessui    heroku
+hexo          hhvm          higress       homebrew
+hotjar        html5         huggingface   hunyuan
+hyper         hyper2        hyperbolic
+
+i18next       id            ie            iflytekcloud
+infermatic    infinigence   inkspace      insomnia
+internlm      invision      ionic
+
+jamstack      java          jest          jimeng
+jina          jira          jquery        js
+jslint        json
+
+kibana        kimi          kling         kluster
+kotlin        kubernetes
+
+langchain     langfuse      langgraph     langsmith
+laravel       leptonai      less          lightroom
+linux         lit           liveblocks    livekit
+llamaindex    llava         logrocket     lokalise
+lovable       lua           luma          lunacy
+
+make          mariadb       marionette    markdown
+materialui    meta          metaai        microsoft
+minimax       miro          mistral       mochajs
+modelscope    mongodb       mongoose      monica
+mozilla       myshell       mysql
+
+n8n           neovim        nestjs        net
+netcore       netlify       netlify2      nextjs
+nextjs2       nim           nitro         nodejs
+notion        nova          novita        nplcloud
+npm           npm2          nuxtjs        nvidia
+
+ocaml         onedrive      openai        openchat
+opera         oracle
+
+palm          pandacss      perplexity    phidata
+php           pinia         pixijs        pixverse
+playwright    poe           postgresql    postman
+powershell    ppio          preact        presto
+prettier      prisma        ps            pugjs
+pwa           pydanticai    python        pytorch
+pytorch3d
+
+qingyan       qiniu         qwen          qwik
+
+radixui       rails         railway       react
+reactquery    reactrouter   redhat        redis
+redux         reduxsaga     remix         render
+replit        resend        rollup        roocode
+rsshub        ruby          rust          rwkv
+
+safari        sambanova     sass          scala
+search1api    semanticui    sensenova     serverless
+shadcnui      siliconcloud  sketch        sketch2
+slack         snowflake     solidity      solidjs
+spark         spring        stability     statecloud
+stepfun       storyblok     storybook     strada
+stream        streamlit     stylelint     sublime
+supabase      sveltejs      swagger       swift
+
+tailwindcss   targon        tencent       tencentcloud
+threejs       tiangong      tii           tinyhttp
+together      tripo         typescript
+
+ubuntu        udio          unjs          unstructured
+upstage       ur
+
+v0            vercel        vertexai      vidu
+vim           visualbasic   vitejs        vitest
+vllm          volcengine    voyage        vscode
+vuejs
+
+webassembly   webpack       wenxin        windsurf
+wordpress     workersai
+
+xamarin       xd            xinference    xuanyuan
+
+yi            yoga          yuanbao
+
+zapier        zeabur        zhipu         zod
+
+=====================================
+NOTES:
+- All names are lowercase
+- Use exactly as shown (no spaces, dots, or capitals)
+- "js" = JavaScript
+- "ts" does NOT exist — use "typescript"
+- "nextjs" or "nextjs2" for Next.js variants
+- "netlify" or "netlify2" for Netlify variants
+- "npm" or "npm2" for npm variants
+- Variant prop: "light" | "dark" | "grayscale" (default: "light")

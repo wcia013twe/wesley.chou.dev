@@ -91,7 +91,7 @@ export default function ProjectCard({ project, parallaxOffset, onClick, glowColo
           <div className="relative z-10">
 
             {/* Horizontal flex row */}
-            <div style={{ display: 'flex', flexDirection: 'row', minHeight: '160px' }}>
+            <div style={{ display: 'flex', flexDirection: 'row', height: '160px' }}>
 
               {/* LEFT: image column */}
               <div style={{ width: '38%', flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
@@ -123,7 +123,7 @@ export default function ProjectCard({ project, parallaxOffset, onClick, glowColo
                 {/* Featured corner ribbon */}
                 {project.badge && (
                   <div style={{
-                    position: 'absolute', top: '2px', left: '-44px',
+                    position: 'absolute', top: '16px', left: '-24px',
                     width: '96px', textAlign: 'center',
                     background: GOLD, color: '#000',
                     fontFamily: MONO, fontSize: '10px', fontWeight: 700,

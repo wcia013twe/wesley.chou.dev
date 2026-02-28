@@ -282,9 +282,13 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
                     <div style={{ fontFamily: MONO, fontSize: '10px', letterSpacing: '0.26em', color: `${accent}65`, textTransform: 'uppercase', marginBottom: '12px' }}>
                       // MISSION BRIEF
                     </div>
-                    <p style={{ fontFamily: MONO, fontSize: '13px', lineHeight: 2.0, color: 'rgba(255,255,255,0.68)', margin: 0 }}>
-                      {fullDescription}
-                    </p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                      {fullDescription.split(/\n\n+/).map((para, i) => (
+                        <p key={i} style={{ fontFamily: MONO, fontSize: '13px', lineHeight: 2.0, color: 'rgba(255,255,255,0.68)', margin: 0 }}>
+                          {para.trim()}
+                        </p>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Tech */}

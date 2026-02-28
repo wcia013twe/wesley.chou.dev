@@ -11,17 +11,25 @@
 import { useState } from 'react';
 import { CONSTELLATIONS } from './getConstellationLines.js';
 
+const DESCRIPTIONS: Record<string, string> = {
+  'Big Dipper':  'Seven stars forming the iconic bowl-and-handle ladle. The two outer bowl stars (Dubhe & Merak) point toward Polaris. Slightly oversized to match its real-sky prominence.',
+  'Orion':       'The hunter — belt anchors the figure instantly. Raised club extends upper-left, a shield/bow arcs upper-right. Head (Meissa) crowns the silhouette above the shoulders.',
+  'Cassiopeia':  'Queen of Ethiopia — a compact W-shaped zigzag of five bright stars. Circumpolar and one of the fastest shapes to recognize in the northern sky.',
+  'Cygnus':      'The swan in flight. Spine (Deneb → Albireo) forms the Northern Cross. Wings fan outward from Sadr at the hub, right wing extending further for asymmetric lift.',
+  'Scorpius':    'The scorpion — Antares marks the heart, with three claws fanning upward. The spine curves down and hooks back up into a J-tail ending at the stinger.',
+};
+
 // ── SVG renderer for one constellation ──────────────────────────────────────
 function ConstellationSVG({
   def,
   size = 200,
   showIdx = true,
-  showCoords = false,
+  // showCoords = false,  // coords hidden — see DESCRIPTIONS instead
 }: {
   def: NonNullable<(typeof CONSTELLATIONS)[number]>;
   size?: number;
   showIdx?: boolean;
-  showCoords?: boolean;
+  // showCoords?: boolean;
 }) {
   const pad = 28;
   const inner = size - pad * 2;
@@ -68,6 +76,7 @@ function ConstellationSVG({
               {i}
             </text>
           )}
+          {/* showCoords disabled — coordinates replaced by description panel
           {showCoords && (
             <text
               x={cx(s[0]) + 5}
@@ -78,7 +87,7 @@ function ConstellationSVG({
             >
               {s[0]},{s[1]}
             </text>
-          )}
+          )} */}
         </g>
       ))}
       {/* Draw-order label on each segment midpoint */}
@@ -99,8 +108,13 @@ function ConstellationSVG({
 // ── Main panel ───────────────────────────────────────────────────────────────
 export default function ConstellationPreview() {
   const [open, setOpen]         = useState(false);
-  const [showCoords, setCoords] = useState(false);
+  // const [showCoords, setCoords] = useState(false);  // coords replaced by descriptions
   const [expanded, setExpanded] = useState<number | null>(null);
+
+  // Filter out null slots — they're placeholders in the cycle, not renderable
+  const visible = CONSTELLATIONS
+    .map((def, idx) => ({ def, idx }))
+    .filter(({ def }) => def !== null) as { def: NonNullable<(typeof CONSTELLATIONS)[number]>; idx: number }[];
 
   return (
     <>
@@ -130,13 +144,7 @@ export default function ConstellationPreview() {
               fontSize: 13, letterSpacing: '0.15em' }}>
               CONSTELLATION EDITOR
             </span>
-            <label style={{ color: 'rgba(160,200,255,0.8)', fontSize: 11,
-              fontFamily: 'ui-monospace,monospace', cursor: 'pointer', display: 'flex',
-              alignItems: 'center', gap: 6 }}>
-              <input type="checkbox" checked={showCoords}
-                onChange={(e) => setCoords(e.target.checked)} />
-              show coords
-            </label>
+            {/* show coords toggle removed — descriptions shown on expand instead */}
             <span style={{ marginLeft: 'auto', color: 'rgba(120,160,255,0.5)',
               fontSize: 10, fontFamily: 'ui-monospace,monospace' }}>
               white = star · yellow = segment draw order · blue = index
@@ -148,9 +156,9 @@ export default function ConstellationPreview() {
             }}>close</button>
           </div>
 
-          {/* Grid */}
+          {/* Grid — nulls excluded */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(260px,1fr))', gap: 16 }}>
-            {CONSTELLATIONS.map((def, idx) => (
+            {visible.map(({ def, idx }) => (
               <div key={idx} style={{
                 background: 'rgba(10,14,40,0.85)', border: '1px solid rgba(80,110,220,0.30)',
                 borderRadius: 12, padding: 14, cursor: 'pointer',
@@ -163,62 +171,47 @@ export default function ConstellationPreview() {
                   marginBottom: 10, alignItems: 'baseline' }}>
                   <span style={{ color: 'rgba(200,215,255,0.9)', fontFamily: 'ui-monospace,monospace',
                     fontSize: 12, fontWeight: 700 }}>
-                    [{idx}] {def ? def.name : '—'}
+                    [{idx}] {def.name}
                   </span>
-                  {def && (
-                    <span style={{ color: 'rgba(130,160,255,0.6)', fontSize: 10,
-                      fontFamily: 'ui-monospace,monospace' }}>
-                      {def.stars.length}★ · {def.segments.length} seg
-                    </span>
-                  )}
+                  <span style={{ color: 'rgba(130,160,255,0.6)', fontSize: 10,
+                    fontFamily: 'ui-monospace,monospace' }}>
+                    {def.stars.length}★ · {def.segments.length} seg
+                  </span>
                 </div>
 
-                {def ? (
-                  <>
-                    <div style={{ display: 'flex', justifyContent: 'center',
-                      background: 'rgba(6,8,28,0.6)', borderRadius: 8 }}>
-                      <ConstellationSVG
-                        def={def}
-                        size={expanded === idx ? 320 : 200}
-                        showCoords={showCoords}
-                      />
-                    </div>
+                <div style={{ display: 'flex', justifyContent: 'center',
+                  background: 'rgba(6,8,28,0.6)', borderRadius: 8 }}>
+                  <ConstellationSVG
+                    def={def}
+                    size={expanded === idx ? 320 : 200}
+                  />
+                </div>
 
-                    {/* Star table when expanded */}
-                    {expanded === idx && (
-                      <div style={{ marginTop: 12 }}>
-                        <div style={{ color: 'rgba(130,160,255,0.6)', fontSize: 9,
-                          fontFamily: 'ui-monospace,monospace', letterSpacing: '0.15em',
-                          marginBottom: 6 }}>STARS</div>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(140px,1fr))', gap: 3 }}>
-                          {def.stars.map((s, si) => (
-                            <div key={si} style={{ fontFamily: 'ui-monospace,monospace', fontSize: 10,
-                              color: 'rgba(180,210,255,0.75)', background: 'rgba(20,30,80,0.4)',
-                              borderRadius: 4, padding: '2px 6px' }}>
-                              <span style={{ color: 'rgba(130,160,255,0.8)' }}>[{si}]</span> {s[0]},{s[1]},{s[2]}
-                            </div>
-                          ))}
-                        </div>
-                        <div style={{ color: 'rgba(130,160,255,0.6)', fontSize: 9,
-                          fontFamily: 'ui-monospace,monospace', letterSpacing: '0.15em',
-                          margin: '8px 0 4px' }}>SEGMENTS (draw order)</div>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
-                          {def.segments.map(([a, b], si) => (
-                            <div key={si} style={{ fontFamily: 'ui-monospace,monospace', fontSize: 10,
-                              color: 'rgba(255,210,120,0.75)', background: 'rgba(40,30,10,0.5)',
-                              borderRadius: 4, padding: '2px 6px' }}>
-                              {si}: [{a}→{b}]
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+                {/* Description + segment list when expanded */}
+                {expanded === idx && (
+                  <div style={{ marginTop: 12 }}>
+                    {DESCRIPTIONS[def.name] && (
+                      <p style={{ fontFamily: 'ui-monospace,monospace', fontSize: 10,
+                        color: 'rgba(180,210,255,0.75)', lineHeight: 1.6,
+                        margin: '0 0 10px' }}>
+                        {DESCRIPTIONS[def.name]}
+                      </p>
                     )}
-                  </>
-                ) : (
-                  <div style={{ height: 80, display: 'flex', alignItems: 'center',
-                    justifyContent: 'center', color: 'rgba(100,120,180,0.35)',
-                    fontFamily: 'ui-monospace,monospace', fontSize: 11 }}>
-                    null — skipped
+                    {/* Star coordinate table commented out — use DESCRIPTIONS above
+                    <div style={{ color: 'rgba(130,160,255,0.6)', fontSize: 9, ... }}>STARS</div>
+                    {def.stars.map((s, si) => ( <div>[{si}] {s[0]},{s[1]},{s[2]}</div> ))} */}
+                    <div style={{ color: 'rgba(130,160,255,0.6)', fontSize: 9,
+                      fontFamily: 'ui-monospace,monospace', letterSpacing: '0.15em',
+                      margin: '0 0 4px' }}>SEGMENTS (draw order)</div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+                      {def.segments.map(([a, b], si) => (
+                        <div key={si} style={{ fontFamily: 'ui-monospace,monospace', fontSize: 10,
+                          color: 'rgba(255,210,120,0.75)', background: 'rgba(40,30,10,0.5)',
+                          borderRadius: 4, padding: '2px 6px' }}>
+                          {si}: [{a}→{b}]
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>

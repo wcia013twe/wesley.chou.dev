@@ -92,7 +92,6 @@ const ExperiencePage = () => (
       coords="49.3°N · 123.1°W"
     />
     <ControlsHint />
-    <ConstellationPreview />
   </div>
 );
 
