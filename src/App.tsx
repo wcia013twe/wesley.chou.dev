@@ -16,6 +16,7 @@ const HomePage       = lazy(() => import("./pages/HomePage"));
 const ExperiencePage = lazy(() => import("./pages/ExperiencePage"));
 const ProjectsPage   = lazy(() => import("./pages/ProjectsPage"));
 const SkillsPage     = lazy(() => import("./pages/SkillsPage"));
+const GalleryPage    = lazy(() => import("./pages/GalleryPage"));
 
 const Layout = () => (
   <>
@@ -54,6 +55,7 @@ const router = createBrowserRouter([
       { path: "experience", element: <ExperiencePage /> },
       { path: "projects", element: <ProjectsPage /> },
       { path: "skills", element: <SkillsPage /> },
+      { path: "gallery", element: <GalleryPage /> },
     ],
   },
 ]);

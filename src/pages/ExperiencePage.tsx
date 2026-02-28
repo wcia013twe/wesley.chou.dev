@@ -1,7 +1,6 @@
 import { motion } from "motion/react";
 import ExperienceTimeline3D from "../components/ExperienceTimeline3D";
 import HudPanel from "@/components/HudPanel";
-import ConstellationPreview from "@/components/ConstellationPreview"; // TODO: remove when done
 
 const MONO = "ui-monospace, SFMono-Regular, monospace";
 const ACCENT = "#6688ff";
@@ -74,6 +73,20 @@ const ControlsHint = () => (
             </svg>
             <span style={{ fontFamily: MONO, fontSize: "9px", letterSpacing: "0.08em", color: "rgba(255,255,255,0.45)" }}>
               Expand entry
+            </span>
+          </div>
+
+          {/* Hover constellation — see details */}
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            {/* Cursor with sparkle dots */}
+            <svg width="14" height="20" viewBox="0 0 14 20" fill="none" style={{ flexShrink: 0 }}>
+              <path d="M2 2 L2 14 L5.5 11 L7.5 16 L9 15.4 L7 10.5 L11 10.5 Z" fill={`${ACCENT}cc`} stroke={`${ACCENT}73`} strokeWidth="0.6" strokeLinejoin="round"/>
+              <circle cx="11.5" cy="3.5" r="1" fill={`${ACCENT}99`}/>
+              <circle cx="9"    cy="1.5" r="0.7" fill={`${ACCENT}66`}/>
+              <circle cx="13"   cy="6"   r="0.6" fill={`${ACCENT}55`}/>
+            </svg>
+            <span style={{ fontFamily: MONO, fontSize: "9px", letterSpacing: "0.08em", color: "rgba(255,255,255,0.45)" }}>
+              Hover star to see details
             </span>
           </div>
 

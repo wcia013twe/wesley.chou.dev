@@ -1,180 +1,161 @@
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const MONO = "ui-monospace, SFMono-Regular, monospace";
-const C_CYAN   = "#22d3ee";
+const SANS = "'Montserrat', 'Ubuntu', Arial, sans-serif";
 const C_BRIGHT = "#67e8f9";
 
-const usePrefersReducedMotion = () => {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
-
-    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
-  }, []);
-
-  return prefersReducedMotion;
+const HIGHLIGHTS: Record<string, string> = {
+  'AI':                            '#ec4899',
+  'machine learning':              '#a78bfa',
+  'Machine Learning':              '#a78bfa',
+  'generative AI':                 '#ec4899',
+  'University of Central Florida': '#22d3ee',
+  'UCF':                           '#22d3ee',
+  'software engineering':          '#60a5fa',
+  'entrepreneurship':              '#34d399',
+  'entrepreneurial':               '#34d399',
 };
+
+function HighlightedText({ text }: { text: string }) {
+  const escaped = Object.keys(HIGHLIGHTS).map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const pattern = new RegExp(`(${escaped.join('|')})`, 'g');
+  return (
+    <>
+      {text.split(pattern).map((part, i) => {
+        const color = HIGHLIGHTS[part];
+        return color
+          ? <span key={i} style={{ color, fontWeight: 600 }}>{part}</span>
+          : part;
+      })}
+    </>
+  );
+}
 
 interface FeatureCardProps {
   title: string;
   description: string;
   imageSrc: string;
+  badge?: string;
 }
 
-const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, imageSrc }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const prefersReducedMotion = usePrefersReducedMotion();
+const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, imageSrc, badge }) => {
+  const [hovered, setHovered] = useState(false);
 
   return (
     <motion.div
-      role="button"
-      tabIndex={0}
-      aria-label={`${title}: ${description}`}
-      className="relative h-[400px] overflow-hidden cursor-pointer"
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      animate={{ y: hovered ? -6 : 0 }}
+      transition={{ duration: 0.25, ease: 'easeOut' }}
       style={{
-        border:          isHovered
-          ? `1px solid rgba(34,211,238,0.45)`
-          : `1px solid rgba(34,211,238,0.18)`,
-        background:      "rgba(0, 4, 8, 0.88)",
-        backdropFilter:  "blur(12px)",
-        boxShadow:       isHovered
-          ? "0 0 40px rgba(34,211,238,0.08), inset 0 0 60px rgba(34,211,238,0.02)"
-          : "none",
-        transition:      "border 0.3s ease, box-shadow 0.3s ease",
+        borderRadius: '8px',
+        border: '1px solid transparent',
+        background: `linear-gradient(rgba(2,6,16,0.90), rgba(2,6,16,0.90)) padding-box,
+                     linear-gradient(135deg, rgba(34,211,238,${hovered ? 0.55 : 0.30}) 0%, rgba(34,211,238,0.06) 50%, rgba(34,211,238,${hovered ? 0.55 : 0.30}) 100%) border-box`,
+        boxShadow: hovered ? '0 12px 40px rgba(0,0,0,0.5)' : 'none',
+        overflow: 'hidden',
+        position: 'relative',
+        aspectRatio: '4/3',
+        transition: 'background 0.35s ease, box-shadow 0.35s ease',
+        cursor: 'default',
       }}
       variants={{
         hidden:  { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 },
       }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      onFocus={() => setIsHovered(true)}
-      onBlur={() => setIsHovered(false)}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          setIsHovered(!isHovered);
-          e.preventDefault();
-        }
-      }}
-      whileHover={prefersReducedMotion ? {} : { y: -6 }}
     >
-      {/* Background Image — with outer glow */}
+      {/* Badge */}
+      {badge && (
+        <div style={{
+          position: 'absolute', top: '12px', right: '12px', zIndex: 20,
+          background: 'rgba(2,6,16,0.75)',
+          border: '1px solid rgba(34,211,238,0.4)',
+          borderRadius: '20px',
+          padding: '3px 10px',
+          fontFamily: MONO,
+          fontSize: '9px',
+          letterSpacing: '0.15em',
+          color: C_BRIGHT,
+          textTransform: 'uppercase',
+        }}>
+          {badge}
+        </div>
+      )}
+
+      {/* Image */}
       <motion.img
         src={imageSrc}
         loading="lazy"
-        className="absolute inset-0 w-full h-full object-cover object-center"
-        style={{
-          filter: isHovered
-            ? "brightness(0.55) drop-shadow(0 0 32px rgba(34,211,238,0.30))"
-            : "brightness(0.45) drop-shadow(0 0 16px rgba(34,211,238,0.12))",
-          transition: "filter 0.4s ease",
+        alt={title}
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
+        animate={{
+          filter: hovered ? 'grayscale(0%) brightness(0.45)' : 'grayscale(35%) brightness(0.72)',
+          scale:  hovered ? 1.06 : 1,
         }}
-        animate={{ scale: isHovered ? 1.08 : 1 }}
-        transition={{ duration: 0.4 }}
-        aria-hidden="true"
-        alt=""
+        transition={{ duration: 0.4, ease: 'easeOut' }}
       />
 
-      {/* Corner accents — top-left */}
-      <span
-        className="pointer-events-none absolute top-0 left-0 h-px w-12 transition-all duration-300"
-        style={{ background: `linear-gradient(90deg, ${isHovered ? C_BRIGHT : C_CYAN}, transparent)` }}
-      />
-      <span
-        className="pointer-events-none absolute top-0 left-0 w-px h-10 transition-all duration-300"
-        style={{ background: `linear-gradient(180deg, ${isHovered ? C_BRIGHT : C_CYAN}, transparent)` }}
-      />
-      {/* Corner accents — bottom-right */}
-      <span
-        className="pointer-events-none absolute bottom-0 right-0 h-px w-12 transition-all duration-300"
-        style={{ background: `linear-gradient(270deg, ${isHovered ? C_BRIGHT : C_CYAN}, transparent)` }}
-      />
-      <span
-        className="pointer-events-none absolute bottom-0 right-0 w-px h-10 transition-all duration-300"
-        style={{ background: `linear-gradient(0deg, ${isHovered ? C_BRIGHT : C_CYAN}, transparent)` }}
-      />
+      {/* Title — always visible at bottom */}
+      <motion.div
+        animate={{ opacity: hovered ? 0 : 1, y: hovered ? 10 : 0 }}
+        transition={{ duration: 0.25 }}
+        style={{
+          position: 'absolute',
+          bottom: 0, left: 0, right: 0,
+          padding: '40px 20px 20px',
+          background: 'linear-gradient(to top, rgba(2,6,16,0.92) 0%, transparent 100%)',
+          zIndex: 10,
+        }}
+      >
+        <h3 style={{
+          fontFamily:    MONO,
+          fontSize:      '18px',
+          fontWeight:    600,
+          letterSpacing: '0.06em',
+          color:         'white',
+          margin:        0,
+        }}>
+          {title}
+        </h3>
+      </motion.div>
 
-      {/* Content */}
-      <div className="relative z-10 h-full flex flex-col justify-between p-6">
-
-        {/* Top label */}
-        <p
-          style={{
-            fontFamily:    MONO,
-            fontSize:      "9px",
-            letterSpacing: "0.35em",
-            textTransform: "uppercase" as const,
-            color:         "rgba(34,211,238,0.35)",
-            margin:        0,
-          }}
-        >
-          — PROFILE
+      {/* Hover overlay — slides up from bottom */}
+      <motion.div
+        initial={false}
+        animate={{ y: hovered ? '0%' : '100%' }}
+        transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 15,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
+          padding: '24px',
+          background: 'linear-gradient(to top, rgba(2,6,16,0.97) 55%, rgba(2,6,16,0.70) 100%)',
+        }}
+      >
+        <h3 style={{
+          fontFamily:    MONO,
+          fontSize:      '18px',
+          fontWeight:    600,
+          letterSpacing: '0.06em',
+          color:         'white',
+          margin:        '0 0 10px',
+        }}>
+          {title}
+        </h3>
+        <p style={{
+          fontFamily: SANS,
+          fontSize:   '13px',
+          lineHeight: 1.75,
+          color:      'rgba(255,255,255,0.72)',
+          margin:     0,
+        }}>
+          <HighlightedText text={description} />
         </p>
-
-        {/* Bottom: opaque panel behind title + description */}
-        <div
-          style={{
-            display:        "flex",
-            flexDirection:  "column",
-            gap:            "12px",
-            background:     isHovered
-              ? "rgba(0, 4, 10, 0.88)"
-              : "rgba(0, 4, 10, 0.78)",
-            backdropFilter: "blur(8px)",
-            borderTop:      `1px solid rgba(34,211,238,${isHovered ? 0.30 : 0.14})`,
-            /* Shadow spreads outside the panel to push image content away */
-            boxShadow:      isHovered
-              ? "0 -12px 30px rgba(0,4,10,0.80), 0 0 0 8px rgba(0,4,10,0.50)"
-              : "0 -8px 20px rgba(0,4,10,0.70), 0 0 0 6px rgba(0,4,10,0.40)",
-            padding:        "14px 16px",
-            margin:         "-6px",          /* bleed slightly into card edges */
-            transition:     "all 0.35s ease",
-          }}
-        >
-          <h3
-            style={{
-              fontFamily:    MONO,
-              fontSize:      "clamp(18px, 2.2vw, 26px)",
-              fontWeight:    600,
-              letterSpacing: "0.08em",
-              color:         "white",
-              textShadow:    isHovered
-                ? "0 0 16px rgba(34,211,238,0.9), 0 0 32px rgba(34,211,238,0.4)"
-                : "0 0 10px rgba(34,211,238,0.35)",
-              margin:        0,
-              transition:    "text-shadow 0.3s ease",
-            }}
-          >
-            {title}
-          </h3>
-
-          <motion.p
-            style={{
-              fontFamily:    MONO,
-              fontSize:      "12px",
-              letterSpacing: "0.04em",
-              lineHeight:    1.75,
-              color:         "rgba(255,255,255,0.62)",
-              margin:        0,
-              overflow:      "hidden",
-            }}
-            initial={{ opacity: 0, maxHeight: 0 }}
-            animate={{
-              opacity:   isHovered ? 1 : 0,
-              maxHeight: isHovered ? 200 : 0,
-            }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
-          >
-            {description}
-          </motion.p>
-        </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };

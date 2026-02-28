@@ -77,8 +77,8 @@ const HomePage = () => {
               <TextType
                 text={[
                   "Software Engineer",
-                  "AR Researcher",
-                  "Founder",
+                  "Product Designer",
+                  "Researcher",
                 ]}
                 typingSpeed={50}
                 pauseDuration={1500}
@@ -169,19 +169,20 @@ const HomePage = () => {
         >
           <FeatureCard
             title="About Me"
-            description="My name is Wei-Lin, but you can call me Wes! I'm a Computer Science senior at University of Central Florida, working at the intersection of software engineering, AI, and entrepreneurship."
+            description="I'm Wei-Lin, but Wes is perfectly acceptable too. I'm a senior at UCF, majoring in CS with interests in software engineering, AI, and sometimes entrepreneurial ventures. Being an generation 1.5 from Taiwan, I’ve learned to marry curiosity with persistence—a combination that drives me to choose unconventional paths"
             imageSrc="assets/gallery/pfp.jpg"
+            // badge="● Available"
           />
 
           <FeatureCard
             title="My Journey"
-            description="In my short two years at UCF, I have deepened my passion for technology, particularly through exploring machine learning, modern software development, and entrepreneurial ventures."
+description="Originally from New Jersey, I moved to UCF, where I’ve explored machine learning, modern software development, and small entrepreneurial experiments. I once dreamed of working in space, but realized I’d rather build software that scales safely than be the intern who pushes to prod and blows up a rocket. However, solving hard problems has never left me, and I’m passionate about building tomorrow’s technology that actually runs and scales."
             imageSrc="assets/gallery/korea.jpg"
           />
 
           <FeatureCard
             title="My Interests"
-            description="I am an outgoing engineer who is passionate about all things AI and latest tech trends. When I step away from the keyboard, I love hiking, volleyball, playing board games, or planning my next trip abroad!"
+            description="I’m an engineer fascinated by generative AI and building software users love. Away from the keyboard, I’m hiking trails that make my legs question life, spiking volleyballs, scheming board game wins, listening to YC podcasts, and using Google Maps or Beli to track down the next great bite. The people around me inspire me, and I’m always looking for ways to give back to my community."
             imageSrc="assets/gallery/duck.jpeg"
           />
         </motion.div>

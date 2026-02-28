@@ -62,7 +62,7 @@ const NODES = [
     shipAnchor: [0.0, 0.0, 1.1],
     labelOffset: [0.0, 2.2, 1.5],
     detail:
-      "Machine learning pipelines, intelligent system design, and the cognitive architecture that guides execution.",
+      "I build ML pipelines with these",
     skills: [
       { name: "Python", icon: <StackIcon name="python" /> },
       { name: "LangChain", icon: <StackIcon name="langchain" variant="dark" /> },
@@ -84,7 +84,7 @@ const NODES = [
     shipAnchor: [2.8, -1.0, -0.8],
     labelOffset: [3.5, 1.4, -1.5],
     detail:
-      "Pixel-perfect interfaces, motion design, and the surfaces users interact with. Lift comes from execution.",
+      "I'm dedicated to an exceptional UI",
     skills: [
       { name: "React", icon: <StackIcon name="react" /> },
       { name: "TypeScript", icon: <StackIcon name="typescript" /> },
@@ -101,7 +101,7 @@ const NODES = [
     shipAnchor: [-2.8, -1.0, -0.8],
     labelOffset: [-3.5, 1.4, -1.5],
     detail:
-      "The runtime frameworks, and data layers that form the connective tissue of every system.",
+      "I use these to ship my projects at scale",
     skills: [
       { name: "Spring", icon: <StackIcon name="spring" /> },
       { name: "Node.js", icon: <StackIcon name="nodejs" /> },
@@ -125,7 +125,7 @@ const NODES = [
     shipAnchor: [0.0, -0.5, -2.6],
     labelOffset: [0.0, 0.6, -4.2],
     detail:
-      "APIs, databases, cloud infrastructure, and the raw power that drives the entire system forward.",
+      "I use these to host & maintain my projects",
     skills: [
       { name: "Docker", icon: <StackIcon name="docker" /> },
       { name: "Kubernetes", icon: <StackIcon name="kubernetes" /> },
@@ -144,7 +144,7 @@ const NODES = [
     shipAnchor: [0.0, 0.8, -2.6],
     labelOffset: [0.0, 2.2, -3.8],
     detail:
-      "System design, technical leadership, and the structural decisions that keep everything aligned under pressure.",
+      "Qualities I developed through failing fast",
     skills: [
       { name: "Mentorship", icon: null },
       { name: "High Agency", icon: null },

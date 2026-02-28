@@ -64,6 +64,8 @@ const NAV_LINKS = [
   { to: "/experience", label: "EXPERIENCE" },
   { to: "/projects",   label: "PROJECTS"   },
   { to: "/skills",     label: "SKILLS"     },
+  { to: "/gallery",     label: "GALLERY"     },
+
 ];
 
 function NavLink({ to, label, onClick }: { to: string; label: string; onClick?: () => void }) {
