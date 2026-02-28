@@ -282,7 +282,11 @@ export default function SolarSystem() {
       });
 
       solarSystem.add(getElipticLines());
-      scene.add(getStarfield({ numStars: 2000, size: 0.5, saturation: 0 }));
+      const starsGroup = new THREE.Group();
+      starsGroup.add(getStarfield({ numStars: 900, size: 0.10, saturation: 0 }));
+      starsGroup.add(getStarfield({ numStars: 300, size: 0.17, saturation: 0 }));
+      starsGroup.add(getStarfield({ numStars: 100, size: 0.24, saturation: 0 }));
+      scene.add(starsGroup);
       scene.add(new THREE.AmbientLight(0xffffff, 0.1));
 
       const dir = new THREE.DirectionalLight(0x0099ff, 1);

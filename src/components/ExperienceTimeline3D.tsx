@@ -15,6 +15,7 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
@@ -22,7 +23,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import getStarfield from './solar-system/src/getStarfield.js';
-import getNebula from './solar-system/src/getNebula.js';
+import getNebula from './getExperienceNebula.js';
 import { professionalExperience, academicExperience } from '@/lib/experience';
 
 // ── Feature flags ─────────────────────────────────────────────────────────────
@@ -449,6 +450,7 @@ export default function ExperienceTimeline3D() {
     const container = containerRef.current;
     if (!container) return;
 
+    let disposed = false;
     let w = container.clientWidth;
     let h = container.clientHeight;
 
@@ -517,11 +519,103 @@ export default function ExperienceTimeline3D() {
     scene.add(engineLight);
 
     // ── Backgrounds (hidden during warp, revealed on idle) ────────────────────
-    const stars   = getStarfield({ numStars: 2500, size: 0.32, saturation: 0.12 });
+    // Three size layers for variation — total ~1300 stars, sizes between 0.05 (skills) and 0.32 (old)
+    const stars = new THREE.Group();
+    stars.add(getStarfield({ numStars: 900, size: 0.10, saturation: 0.12 }));
+    stars.add(getStarfield({ numStars: 300, size: 0.17, saturation: 0.12 }));
+    stars.add(getStarfield({ numStars: 100, size: 0.24, saturation: 0.12 }));
     const nebula1 = getNebula({ hue: 0.65, numSprites: 12, opacity: 0.06, radius: 50, size: 95, z: -100, sat: 0.28 });
     const nebula2 = getNebula({ hue: 0.0,  numSprites: 10, opacity: 0.08, radius: 40, size: 75, z: 30 });
     // stars/nebula visible from the start — they show through the warp beams
     scene.add(stars); scene.add(nebula1); scene.add(nebula2);
+
+    // ── Asteroid field (reuses Rock1/Rock2/Rock3 OBJ assets from solar system) ─
+    // Zinc/cool-grey palette — varied roughness so each rock reads differently under bloom
+    const astMats = [
+      new THREE.MeshStandardMaterial({ color: 0xa1a1aa, roughness: 0.88, metalness: 0.08 }), // zinc-400
+      new THREE.MeshStandardMaterial({ color: 0x71717a, roughness: 0.93, metalness: 0.06 }), // zinc-500
+      new THREE.MeshStandardMaterial({ color: 0x52525b, roughness: 0.95, metalness: 0.04 }), // zinc-600
+      new THREE.MeshStandardMaterial({ color: 0x3f3f46, roughness: 0.97, metalness: 0.03 }), // zinc-700
+      new THREE.MeshStandardMaterial({ color: 0x8b8b96, roughness: 0.90, metalness: 0.07 }), // zinc-400/500 mid
+    ];
+    const asteroidMeshes: THREE.Mesh[] = [];
+    const astRotVel: { x: number; y: number; z: number }[] = [];
+    const astLoadedGeos: THREE.BufferGeometry[] = [];
+
+    const astZSpan = Math.abs(MIN_Z) + 40;
+
+    // Spawn a single asteroid at a given world position + scale
+    const spawnAsteroid = (geo: THREE.BufferGeometry, x: number, y: number, z: number, s: number) => {
+      const mesh = new THREE.Mesh(geo, astMats[Math.floor(Math.random() * astMats.length)]);
+      mesh.position.set(x, y, z);
+      mesh.scale.setScalar(s);
+      mesh.rotation.set(
+        Math.random() * Math.PI * 2,
+        Math.random() * Math.PI * 2,
+        Math.random() * Math.PI * 2,
+      );
+      astRotVel.push({
+        x: (Math.random() - 0.5) * 0.30,
+        y: (Math.random() - 0.5) * 0.42,
+        z: (Math.random() - 0.5) * 0.24,
+      });
+      scene.add(mesh);
+      asteroidMeshes.push(mesh);
+    };
+
+    const objLoader = new OBJLoader();
+    ['Rock1', 'Rock2', 'Rock3'].forEach((name) => {
+      objLoader.load(`/rocks/${name}.obj`, (obj) => {
+        if (disposed) return;
+        let rockGeo: THREE.BufferGeometry | null = null;
+        obj.traverse((child) => {
+          if ((child as THREE.Mesh).isMesh && !rockGeo) {
+            rockGeo = (child as THREE.Mesh).geometry;
+          }
+        });
+        if (!rockGeo) return;
+        astLoadedGeos.push(rockGeo);
+
+        // ── Scattered individuals (10 per rock type) ──────────────────────────
+        for (let i = 0; i < 10; i++) {
+          const sign = Math.random() > 0.5 ? 1 : -1;
+          spawnAsteroid(
+            rockGeo,
+            sign * (5.5 + Math.random() * 10),
+            (Math.random() - 0.5) * 18,
+            20 - Math.random() * astZSpan,
+            0.14 + Math.random() * 0.22,
+          );
+        }
+
+        // ── Clusters (3 per rock type, 4–8 rocks each) ────────────────────────
+        for (let c = 0; c < 3; c++) {
+          const sign   = Math.random() > 0.5 ? 1 : -1;
+          const cx     = sign * (6 + Math.random() * 9);
+          const cy     = (Math.random() - 0.5) * 14;
+          const cz     = 20 - Math.random() * astZSpan;
+          const radius = 1.8 + Math.random() * 2.0; // cluster spread radius
+          const count  = 4 + Math.floor(Math.random() * 5); // 4–8 members
+
+          // Anchor rock — slightly larger, at the cluster center
+          spawnAsteroid(rockGeo, cx, cy, cz, 0.22 + Math.random() * 0.18);
+
+          // Surrounding rocks — scattered within the cluster radius
+          for (let r = 1; r < count; r++) {
+            const theta = Math.random() * Math.PI * 2;
+            const phi   = Math.acos(2 * Math.random() - 1);
+            const d     = radius * (0.3 + Math.random() * 0.7);
+            spawnAsteroid(
+              rockGeo,
+              cx + d * Math.sin(phi) * Math.cos(theta),
+              cy + d * Math.sin(phi) * Math.sin(theta),
+              cz + d * Math.cos(phi),
+              0.08 + Math.random() * 0.18,
+            );
+          }
+        }
+      });
+    });
 
     // ── Timeline spine ────────────────────────────────────────────────────────
     const spineLen = (allEntries.length - 1) * CARD_SPACING;
@@ -990,6 +1084,13 @@ export default function ExperienceTimeline3D() {
       const delta = lastT === 0 ? 0 : Math.min((t - lastT) * 0.001, 1 / 20);
       lastT = t;
 
+      // ── Asteroids (rotate every frame regardless of intro phase) ─────────────
+      asteroidMeshes.forEach((mesh, i) => {
+        mesh.rotation.x += astRotVel[i].x * delta;
+        mesh.rotation.y += astRotVel[i].y * delta;
+        mesh.rotation.z += astRotVel[i].z * delta;
+      });
+
       // ── Warp & Resolve phases ────────────────────────────────────────────────
       if (introPhase === 'warp' || introPhase === 'resolve') {
         if (delta > 0) {
@@ -1307,7 +1408,11 @@ export default function ExperienceTimeline3D() {
       if (rimOverlay) scene.remove(rimOverlay);
       scene.remove(shipWarmLight);
       scene.remove(shipCoolLight);
+      disposed = true;
       beamGeo.dispose();
+      asteroidMeshes.forEach(m => scene.remove(m));
+      astLoadedGeos.forEach(g => g.dispose());
+      astMats.forEach(m => m.dispose());
       renderer.dispose();
       composer.dispose();
     };

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { motion } from "motion/react";
 import SpaceshipDiagram from "@/components/SpaceshipDiagram";
 import HudPanel from "@/components/HudPanel";
+import SkillsHudOverlay from "@/components/SkillsHudOverlay";
 
 const MONO = "ui-monospace, SFMono-Regular, monospace";
 const ACCENT = "#22d3ee";
@@ -94,6 +95,7 @@ const SkillsPage = () => {
   return (
     <div className="relative h-screen overflow-hidden">
       <SpaceshipDiagram />
+      <SkillsHudOverlay />
       <HudPanel
         title="Technical Skills"
         systemPath="SYS / SKILL / ACTIVE"
