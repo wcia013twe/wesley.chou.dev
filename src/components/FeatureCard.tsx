@@ -65,10 +65,11 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, imageSrc 
       whileHover={prefersReducedMotion ? {} : { y: -6 }}
     >
       {/* Background Image — with outer glow */}
-      <motion.div
-        className="absolute inset-0 bg-cover bg-center"
+      <motion.img
+        src={imageSrc}
+        loading="lazy"
+        className="absolute inset-0 w-full h-full object-cover object-center"
         style={{
-          backgroundImage: `url(${imageSrc})`,
           filter: isHovered
             ? "brightness(0.55) drop-shadow(0 0 32px rgba(34,211,238,0.30))"
             : "brightness(0.45) drop-shadow(0 0 16px rgba(34,211,238,0.12))",
@@ -77,6 +78,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, imageSrc 
         animate={{ scale: isHovered ? 1.08 : 1 }}
         transition={{ duration: 0.4 }}
         aria-hidden="true"
+        alt=""
       />
 
       {/* Corner accents — top-left */}

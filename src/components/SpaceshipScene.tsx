@@ -313,5 +313,6 @@ const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({ className }) => {
 
 export default SpaceshipScene;
 
-// Preload the model to prevent loading flicker
+// Preload the model. drei's useGLTF defaults useMeshopt=true, so the
+// meshopt-compressed GLB is decoded automatically via three-stdlib's decoder.
 useGLTF.preload("/models/spaceship.glb");

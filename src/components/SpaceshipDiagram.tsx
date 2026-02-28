@@ -468,7 +468,7 @@ export default function SpaceshipDiagram() {
 
     // Load model
     const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+    dracoLoader.setDecoderPath('/draco/');
     const gltfLoader = new GLTFLoader();
     gltfLoader.setDRACOLoader(dracoLoader);
     gltfLoader.load('/models/spaceship-diagram.glb', gltf => {
@@ -517,9 +517,20 @@ export default function SpaceshipDiagram() {
     // Animation loop
     let animId: number;
     let lastT = 0;
+    let isVisible = true;
     const _tmpVec = new THREE.Vector3();
 
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible) animate(); // resume if paused
+      },
+      { threshold: 0 }
+    );
+    visibilityObserver.observe(container);
+
     function animate(t = 0) {
+      if (!isVisible) return; // paused — will be resumed by IntersectionObserver
       animId = requestAnimationFrame(animate);
       const delta = Math.min((t - lastT) * 0.001, 0.05);
       lastT = t;
@@ -563,6 +574,7 @@ export default function SpaceshipDiagram() {
 
     return () => {
       cancelAnimationFrame(animId);
+      visibilityObserver.disconnect();
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mousedown', onMouseDown);
       window.removeEventListener('mouseup',   onMouseUp);

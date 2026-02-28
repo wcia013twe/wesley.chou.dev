@@ -8,6 +8,7 @@ import {
 import Navbar from "./components/NavBar";
 import { HelmetProvider } from "react-helmet-async";
 import Particles from "./components/Particles";
+import PageLoader from "./components/PageLoader";
 
 // Lazy-load each page so their JS (including Three.js) is only downloaded
 // when the user navigates to that route, not on the initial page load.
@@ -37,7 +38,7 @@ const Layout = () => (
     </div>
     <main>
       {/* Suspense boundary for lazy-loaded page chunks */}
-      <Suspense fallback={null}>
+      <Suspense fallback={<PageLoader />}>
         <Outlet />
       </Suspense>
     </main>

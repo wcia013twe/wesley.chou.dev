@@ -24,6 +24,8 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import getStarfield from './solar-system/src/getStarfield.js';
 import getNebula from './getExperienceNebula.js';
+import getAurora from './getAurora.js';
+import { getConstellationLines } from './getConstellationLines.js';
 import { professionalExperience, academicExperience } from '@/lib/experience';
 
 // ── Feature flags ─────────────────────────────────────────────────────────────
@@ -528,6 +530,46 @@ export default function ExperienceTimeline3D() {
     const nebula2 = getNebula({ hue: 0.0,  numSprites: 10, opacity: 0.08, radius: 40, size: 75, z: 30 });
     // stars/nebula visible from the start — they show through the warp beams
     scene.add(stars); scene.add(nebula1); scene.add(nebula2);
+
+    // ── Faint colour tints over the blue nebula ────────────────────────────────
+    const auroraGroup = new THREE.Group();
+    auroraGroup.add(getAurora({ hue: 0.35, numSprites: 8, opacity: 0.02, radius: 75, size: 130, z: -100, sat: 0.70 })); // green
+    auroraGroup.add(getAurora({ hue: 0.92, numSprites: 7, opacity: 0.02, radius: 70, size: 115, z:  -95, sat: 0.65 })); // pink
+    scene.add(auroraGroup);
+
+    // ── Constellations — one per career entry, world-space (not parented to stars) ──
+    // Spawn offsets are relative to each entry's base position (entryX[i], 0, entryZ[i]).
+    // Edit these to reposition individual constellations: [dX, dY, dZ]
+    // Positive dX = further right, negative = further left. Negative dZ = deeper background.
+    const CONSTELLATION_OFFSETS: [number, number, number][] = [
+      [ 24,  8, -55 ], // entry 0
+      [-24,  8, -55 ], // entry 1
+      [ 24,  6, -60 ], // entry 2
+      [-24,  6, -60 ], // entry 3
+      [ 26,  8, -55 ], // entry 4
+      [-26,  8, -55 ], // entry 5
+      [ 24,  7, -58 ], // entry 6
+      [-24,  7, -58 ], // entry 7
+    ];
+
+    const circleTexture = new THREE.TextureLoader().load('/textures/circle.png');
+    const constellationProgress = new Float32Array(allEntries.length);
+    const constellations = allEntries.map((_, i) => {
+      const off = CONSTELLATION_OFFSETS[i] ?? [entryX[i] * 4.5, 7, -55];
+      return getConstellationLines({
+        position: new THREE.Vector3(entryX[i] + off[0], off[1], entryZ[i] + off[2]),
+        definitionIndex: i,
+        circleTexture,
+        isPro: i < profCount,
+        scale: 0.7,
+      });
+    });
+    constellations.forEach(c => scene.add(c.group));
+
+    // ── Raycaster for constellation hover ────────────────────────────────────
+    const raycaster = new THREE.Raycaster();
+    raycaster.params.Points = { threshold: 0.5 };
+    const constellationStarPoints = constellations.map(c => c.starsPoints);
 
     // ── Asteroid field (reuses Rock1/Rock2/Rock3 OBJ assets from solar system) ─
     // Zinc/cool-grey palette — varied roughness so each rock reads differently under bloom
@@ -1035,6 +1077,8 @@ export default function ExperienceTimeline3D() {
       (best, s, i) => Math.abs(s - targetZ) < Math.abs(snapStops[best] - targetZ) ? i : best, 0
     );
     const snapToNearest = () => {
+      isSnapping = true;
+      scrollWarpFactor = 0;
       targetZ = snapStops[nearestStopIdx()];
     };
 
@@ -1074,6 +1118,7 @@ export default function ExperienceTimeline3D() {
     let prevCurrentZ = 0;
     let boostFactor = 0;       // 0 = idle flame, 1 = full throttle
     let scrollWarpFactor = 0;  // 0 = no flash, 1 = full warp flash; decays each frame
+    let isSnapping = false;    // true while auto-calibrating to nearest stop
     let starsWarpOffset  = 0;  // transient Z nudge for scroll warp rush; decays to 0
     let prevActiveIdx = -1;
     let lastT = 0;
@@ -1143,6 +1188,7 @@ export default function ExperienceTimeline3D() {
               stars.visible   = true;
               nebula1.visible = true;
               nebula2.visible = true;
+              auroraGroup.visible = true;
               starsWarpOffset  = stars.position.z; // capture offset for landing decay
               if (ship) {
                 ship.visible       = true;
@@ -1241,7 +1287,9 @@ export default function ExperienceTimeline3D() {
 
       // Forward velocity (positive when moving toward lower Z — forward in timeline)
       const vel         = Math.max(0, prevCurrentZ - currentZ);
-      const targetBoost = Math.min(1, vel / 0.18);
+      // Suppress boost during auto-snap so the exhaust beam doesn't re-extend
+      if (isSnapping && Math.abs(currentZ - targetZ) < 0.05) isSnapping = false;
+      const targetBoost = isSnapping ? 0 : Math.min(1, vel / 0.18);
       boostFactor      += (targetBoost - boostFactor) * 0.1;
 
       // Chase camera
@@ -1256,7 +1304,7 @@ export default function ExperienceTimeline3D() {
         ship.rotation.x = mouseY * SHIP_PITCH_AMP + SHIP_PITCH_BIAS;
         ship.rotation.z = -mouseX * SHIP_ROLL_AMP;
         // Anchor the ship-facing end; let the tail extend only behind the ship
-        const boostScaleY = 1 + boostFactor * 3.0;
+        const boostScaleY = 1 + boostFactor * 1.5;
         const boostZ = sz + BOOST_Z_OFFSET + (BOOST_LENGTH / 2) * (boostScaleY - 1);
         engineBoost.position.set(ship.position.x + BOOST_X_OFFSET, ship.position.y + BOOST_Y_OFFSET, boostZ);
 
@@ -1298,6 +1346,10 @@ export default function ExperienceTimeline3D() {
 
       if (activeIdx !== prevActiveIdx) {
         if (prevActiveIdx >= 0) cards[prevActiveIdx]?.close();
+        // Reset draw-in so constellation animates in fresh for the new section
+        if (activeIdx >= 0) {
+          constellationProgress[activeIdx] = 0;
+        }
         prevActiveIdx = activeIdx;
       }
 
@@ -1328,6 +1380,24 @@ export default function ExperienceTimeline3D() {
         dot.style.transform  = active ? 'scale(1.5)' : 'scale(1)';
       });
 
+      // Constellation visibility — only the active entry; everything else hidden
+      for (let i = 0; i < constellations.length; i++) {
+        if (i === activeIdx) {
+          if (constellationProgress[i] < 1) {
+            constellationProgress[i] = Math.min(1, constellationProgress[i] + delta * 0.65);
+            constellations[i].revealTo(constellationProgress[i]);
+          }
+        } else {
+          constellations[i].hide();
+        }
+      }
+
+      // Constellation hover — only the active constellation
+      raycaster.setFromCamera(new THREE.Vector2(mouseX, mouseY), camera);
+      const hits = raycaster.intersectObjects(constellationStarPoints);
+      const hitIdx = hits.length > 0 ? constellationStarPoints.indexOf(hits[0].object) : -1;
+      constellations.forEach((c, i) => c.setHighlight(i === activeIdx && i === hitIdx));
+
       // Ring labels — only visible when near their own ring
       proLabelEl.style.opacity = atProRing ? '1' : '0';
       divEl.style.opacity      = atDivRing ? '1' : '0';
@@ -1337,7 +1407,7 @@ export default function ExperienceTimeline3D() {
       ring.rotation.z    += delta * 0.25;
 
       // ── Scroll warp flash ──────────────────────────────────────────────────
-      scrollWarpFactor *= Math.exp(-4.5 * delta); // decay ~0.15s half-life
+      scrollWarpFactor *= Math.exp(-8.0 * delta); // decay ~0.09s half-life
 
       // Burst forward on each scroll, then decay to a small residual (stars
       // stay slightly ahead of the camera between scrolls).  Decaying to ~2
@@ -1351,6 +1421,7 @@ export default function ExperienceTimeline3D() {
       // so the ship never flies through it.  Sprites start at world z≈-100;
       // group offset = min(0, currentZ+40) keeps them ≥60 units ahead.
       nebula1.position.z = Math.min(0, currentZ + 40);
+      auroraGroup.position.z = Math.min(0, currentZ + 40);
       // bloomPass.strength = 0.45 + scrollWarpFactor * 1.5;
 
       if (scrollWarpFactor > 0.01) {
@@ -1362,7 +1433,7 @@ export default function ExperienceTimeline3D() {
           if (bZ[i] > camZ + 5) bZ[i] = camZ - Math.random() * 160;
           const x   = Math.cos(bAngle[i]) * bSpread[i];
           const y   = Math.sin(bAngle[i]) * bSpread[i];
-          const len = bLen[i] * (0.2 + wf * 1.8);
+          const len = bLen[i] * (0.2 + wf * 0.8);
           beamPos[i*6+0] = x; beamPos[i*6+1] = y; beamPos[i*6+2] = bZ[i];
           beamPos[i*6+3] = x; beamPos[i*6+4] = y; beamPos[i*6+5] = bZ[i] + len;
           const bright = (0.5 + Math.sin(bAngle[i] * 2.3) * 0.2) * wf;
@@ -1409,6 +1480,13 @@ export default function ExperienceTimeline3D() {
       scene.remove(shipWarmLight);
       scene.remove(shipCoolLight);
       disposed = true;
+      auroraGroup.children.forEach(layer => {
+        layer.children.forEach(sprite => {
+          sprite.material.map?.dispose();
+          sprite.material.dispose();
+        });
+      });
+      constellations.forEach(c => c.dispose());
       beamGeo.dispose();
       asteroidMeshes.forEach(m => scene.remove(m));
       astLoadedGeos.forEach(g => g.dispose());

@@ -16,10 +16,10 @@ const C_BRIGHT= "#67e8f9";
 const C_DIM   = "rgba(34,211,238,0.45)";
 const C_MUTED = "rgba(255,255,255,0.38)";
 
-// ── Speculative prefetch for heavy experience-page assets ─────────────────────
+// ── Speculative prefetch for heavy page assets ────────────────────────────────
 // Injecting a <link rel="prefetch"> queues a low-priority background fetch that
 // the browser stores in HTTP cache. By the time the user clicks and the
-// component mounts, GLTFLoader finds the 32 MB GLB already cached.
+// component mounts, the loader finds assets already cached.
 let experiencePrefetchStarted = false;
 function prefetchExperienceAssets() {
   if (experiencePrefetchStarted) return;
@@ -31,6 +31,31 @@ function prefetchExperienceAssets() {
     link.href = href;
     document.head.appendChild(link);
   });
+}
+
+let projectsPrefetchStarted = false;
+function prefetchProjectsAssets() {
+  if (projectsPrefetchStarted) return;
+  projectsPrefetchStarted = true;
+  ['/textures/earth.png', '/textures/jupiter.png', '/textures/mars.png',
+   '/textures/moon.png', '/textures/venus.png', '/textures/mercury.png'].forEach((href) => {
+    const link = document.createElement('link');
+    link.rel  = 'prefetch';
+    link.as   = 'image';
+    link.href = href;
+    document.head.appendChild(link);
+  });
+}
+
+let skillsPrefetchStarted = false;
+function prefetchSkillsAssets() {
+  if (skillsPrefetchStarted) return;
+  skillsPrefetchStarted = true;
+  const link = document.createElement('link');
+  link.rel  = 'prefetch';
+  link.as   = 'fetch';
+  link.href = '/models/spaceship-diagram.glb';
+  document.head.appendChild(link);
 }
 
 // ── Nav link with text-width underline ────────────────────────────────────────
@@ -51,7 +76,12 @@ function NavLink({ to, label, onClick }: { to: string; label: string; onClick?: 
     <Link
       to={to}
       onClick={onClick}
-      onMouseEnter={() => { setHovered(true); if (to === '/experience') prefetchExperienceAssets(); }}
+      onMouseEnter={() => {
+        setHovered(true);
+        if (to === '/experience') prefetchExperienceAssets();
+        if (to === '/projects')   prefetchProjectsAssets();
+        if (to === '/skills')     prefetchSkillsAssets();
+      }}
       onMouseLeave={() => setHovered(false)}
       style={{
         display:        "inline-flex",
