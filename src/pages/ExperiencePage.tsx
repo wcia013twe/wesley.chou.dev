@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import ExperienceTimeline3D from "../components/ExperienceTimeline3D";
 import HudPanel from "@/components/HudPanel";
+import ConstellationPreview from "@/components/ConstellationPreview"; // TODO: remove when done
 
 const MONO = "ui-monospace, SFMono-Regular, monospace";
 const ACCENT = "#6688ff";
@@ -91,6 +92,7 @@ const ExperiencePage = () => (
       coords="49.3°N · 123.1°W"
     />
     <ControlsHint />
+    <ConstellationPreview />
   </div>
 );
 
