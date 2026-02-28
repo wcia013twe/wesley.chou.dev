@@ -1346,10 +1346,6 @@ export default function ExperienceTimeline3D() {
 
       if (activeIdx !== prevActiveIdx) {
         if (prevActiveIdx >= 0) cards[prevActiveIdx]?.close();
-        // Reset draw-in so constellation animates in fresh for the new section
-        if (activeIdx >= 0) {
-          constellationProgress[activeIdx] = 0;
-        }
         prevActiveIdx = activeIdx;
       }
 
@@ -1380,23 +1376,42 @@ export default function ExperienceTimeline3D() {
         dot.style.transform  = active ? 'scale(1.5)' : 'scale(1)';
       });
 
-      // Constellation visibility — only the active entry; everything else hidden
+      // Constellation trail — stack model:
+      //   i < activeIdx  → trail: maintain (stay fully visible)
+      //   i === activeIdx → current: draw in
+      //   i > activeIdx  → ahead: fade out
+      //   atProRing      → back at start: fade everything out
       for (let i = 0; i < constellations.length; i++) {
-        if (i === activeIdx) {
-          if (constellationProgress[i] < 1) {
-            constellationProgress[i] = Math.min(1, constellationProgress[i] + delta * 0.65);
+        const p = constellationProgress[i];
+        if (!atProRing && activeIdx >= 0 && i === activeIdx) {
+          // Draw in (or hold at 1 if already complete)
+          if (p < 1) {
+            constellationProgress[i] = Math.min(1, p + delta * 0.65);
             constellations[i].revealTo(constellationProgress[i]);
           }
+        } else if (!atProRing && activeIdx >= 0 && i < activeIdx) {
+          // Trail — already drawn, just keep it alive (no-op when p === 1)
+          if (p > 0) constellations[i].revealTo(p);
+          else       constellations[i].hide();
         } else {
-          constellations[i].hide();
+          // Ahead of current position, or atProRing → fade out
+          if (p > 0) {
+            constellationProgress[i] = Math.max(0, p - delta * 0.65);
+            constellations[i].revealTo(constellationProgress[i]);
+          } else {
+            constellations[i].hide();
+          }
         }
       }
 
-      // Constellation hover — only the active constellation
+      // Constellation hover — highlight any visible (trail + active) constellation
       raycaster.setFromCamera(new THREE.Vector2(mouseX, mouseY), camera);
       const hits = raycaster.intersectObjects(constellationStarPoints);
       const hitIdx = hits.length > 0 ? constellationStarPoints.indexOf(hits[0].object) : -1;
-      constellations.forEach((c, i) => c.setHighlight(i === activeIdx && i === hitIdx));
+      constellations.forEach((c, i) => {
+        const visible = !atProRing && activeIdx >= 0 && i <= activeIdx && constellationProgress[i] > 0;
+        c.setHighlight(visible && i === hitIdx);
+      });
 
       // Ring labels — only visible when near their own ring
       proLabelEl.style.opacity = atProRing ? '1' : '0';

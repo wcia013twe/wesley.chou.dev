@@ -8,120 +8,90 @@ function easeInOutCubic(t) {
 // Coordinates are in local space; they get offset by `position` at construction time.
 // Stars spread ±12 X, ±8 Y, ±8 Z from entry center.
 // Segments are ordered for aesthetic draw-in: hub-and-spoke first, outer edges last.
+// 5 constellations cycle across career entries via definitionIndex % 5.
+// With 8 entries: 0→Big Dipper, 1→Orion, 2→Cassiopeia, 3→Cygnus, 4→Scorpius, 0→Big Dipper, 1→Orion, 2→Cassiopeia
 const CONSTELLATIONS = [
-  // 0: Professional — "Navigator" (compass rose)
+  // 0: "Big Dipper" — bowl then handle sweep (scale: 1.2 → slightly larger than others)
   {
-    name: 'Navigator',
+    name: 'Big Dipper',
+    scale: 1.2,
     stars: [
-      [  0,  0,  0 ], // 0: center hub
-      [  0,  7, -2 ], // 1: north
-      [  8,  2,  1 ], // 2: east
-      [  4, -5,  3 ], // 3: south-east
-      [ -5, -5, -1 ], // 4: south-west
-      [ -8,  3,  2 ], // 5: west
-      [  3,  6,  4 ], // 6: north-east
+      [ -6,  4,  0 ], // 0 Dubhe
+      [ -4,  2,  0 ], // 1 Merak
+      [ -2,  2,  0 ], // 2 Phecda
+      [  0,  3,  0 ], // 3 Megrez
+      [  2,  5,  0 ], // 4 Alioth
+      [  4,  6,  0 ], // 5 Mizar
+      [  6,  7,  0 ], // 6 Alkaid
     ],
-    segments: [[0,1],[0,2],[0,5],[0,4],[0,3],[1,6],[6,2],[2,3],[4,5]],
+    segments: [
+      [0,1],[1,2],[2,3],   // bowl
+      [3,4],[4,5],[5,6],   // handle
+    ],
   },
-  // 1: Professional — "Sigma" (lightning career path)
+  // 1: "Orion" — belt first for instant recognition
   {
-    name: 'Sigma',
+    name: 'Orion',
     stars: [
-      [ -6,  6,  0 ], // 0: top-left
-      [  6,  6, -2 ], // 1: top-right
-      [  0,  2,  1 ], // 2: mid
-      [ -6, -2,  3 ], // 3: mid-left
-      [  6, -6, -1 ], // 4: bottom-right
-      [  0, -6,  2 ], // 5: bottom-mid
-      [ -4,  0, -2 ], // 6: mid-left accent
+      [ -4,  6,  0 ], // 0 Betelgeuse
+      [  4,  6,  0 ], // 1 Bellatrix
+      [ -2,  2,  0 ], // 2 Alnitak
+      [  0,  2,  0 ], // 3 Alnilam
+      [  2,  2,  0 ], // 4 Mintaka
+      [  3, -4,  0 ], // 5 Rigel
+      [ -3, -4,  0 ], // 6 Saiph
     ],
-    segments: [[0,1],[1,2],[2,3],[3,4],[4,5],[0,6],[6,3]],
+    segments: [
+      [2,3],[3,4],   // belt first
+      [0,2],[1,4],   // shoulders
+      [2,6],[4,5],   // legs
+    ],
   },
-  // 2: Professional — "Delta" (launch triangle)
+  // 2: "Cassiopeia" — compact W zigzag
   {
-    name: 'Delta',
+    name: 'Cassiopeia',
     stars: [
-      [  0,  7,  0 ], // 0: apex
-      [ -8, -4,  2 ], // 1: base-left
-      [  8, -4, -2 ], // 2: base-right
-      [  0, -1,  1 ], // 3: centroid
-      [ -4,  2,  3 ], // 4: left mid
-      [  4,  2, -1 ], // 5: right mid
+      [ -5,  4,  0 ], // 0
+      [ -2,  2,  0 ], // 1
+      [  0,  5,  0 ], // 2 peak
+      [  2,  2,  0 ], // 3
+      [  5,  4,  0 ], // 4
     ],
-    segments: [[0,3],[3,1],[3,2],[0,4],[0,5],[1,4],[2,5],[4,5]],
+    segments: [
+      [0,1],[1,2],[2,3],[3,4],
+    ],
   },
-  // 3: Academic — "Libra" (scales of balance)
+  // 3: "Cygnus" — spine first, then wings
   {
-    name: 'Libra',
+    name: 'Cygnus',
     stars: [
-      [  0,  5,  0 ], // 0: top center
-      [ -7,  1,  2 ], // 1: left arm
-      [  7,  1, -1 ], // 2: right arm
-      [ -9, -3,  1 ], // 3: left plate outer
-      [ -5, -3,  3 ], // 4: left plate inner
-      [  5, -3, -2 ], // 5: right plate inner
-      [  9, -3,  0 ], // 6: right plate outer
-      [  0,  0,  1 ], // 7: fulcrum
+      [  0,  6,  0 ], // 0 Deneb
+      [  0,  2,  0 ], // 1 Sadr (hub)
+      [  0, -4,  0 ], // 2 Albireo
+      [ -4,  2,  0 ], // 3 left wing
+      [  4,  2,  0 ], // 4 right wing
     ],
-    segments: [[7,0],[7,1],[7,2],[1,3],[1,4],[2,5],[2,6],[3,4],[5,6]],
+    segments: [
+      [0,1],[1,2],   // spine first
+      [1,3],[1,4],   // wings
+    ],
   },
-  // 4: Academic — "Vega" (radiant star cluster)
+  // 4: "Scorpius" — organic sweep, left to right
   {
-    name: 'Vega',
+    name: 'Scorpius',
     stars: [
-      [  0,  0,  0 ], // 0: center
-      [  5,  5, -2 ], // 1: NE
-      [  7, -3,  1 ], // 2: SE
-      [  0, -7,  3 ], // 3: S
-      [ -7, -3, -2 ], // 4: SW
-      [ -5,  5,  1 ], // 5: NW
-      [  0,  8, -1 ], // 6: N
+      [ -6,  3,  0 ], // 0
+      [ -4,  2,  0 ], // 1
+      [ -2,  1,  0 ], // 2
+      [  0,  0,  0 ], // 3
+      [  2, -2,  0 ], // 4
+      [  4, -3,  0 ], // 5
+      [  6, -2,  0 ], // 6
     ],
-    segments: [[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[1,6],[6,5],[1,2],[4,5]],
-  },
-  // 5: Academic — "Meridian" (astrolabe cross)
-  {
-    name: 'Meridian',
-    stars: [
-      [  0,  0,  0 ], // 0: center
-      [  0,  7, -2 ], // 1: up
-      [  0, -7,  2 ], // 2: down
-      [ -8,  0,  1 ], // 3: left
-      [  8,  0, -1 ], // 4: right
-      [ -5,  5, -3 ], // 5: upper-left
-      [  5,  5,  3 ], // 6: upper-right
+    segments: [
+      [0,1],[1,2],[2,3],
+      [3,4],[4,5],[5,6],
     ],
-    segments: [[0,1],[0,2],[0,3],[0,4],[1,5],[1,6],[5,3],[6,4]],
-  },
-  // 6: Academic — "Phoenix" (rising wings)
-  {
-    name: 'Phoenix',
-    stars: [
-      [  0, -5,  0 ], // 0: base
-      [  0,  2,  1 ], // 1: body mid
-      [ -9,  5, -2 ], // 2: left wing tip
-      [ -4,  3,  2 ], // 3: left wing mid
-      [  9,  5,  3 ], // 4: right wing tip
-      [  4,  3, -1 ], // 5: right wing mid
-      [  0,  8, -2 ], // 6: head
-    ],
-    segments: [[0,1],[1,3],[3,2],[1,5],[5,4],[1,6],[2,3],[4,5]],
-  },
-  // 7: Academic — "Polaris" (fixed north star)
-  {
-    name: 'Polaris',
-    stars: [
-      [  0,  0,  0 ], // 0: center
-      [  0,  7, -2 ], // 1: top (north)
-      [  6,  3,  1 ], // 2: NE
-      [ 10,  0, -1 ], // 3: E
-      [  6, -4,  2 ], // 4: SE
-      [ -6, -4, -2 ], // 5: SW
-      [-10,  0,  1 ], // 6: W
-      [ -6,  3,  3 ], // 7: NW
-      [  3, -6, -3 ], // 8: S
-    ],
-    segments: [[0,1],[0,2],[0,6],[0,3],[0,5],[0,4],[1,7],[7,6],[2,3],[4,8],[8,5]],
   },
 ];
 
@@ -222,8 +192,9 @@ export function getConstellationLines({ position, definitionIndex, circleTexture
   }
 
   function hide() {
-    lineMat.opacity = 0;
-    starMat.opacity = 0;
+    currentBaseOpacity = 0;
+    lineMat.opacity    = 0;
+    starMat.opacity    = 0;
   }
 
   function setHighlight(active) {
