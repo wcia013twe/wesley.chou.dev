@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -45,7 +46,9 @@ const HomePage = () => {
 
         {/* Shared 3D background - spans both sections */}
         <div className="absolute inset-0 z-10 pointer-events-none">
-          <SpaceshipScene />
+          <Suspense fallback={null}>
+            <SpaceshipScene />
+          </Suspense>
         </div>
 
         {/* Left Section - subtle cyan glow overlay */}
