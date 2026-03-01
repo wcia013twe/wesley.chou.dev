@@ -253,7 +253,7 @@ function Navbar() {
 
           <Tooltip>
             <TooltipTrigger render={
-              <a href="documents/IWesChouResume2026_1120.pdf" aria-label="Resume">
+              <a href="documents/Website_Cleaned_Resume.pdf" aria-label="Resume">
                 <SocialIcon><CgFileDocument size={20} /></SocialIcon>
               </a>
             } />

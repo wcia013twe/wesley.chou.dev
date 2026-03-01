@@ -42,6 +42,7 @@ const SHIP_Z_OFFSET = -1; // ship is this far ahead of the action point
 
 // ── Warp intro animation ───────────────────────────────────────────────────
 const WARP_DUR = 1.9; // hyperspeed beam phase duration (seconds)
+let warpIntroSeen = false; // resets on page refresh, persists during SPA navigation
 const RESOLVE_DUR = 0.55; // beam fade-out phase duration (seconds)
 const LANDING_DUR = 2.0; // ship decelerates onto ring after warp resolves
 const BEAM_COUNT = 300; // number of hyperspeed beam segments
@@ -482,7 +483,7 @@ export default function ExperienceTimeline3D() {
     let disposed = false;
 
     // Play the warp intro on every fresh page load; skip if already seen this session
-    const showWarpIntro = sessionStorage.getItem('warpIntroSeen') !== 'true';
+    const showWarpIntro = !warpIntroSeen;
     let w = container.clientWidth;
     let h = container.clientHeight;
 
@@ -1316,6 +1317,8 @@ export default function ExperienceTimeline3D() {
     let starsWarpOffset = 0; // transient Z nudge for scroll warp rush; decays to 0
     let prevActiveIdx = -1;
     let lastT = 0;
+    let raycastFrame = 0;
+    let hoveredConstIdx = -1;
 
     function animate(t = 0) {
       animId = requestAnimationFrame(animate);
@@ -1488,7 +1491,7 @@ export default function ExperienceTimeline3D() {
           targetZ = RING_PRO_STOP;
           buildAllCards();
           introPhase = "idle";
-          sessionStorage.setItem('warpIntroSeen', 'true');
+          warpIntroSeen = true;
           hint.style.opacity = "1";
           navContainer.style.opacity = "1";
           proLabelEl.style.opacity = "1";
@@ -1645,24 +1648,27 @@ export default function ExperienceTimeline3D() {
       }
 
       // Constellation hover — highlight any visible (trail + active) constellation
-      raycaster.setFromCamera(new THREE.Vector2(mouseX, mouseY), camera);
-      const visiblePoints = constellationStarPoints.filter(Boolean);
-      const hits = visiblePoints.length
-        ? raycaster.intersectObjects(visiblePoints)
-        : [];
-      const hitObj = hits.length > 0 ? hits[0].object : null;
-      let hoveredConstIdx = -1;
-      constellations.forEach((c, i) => {
-        if (!c) return;
-        const visible =
-          !atProRing &&
-          activeIdx >= 0 &&
-          i <= activeIdx &&
-          constellationProgress[i] > 0;
-        const isHit = visible && constellationStarPoints[i] === hitObj;
-        c.setHighlight(isHit);
-        if (isHit) hoveredConstIdx = i;
-      });
+      raycastFrame = (raycastFrame + 1) % 3;
+      if (raycastFrame === 0) {
+        hoveredConstIdx = -1;
+        raycaster.setFromCamera(new THREE.Vector2(mouseX, mouseY), camera);
+        const visiblePoints = constellationStarPoints.filter(Boolean);
+        const hits = visiblePoints.length
+          ? raycaster.intersectObjects(visiblePoints)
+          : [];
+        const hitObj = hits.length > 0 ? hits[0].object : null;
+        constellations.forEach((c, i) => {
+          if (!c) return;
+          const visible =
+            !atProRing &&
+            activeIdx >= 0 &&
+            i <= activeIdx &&
+            constellationProgress[i] > 0;
+          const isHit = visible && constellationStarPoints[i] === hitObj;
+          c.setHighlight(isHit);
+          if (isHit) hoveredConstIdx = i;
+        });
+      }
 
       // Update tooltip
       if (hoveredConstIdx >= 0) {

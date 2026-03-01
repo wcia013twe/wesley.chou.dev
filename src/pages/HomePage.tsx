@@ -177,7 +177,7 @@ const HomePage = () => {
           <FeatureCard
             title="My Journey"
 description="Originally from New Jersey, I moved to UCF, where I’ve explored machine learning, modern software development, and small entrepreneurial experiments. I once dreamed of working in space, but realized I’d rather build software that scales safely than be the intern who pushes to prod and blows up a rocket. However, solving hard problems has never left me, and I’m passionate about building tomorrow’s technology that actually runs and scales."
-            imageSrc="assets/gallery/korea.jpg"
+            imageSrc="assets/gallery/korea.webp"
           />
 
           <FeatureCard
@@ -222,8 +222,10 @@ description="Originally from New Jersey, I moved to UCF, where I’ve explored m
               <FaLinkedin />
             </a>
             <a
-              href="documents/IWesChouResume2026_1120.pdf"
+              href="documents/Website_Cleaned_Resume.pdf"
               aria-label="Resume"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-2xl transition-all duration-200 hover:scale-110 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]"
               style={{ color: C_DIM }}
               onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = C_BRIGHT)}

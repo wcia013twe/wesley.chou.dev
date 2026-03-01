@@ -49,6 +49,7 @@ const CustomIcon: React.FC<CustomIconProps> = ({
       <img
         src={resolvedSrc}
         alt={title}
+        loading="lazy"
         style={{
           width: "100%",
           height: "100%",

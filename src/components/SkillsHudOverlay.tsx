@@ -37,7 +37,7 @@ export default function SkillsHudOverlay() {
         y: c.y + (Math.random() - 0.5) * 0.28,
         z: c.z + (Math.random() - 0.5) * 0.22,
       }));
-    }, 220);
+    }, 450);
     const logT    = setInterval(() => setLog(p => [...p.slice(-4), randLog()]), 1800);
     const uptimeT = setInterval(() => setUptime(t => t + 1), 1000);
     return () => { clearInterval(coordT); clearInterval(logT); clearInterval(uptimeT); };
