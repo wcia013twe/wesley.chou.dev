@@ -225,8 +225,11 @@ const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
   // Hide for the first 2 frames while bloom render targets initialize,
   // otherwise the bright engine materials spike the bloom red on frame 1.
   const warmup = useRef(0);
+  const flyIn = useRef(0);
+  const FLY_IN_DURATION = 1.2;
+  const FLY_IN_START_X = -20;
 
-  useFrame(() => {
+  useFrame((_, delta) => {
     if (!meshRef.current) return;
 
     if (warmup.current < 2) {
@@ -235,6 +238,14 @@ const SpaceshipModel: React.FC<SpaceshipModelProps> = ({
       return;
     }
     meshRef.current.visible = true;
+
+    // Fly in from the left — ease-out cubic over FLY_IN_DURATION seconds
+    if (flyIn.current < FLY_IN_DURATION) {
+      flyIn.current = Math.min(flyIn.current + delta, FLY_IN_DURATION);
+      const t = flyIn.current / FLY_IN_DURATION;
+      const eased = 1 - Math.pow(1 - t, 3);
+      meshRef.current.position.x = FLY_IN_START_X * (1 - eased);
+    }
 
     if (prefersReducedMotion) return;
 
