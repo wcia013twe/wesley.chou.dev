@@ -1,21 +1,33 @@
-# React + TypeScript + Vite
+# wesley.chou.dev
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is my personal portfolio website, built to showcase my projects, skills, and professional experience.
 
-While this project uses React, Vite supports many popular JS frameworks. [See all the supported frameworks](https://vitejs.dev/guide/#scaffolding-your-first-vite-project).
+## Tech Stack
 
-## Deploy Your Own
+- **React** + **TypeScript**
+- **Vite** (for fast development and bundling)
+- **ESLint** (for code quality and consistency)
 
-Deploy your own Vite project with Vercel.
+## Getting Started
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/framework-boilerplates/vite-react&template=vite-react)
+To run this project locally:
 
-_Live Example: https://vite-react-example.vercel.app_
+1.  **Clone the repository:**
+    ```shell
+    git clone [https://github.com/wcia013twe/wesley.chou.dev.git](https://github.com/wcia013twe/wesley.chou.dev.git)
+    ```
+2.  **Install dependencies:**
+    ```shell
+    npm install
+    ```
+3.  **Start the development server:**
+    ```shell
+    npm run dev
+    ```
 
-### Deploying From Your Terminal
+## Deployment
 
-You can deploy your new Vite project with a single command from your terminal using [Vercel CLI](https://vercel.com/download):
+This site is configured for easy deployment via [Vercel](https://vercel.com). You can deploy directly from your terminal using the [Vercel CLI](https://vercel.com/download):
 
 ```shell
 $ vercel
-```
