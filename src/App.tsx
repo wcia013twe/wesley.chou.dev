@@ -1,25 +1,22 @@
 import "./App.css";
 import { lazy, Suspense } from "react";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Outlet,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import Navbar from "./components/NavBar";
 import { HelmetProvider } from "react-helmet-async";
 import Particles from "./components/Particles";
 import PageLoader from "./components/PageLoader";
-
+import { Analytics } from "@vercel/analytics/react";
 // Lazy-load each page so their JS (including Three.js) is only downloaded
 // when the user navigates to that route, not on the initial page load.
-const HomePage       = lazy(() => import("./pages/HomePage"));
+const HomePage = lazy(() => import("./pages/HomePage"));
 const ExperiencePage = lazy(() => import("./pages/ExperiencePage"));
-const ProjectsPage   = lazy(() => import("./pages/ProjectsPage"));
-const SkillsPage     = lazy(() => import("./pages/SkillsPage"));
-const GalleryPage    = lazy(() => import("./pages/GalleryPage"));
+const ProjectsPage = lazy(() => import("./pages/ProjectsPage"));
+const SkillsPage = lazy(() => import("./pages/SkillsPage"));
+const GalleryPage = lazy(() => import("./pages/GalleryPage"));
 
 const Layout = () => (
   <>
+    <Analytics />
     <Navbar />
     {/* Black background layer */}
     <div className="fixed inset-0 -z-30 bg-black" />

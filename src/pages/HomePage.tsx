@@ -11,6 +11,7 @@ import ScrollIndicator from "@/components/ScrollIndicator";
 import TextType from "@/components/TextType";
 import Particles from "@/components/Particles";
 
+
 const MONO = "ui-monospace, SFMono-Regular, monospace";
 const C_CYAN   = "#22d3ee";
 const C_BRIGHT = "#67e8f9";
@@ -19,6 +20,7 @@ const C_DIM    = "rgba(34,211,238,0.45)";
 const HomePage = () => {
   return (
     <div className="">
+      
       <Helmet>
         <title>Home | Wesley Chou</title>
         <meta
