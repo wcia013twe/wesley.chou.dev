@@ -16,6 +16,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import * as THREE from "three";
 import type { SkillIcon } from "@/data/skillsGalaxyData";
+import { isWebGLAvailable } from "@/lib/webgl";
 import StackIcon from "tech-stack-icons";
 import CustomIcon from "@/components/CustomIcon";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
@@ -503,6 +504,9 @@ export default function SpaceshipDiagram() {
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+    // WebGLRenderer throws when no WebGL context can be created; skip the
+    // scene instead of taking down the whole page.
+    if (!isWebGLAvailable()) return;
 
     let w = container.clientWidth;
     let h = container.clientHeight;
