@@ -28,6 +28,7 @@ import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import getStarfield from "./solar-system/src/getStarfield.js";
 import getNebula from "./getExperienceNebula.js";
 import getAurora from "./getAurora.js";
+import { isWebGLAvailable } from "../lib/webgl";
 import { getConstellationLines, CONSTELLATIONS } from "./getConstellationLines.js";
 import { professionalExperience, academicExperience } from "@/lib/experience";
 
@@ -479,6 +480,9 @@ export default function ExperienceTimeline3D() {
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+    // WebGLRenderer throws when no WebGL context can be created; skip the
+    // scene instead of taking down the whole page.
+    if (!isWebGLAvailable()) return;
 
     let disposed = false;
 
