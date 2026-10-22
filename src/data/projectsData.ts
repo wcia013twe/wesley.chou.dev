@@ -182,6 +182,35 @@ Built with Next.js 14 and FastAPI, Emergent leverages parallel processing to sim
     depth: 1, // Front layer
   },
   {
+    id: "camvas",
+    planetId: "full-stack",
+    badge: false,
+    title: "Camvas",
+    description:
+      "Collaborative 3D previsualization studio where filmmakers describe camera moves in plain language and an AI director turns them into validated cinematic and drone shots.",
+    fullDescription: `Camvas is a collaborative 3D studio for planning cinematic shots before production begins. Creators build a scene from 3D models and Gaussian splat captures, then direct the camera in plain language while an AI director agent turns those instructions into editable camera paths on a timeline.
+
+Under the hood, a semantic scene graph gives the agent labeled subjects and measured geometry, so proposed moves and drone routes are checked against collision boxes and motion limits before they are applied. A CinemaTraj-based optimizer then refines each path for clearance and smoothness. Yjs and WebRTC keep scenes, presence, and cursors in sync for real-time collaboration, and finished shots export straight from the browser as MP4 or WebM.
+
+Built in 36 hours with Next.js, PlayCanvas, and Three.js, Camvas takes a shot from an idea to a camera-ready plan in one studio.`,
+    date: "2026-09-27",
+    imageUrl: "assets/projects/camvas.jpg",
+    detailsUrl: "https://devpost.com/software/camvas",
+    githubUrl: "https://github.com/amyhakim/Camvas",
+    tech: [
+      { name: "Next.js", category: "frontend" },
+      { name: "React", category: "frontend" },
+      { name: "TypeScript", category: "frontend" },
+      { name: "PlayCanvas", category: "frontend" },
+      { name: "Three.js", category: "frontend" },
+      { name: "Codex AI Director", category: "ai" },
+      { name: "Yjs / WebRTC", category: "devops" },
+      { name: "Python / PyTorch", category: "backend" },
+    ],
+    badgeColor: "text-cyan-300",
+    depth: 2, // Mid layer
+  },
+  {
   id: "imsoatl",
   planetId: "full-stack",
   badge: true,
@@ -330,6 +359,34 @@ A deliberate exercise in foundational web technologies — no frameworks, just t
   //-------------HARDWARE------------//
 
   {
+    id: "dottie",
+    planetId: "hardware",
+    badge: true,
+    title: "Dottie",
+    description:
+      "Interactive braille learning system for blind children that pairs a refreshable braille cell with voice interaction, storytelling, and a Databricks-powered teaching engine that adapts to each learner.",
+    fullDescription: `Dottie is an interactive, multi-modal braille learning system built to help young blind learners build literacy through touch, voice, and storytelling. Only about 10% of blind schoolchildren receive braille instruction, so Dottie makes practice playful: a refreshable six-dot braille cell spells out letters and words while a companion app guides story mode, reading exercises, and camera-based object exploration.
+
+The hardware pairs an Arduino-driven servo braille cell with a Jetson Nano for on-device object recognition, turning what the camera sees into speech and braille in real time. Behind it, a Databricks medallion pipeline (Bronze, Silver, and Gold Delta layers) turns confirmed learner events into versioned learner profiles, while MLflow and the Genie API ground the teaching companion in cited research and human-approved recommendations, keeping AI proposals separate from verified observations.
+
+The device was designed and built from scratch, including first-time CAD, 3D printing, and servo firmware, alongside the full object-to-braille software pipeline.`,
+    date: "2026-10-11",
+    imageUrl: "assets/projects/dottie.jpg",
+    detailsUrl: "https://devpost.com/software/gerald-2hb7v3",
+    githubUrl: "https://github.com/wcia013twe/magneto",
+    tech: [
+      { name: "Python", category: "backend" },
+      { name: "Arduino", category: "devops" },
+      { name: "NVIDIA Jetson Nano", category: "devops" },
+      { name: "Databricks", category: "database" },
+      { name: "MLflow", category: "ai" },
+      { name: "Computer Vision", category: "ai" },
+      { name: "Voice Interaction", category: "ai" },
+    ],
+    badgeColor: "text-rose-300",
+    depth: 1, // Front layer
+  },
+  {
     id: "firewatch",
     planetId: "hardware",
     // badge: true,
@@ -375,7 +432,7 @@ Developers rank their UI components by importance, then InsightAI uses eye track
 Built with Python and Tkinter, the tool integrates TensorFlow and OpenCV for robust eye tracking, while MongoDB stores attention data for historical analysis. InsightAI generates comprehensive performance summaries that track attention metrics over time and provide data-driven insights for design decisions.`,
     date: "2025-9-27",
     imageUrl: "assets/projects/insightAI.png",
-    detailsUrl: "https://devpost.com/software/emergent-b2t1fl",
+    detailsUrl: "https://devpost.com/software/insightui",
     githubUrl: undefined,
     tech: [
       { name: "Python", category: "backend" },
