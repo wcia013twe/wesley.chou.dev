@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Renderer, Camera, Geometry, Program, Mesh } from 'ogl';
+import { isWebGLAvailable } from '../lib/webgl';
 
 interface ParticlesProps {
   particleCount?: number;
@@ -122,8 +123,19 @@ const Particles: React.FC<ParticlesProps> = ({
     const container = containerRef.current;
     if (!container) return;
 
-    const renderer = new Renderer({ dpr: pixelRatio, depth: false, alpha: true });
+    // Without WebGL, ogl's Renderer constructor throws: it logs the failed
+    // context creation, then still assigns `gl.renderer` on the null
+    // context. Skip the particle layer so the page itself still renders.
+    if (!isWebGLAvailable()) return;
+
+    let renderer: Renderer;
+    try {
+      renderer = new Renderer({ dpr: pixelRatio, depth: false, alpha: true });
+    } catch {
+      return;
+    }
     const gl = renderer.gl;
+    if (!gl) return;
     container.appendChild(gl.canvas);
     gl.clearColor(0, 0, 0, 0);
 
