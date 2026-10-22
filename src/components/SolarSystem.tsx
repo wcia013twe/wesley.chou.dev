@@ -21,6 +21,7 @@ import { projects, categoryPlanets } from '../data/projectsData';
 import ProjectsGrid from './projects/ProjectsGrid';
 import ProjectModal from './projects/ProjectModal';
 import HudPanel from './HudPanel';
+import { isWebGLAvailable } from '../lib/webgl';
 
 // ─── Tunable constants ────────────────────────────────────────────────────────
 
@@ -161,6 +162,9 @@ export default function SolarSystem() {
   // ── Three.js setup (runs once on mount) ─────────────────────────────────────
   useEffect(() => {
     if (!containerRef.current || initializedRef.current) return;
+    // WebGLRenderer throws when no WebGL context can be created; skip the
+    // scene instead of taking down the whole page.
+    if (!isWebGLAvailable()) return;
     initializedRef.current = true;
 
     const container = containerRef.current;
