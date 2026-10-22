@@ -17,6 +17,45 @@ interface ExperienceItem {
 
 export const professionalExperience: ExperienceItem[] = [
   {
+    date: "Jun 2026 - Sep 2026",
+    imageSrc: "assets/experience/oracle_logo.png",
+    hero: "assets/experience/oracle_hq.jpg",
+    altText: "Oracle Logo",
+    captionText: "Oracle",
+    title: "Software Engineer Intern",
+    workplace: "Oracle",
+    location: "Pleasanton, CA",
+    description:
+      "Designed and built an agent harness that turns product specs into customer-facing AI agents, adopted by a 40+ engineer org shipping 20+ agents per release.",
+    skills: [
+      "AI Agents",
+      "LangGraph",
+      "Text-to-SQL",
+      "Semantic Models",
+      "Python",
+      "LLM Reranking",
+      "Data Planning",
+    ],
+    overview:
+      "As a software engineering intern, I built the agent harness and data-planning layer behind customer-facing AI agents, grounding agent answers in approved data sources and semantic models across HR, supply chain, customer, and finance domains.",
+    key_responsibilities: [
+      "Designed and built an agent harness that turns product specs into customer-facing AI agents, adopted by a 40+ engineer org shipping 20+ agents per release.",
+      "Built the data-planning layer that splits each request into business intents and ties every intent to a real data source: an API, approved SQL, or the right semantic model.",
+      "Designed a two-stage reranker that merges results from multiple query rewrites, then uses an LLM with auto-optimized instructions to reach 90.4% top-5 accuracy selecting the right semantic model on held-out data.",
+      "Extended a LangGraph text-to-SQL engine to accept the business domain and semantic model as parameters, grounding its queries in the right context across HR, supply chain, customer, and finance.",
+    ],
+    icon: (
+      <img
+        src="assets/experience/oracle_logo.png"
+        alt="Oracle Logo"
+        className="rounded-full h-14 w-14 ml-0.75 mt-0.75"
+      />
+    ),
+    links: {
+      "Oracle Careers": "https://www.oracle.com/careers/",
+    },
+  },
+  {
     date: "Jan 2025 - Present",
     imageSrc: "assets/experience/kylogo.png",
     hero: "assets/experience/kyrinLabs.jpg",
