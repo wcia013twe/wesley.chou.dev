@@ -19,6 +19,7 @@ import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import MovingRays from "./MovingRays";
+import { isWebGLAvailable } from "../lib/webgl";
 
 interface SpaceshipSceneProps {
   className?: string;
@@ -292,6 +293,7 @@ const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({ className }) => {
       aria-hidden="true"
       style={{ background: 'transparent' }}
     >
+      {isWebGLAvailable() && (
       <Canvas
         frameloop={isInView ? "always" : "demand"}
         camera={{ position: [-5, 6, 10], fov: 25 }}
@@ -318,6 +320,7 @@ const SpaceshipScene: React.FC<SpaceshipSceneProps> = ({ className }) => {
         />
         <Effects />
       </Canvas>
+      )}
     </div>
   );
 };
