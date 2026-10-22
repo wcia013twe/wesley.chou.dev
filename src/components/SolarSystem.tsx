@@ -526,6 +526,8 @@ export default function SolarSystem() {
     ? projects.filter((p) => p.planetId === orbitView.id)
     : [];
 
+  const featuredProjects = projects.filter((p) => p.badge);
+
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div className="relative w-full h-full">
@@ -659,6 +661,80 @@ export default function SolarSystem() {
         isOpen={!!selectedProject}
         onClose={() => setSelectedProject(null)}
       />
+
+      {/* ── Featured projects — direct shortcuts, visible from the system view ── */}
+      <AnimatePresence>
+        {!orbitView && featuredProjects.length > 0 && (
+          <motion.div
+            key="featured-projects"
+            className="absolute left-6 z-20"
+            style={{ bottom: '24px', maxWidth: '320px' }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.4, ease: 'easeOut', delay: 0.15 }}
+          >
+            <div style={{ display: 'flex', gap: '10px' }}>
+              {/* Left accent bar */}
+              <div style={{
+                width: '2px',
+                background: 'linear-gradient(180deg, #22d3ee 0%, #22d3ee44 100%)',
+                flexShrink: 0,
+              }} />
+              <div style={{
+                background: 'rgba(0,0,0,0.45)',
+                border: '1px solid rgba(34,211,238,0.18)',
+                borderLeft: 'none',
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                padding: '12px 14px 10px 12px',
+              }}>
+                <p style={{
+                  fontFamily: MONO, fontSize: '8px', letterSpacing: '0.3em',
+                  color: '#22d3eeaa', textTransform: 'uppercase', margin: '0 0 4px',
+                }}>
+                  ★ Featured Projects
+                </p>
+                <p style={{
+                  fontFamily: MONO, fontSize: '9px', letterSpacing: '0.06em',
+                  color: 'rgba(255,255,255,0.40)', margin: '0 0 10px',
+                }}>
+                  Skip the orbit — start with these
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {featuredProjects.map((p) => (
+                    <button
+                      key={p.id}
+                      onClick={() => setSelectedProject(p)}
+                      className="text-left transition-colors hover:bg-white/10"
+                      style={{
+                        fontFamily: MONO,
+                        background: 'rgba(255,255,255,0.04)',
+                        border: '1px solid rgba(255,255,255,0.10)',
+                        padding: '7px 10px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'baseline',
+                        gap: '8px',
+                        width: '100%',
+                      }}
+                    >
+                      <span style={{ color: '#f59e0b', fontSize: '10px' }}>★</span>
+                      <span style={{ color: 'rgba(255,255,255,0.92)', fontSize: '11px', letterSpacing: '0.04em', fontWeight: 600 }}>
+                        {p.title}
+                      </span>
+                      <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '8px', letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+                        {categoryPlanets.find((cp) => cp.id === p.planetId)?.name ?? p.planetId}
+                      </span>
+                      <span style={{ marginLeft: 'auto', color: '#22d3ee', fontSize: '10px' }}>→</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── Controls hint — hidden when in orbit ─────────────────────────── */}
       <AnimatePresence>
